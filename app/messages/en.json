@@ -1,5 +1,7 @@
 {
   "home": {
-    "title": "Hello"
+    "title": "Dax - Freelance Frontend Developer ",
+    "intro": "Hi, I'm Dax, a freelance frontend developer. Aspiring to be a full-stack independent developer.",
+    "contact":"You can find me on my <blog>Blog</blog>, <github>Github</github>, <twitter>Twitter</twitter> and <email>Email</email>. Thanks for following along!"
   }
 } 

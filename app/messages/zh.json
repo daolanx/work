@@ -1,5 +1,7 @@
 {
   "home": {
-    "title": "你好"
+    "title": "Dax - 自由前端开发者",
+    "intro": "Hi，我是 Dax，目前是一名自由前端开发者，正致力于成为全栈独立开发者。",
+    "contact":"可以通过 <blog>Blog</blog>、<github>Github</github>、<twitter>Twitter</twitter> 和 <email>Email</email> 找到我。感谢你的关注!"
   }
 }
