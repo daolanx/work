@@ -1,20 +1,13 @@
-"use client";
-
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import Image from "next/image";
 import ThemeSwitch from "@/app/components/themeSwitch";
-import LocaleSwitch from "../components/localeSwitch";
-import { MagicCard } from "@/components/ui/magic-card";
+import LocaleSwitch from "@/app/components/localeSwitch";
 import { Badge } from "@/components/ui/badge";
-
-
-import { Button } from "@/components/ui/button";
-import { useTheme } from "next-themes";
+import SiteCard from "@/components/site-card";
 
 export default function Home() {
-  const t = useTranslations("home");
-  const { theme } = useTheme();
+  const t = useTranslations("profile");
 
   return (
     <>
@@ -78,9 +71,9 @@ export default function Home() {
             </p>
           </div>
         </section>
-        <section className="border-t border-slate-100 mt-10 pt-8">
-          <h2 className="font-bold  text-xl bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent pb-6">
-            My Skills
+        <section className="border-t border-slate-100 mt-8  p-4">
+          <h2 className="font-bold   text-xl bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent pb-6">
+            {t('my-skills')}
           </h2>
 
           <ul className="flex flex-wrap gap-3">
@@ -132,55 +125,47 @@ export default function Home() {
           </ul>
         </section>
 
-        <section className="border-t border-slate-100 mt-10 pt-8">
+        <section className="border-t border-slate-100 mt-8 p-4">
           <h2 className="font-bold  text-xl bg-gradient-to-r from-orange-600 to-purple-500 bg-clip-text text-transparent pb-6">
-            My Projects
+            {t('my-projects')}
           </h2>
 
-          <MagicCard
-            className="p-4 mb-6 rounded-xl hover:-translate-y-0.5 hover:shadow-sm transition-all duration-300 "
-            gradientColor={theme === "dark" ? "#000" : "#fff"}
-          >
-            <h3 className="font-bold font-sans text-xl mb-2 border-b-1 pb-2 mb-4">
-              Landing Page
-            </h3>
+          <SiteCard 
+            siteTitle="Landing Page"
+            sitePreviewUrl="/images/landing-page.webp"
+            siteDesciption="Highly polished landing page featuring smooth scroll animations and pixel-perfect UI implementation.
+            SEO-optimized landing page with high-speed loading performance and interactive storytelling elements."
+            siteWebUrl="x"
+            siteSourceUrl="x"
+          />
 
-            {/* 添加 items-start 防止图片在垂直方向被拉伸 */}
-            <div className="md:flex md:items-start space-x-4">
-              <div className="w-3/5 mb-4 md:w-[40%] shrink-0 ">
-                {" "}
-                {/* 使用 shrink-0 确保图片容器宽度固定 */}
-                <Image
-                  src="/images/landing-page.webp"
-                  width={300}
-                  height={200}
-                  alt="Landing Page Preview"
-                  // object-cover 是保持比例的关键，rounded-lg 增加美观
-                  className="w-full h-auto object-cover shadow rounded-lg"
-                />
-              </div>
+          <SiteCard 
+            siteTitle="E-commerce Page"
+            sitePreviewUrl="/images/e-commerce-page.webp"
+            siteDesciption="A high-performance storefront featuring complex state management and seamless shopping cart interactions.
+            Responsive e-commerce interface optimized for core web vitals and conversion-driven UX."
+            siteWebUrl="x"
+            siteSourceUrl="x"
+          />
 
-              <div className="flex flex-col justify-between">
-                <p >
-                  Some text Some textSome textSome textSome texome textSome
-                  text...e text Some textSome textSome textSome texome textSome
-                  texe text Some textSome textSome textSome texome textSome texe
-                  text Some textSome textSome textSome texome textSome texe text
-                  Some textSome textSome textSome texome textSome texe text Some
-                  textSome textSome textSome texome textSome tex
-                </p>
-                <div className="pt-4 space-x-2 md:text-right">
-                  <Button variant="outline">
-                    <Link href="x">View Site</Link>
-                  </Button>
+          <SiteCard 
+            siteTitle="Social Media Page"
+            sitePreviewUrl="/images/social-page.webp"
+            siteDesciption="Dynamic social feed with features like infinite scrolling, real-time notifications, and media lazy loading.
+            Interactive community platform emphasizing component reusability and real-time user engagement."
+            siteWebUrl="x"
+            siteSourceUrl="x"
+          />
 
-                  <Button variant="outline">
-                    <Link href="x">View Source</Link>
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </MagicCard>
+          <SiteCard 
+            siteTitle="Console Page"
+            sitePreviewUrl="/images/console-page.webp"
+            siteDesciption="Advanced data visualization dashboard with real-time analytics and customizable widget layouts.
+            Role-based access control (RBAC) management system built with scalable component architecture.
+            "
+            siteWebUrl="x"
+            siteSourceUrl="x"
+          />
         </section>
       </main>
     </>
