@@ -28,8 +28,8 @@ export type Site = {
 const sites: SiteMeta[] = [
   {
     previewUrl: "/images/landing-page.webp",
-    webUrl: "x",
-    sourceUrl: "x",
+    webUrl: "/landing",
+    sourceUrl: "https://github.com/daolanx/work",
     en: {
       title: "Landing Page",
       keywords: ["Responsive", "Speed", "Motion", "SEO"],

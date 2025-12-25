@@ -2,12 +2,14 @@
 
 import { MagicCard } from "./ui/magic-card";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { type Site } from "@/app/api/site";
+import { motion } from "motion/react";
+import { Link } from '@/app/i18n/navagation';
 
 export default function SiteCard(props: Site) {
   const { theme } = useTheme();
@@ -22,7 +24,13 @@ export default function SiteCard(props: Site) {
   } = props;
 
   return (
-    <MagicCard
+    <motion.div
+      initial={{ opacity: 0, y: 20 }} // 初始状态：透明且向下位移
+      whileInView={{ opacity: 1, y: 0 }} // 进入视口后的状态
+      viewport={{ once: true, amount: 0.2 }} // once: true 表示只执行一次；amount 表示进入 20% 时触发
+      transition={{ duration: 0.5, ease: "easeOut" }} // 动画曲线
+    >
+ <MagicCard
       className="p-6 mb-6 rounded-xl  hover:shadow-sm transition-all duration-300 "
       gradientColor={theme === "dark" ? "#000" : "#fff"}
     >
@@ -66,5 +74,7 @@ export default function SiteCard(props: Site) {
         </div>
       </div>
     </MagicCard>
+    </motion.div>
+   
   );
 }
