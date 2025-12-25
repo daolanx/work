@@ -1,4 +1,5 @@
-import { useTranslations } from "next-intl";
+
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import Image from "next/image";
 import ThemeSwitch from "@/app/components/themeSwitch";
@@ -6,8 +7,11 @@ import LocaleSwitch from "@/app/components/localeSwitch";
 import { Badge } from "@/components/ui/badge";
 import SiteCard from "@/components/site-card";
 
-export default function Home() {
-  const t = useTranslations("profile");
+import { getSites, type Site } from "@/app/api/site";
+
+export default async function Home() {
+  const t = await getTranslations("profile");
+  const sites: Site[] = await getSites();
 
   return (
     <>
@@ -129,43 +133,13 @@ export default function Home() {
           <h2 className="font-bold  text-xl bg-gradient-to-r from-orange-600 to-purple-500 bg-clip-text text-transparent pb-6">
             {t('my-projects')}
           </h2>
+          {
 
-          <SiteCard 
-            siteTitle="Landing Page"
-            sitePreviewUrl="/images/landing-page.webp"
-            siteDesciption="Highly polished landing page featuring smooth scroll animations and pixel-perfect UI implementation.
-            SEO-optimized landing page with high-speed loading performance and interactive storytelling elements."
-            siteWebUrl="x"
-            siteSourceUrl="x"
-          />
-
-          <SiteCard 
-            siteTitle="E-commerce Page"
-            sitePreviewUrl="/images/e-commerce-page.webp"
-            siteDesciption="A high-performance storefront featuring complex state management and seamless shopping cart interactions.
-            Responsive e-commerce interface optimized for core web vitals and conversion-driven UX."
-            siteWebUrl="x"
-            siteSourceUrl="x"
-          />
-
-          <SiteCard 
-            siteTitle="Social Media Page"
-            sitePreviewUrl="/images/social-page.webp"
-            siteDesciption="Dynamic social feed with features like infinite scrolling, real-time notifications, and media lazy loading.
-            Interactive community platform emphasizing component reusability and real-time user engagement."
-            siteWebUrl="x"
-            siteSourceUrl="x"
-          />
-
-          <SiteCard 
-            siteTitle="Console Page"
-            sitePreviewUrl="/images/console-page.webp"
-            siteDesciption="Advanced data visualization dashboard with real-time analytics and customizable widget layouts.
-            Role-based access control (RBAC) management system built with scalable component architecture.
-            "
-            siteWebUrl="x"
-            siteSourceUrl="x"
-          />
+            sites.map((site: Site) => <SiteCard 
+              key={site.title}
+              {...site}
+          />)
+          }
         </section>
       </main>
     </>
