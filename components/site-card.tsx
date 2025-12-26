@@ -9,7 +9,7 @@ import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { type Site } from "@/app/api/site";
 import { motion } from "motion/react";
-import { Link } from '@/app/i18n/navagation';
+import Link from "next/link";
 
 export default function SiteCard(props: Site) {
   const { theme } = useTheme();

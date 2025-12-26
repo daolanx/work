@@ -1,17 +1,14 @@
 "use client";
 
 import { Languages } from "lucide-react";
-import { routing } from "@/app/i18n/routing";
-import { useLocale } from "next-intl";
-import { usePathname } from "next/navigation";
+import { locales, defaultLocale, LOCALE_COOKIE_NAME } from "@/app/i18n/config";
+import { setCookie, getCookie } from 'cookies-next';
 import { useRouter } from "next/navigation";
 
 export default function LanguageToggle() {
-  const { locales, defaultLocale } = routing;
-  const locale = useLocale();
-  const pathname = usePathname();
+
+  const locale = getCookie(LOCALE_COOKIE_NAME);
   const router = useRouter();
-  const REG_LOCALE = /^\/([a-z]{2,3}(-[A-Z]{2})?)(?=\/|$)/;
 
   return (
     <Languages className="cursor-pointer" onClick={handleLocaleSwitch} />
@@ -19,6 +16,7 @@ export default function LanguageToggle() {
 
   function handleLocaleSwitch() {
      const newLoacle = locales.find((temp) => temp !== locale) || defaultLocale;
-    router.replace(pathname.replace(REG_LOCALE, newLoacle));
+     setCookie(LOCALE_COOKIE_NAME, newLoacle);
+    router.refresh();
   }
 }
