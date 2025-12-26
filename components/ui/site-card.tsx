@@ -1,7 +1,8 @@
 "use client";
 
-import { MagicCard } from "./ui/magic-card";
+import { MagicCard } from "./magic-card";
 import { Button } from "@/components/ui/button";
+import { ArrowUpRight } from 'lucide-react';
 
 import Image from "next/image";
 import { useTheme } from "next-themes";
@@ -10,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { type Site } from "@/app/api/site";
 import { motion } from "motion/react";
 import Link from "next/link";
+
 
 export default function SiteCard(props: Site) {
   const { theme } = useTheme();
@@ -25,10 +27,10 @@ export default function SiteCard(props: Site) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }} // 初始状态：透明且向下位移
-      whileInView={{ opacity: 1, y: 0 }} // 进入视口后的状态
-      viewport={{ once: true, amount: 0.2 }} // once: true 表示只执行一次；amount 表示进入 20% 时触发
-      transition={{ duration: 0.5, ease: "easeOut" }} // 动画曲线
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }} 
+      transition={{ duration: 0.5, ease: "easeOut" }}
     >
  <MagicCard
       className="p-6 mb-6 rounded-xl  hover:shadow-sm transition-all duration-300 "
@@ -60,14 +62,14 @@ export default function SiteCard(props: Site) {
           <div className="pt-4 space-x-2 md:text-right md:absolute md:bottom-0 md:right-0">
             <Button asChild  className="bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-800/60 dark:hover:text-blue-300">
               <Link target="_blank" href={webUrl}>
-                {t("view-site")}
+                {t("view-site")} <ArrowUpRight />
               </Link>
             </Button>
 
             <Button asChild  className="bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-800/60 dark:hover:text-blue-300">
              
               <Link target="_blank" href={sourceUrl}>
-                {t("view-source")}
+                {t("view-source")} <ArrowUpRight />
               </Link>
             </Button>
           </div>

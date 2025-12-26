@@ -1,14 +1,19 @@
 
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
+import type { Metadata } from 'next'
 import Image from "next/image";
-import ThemeSwitch from "@/app/components/themeSwitch";
-import LocaleSwitch from "@/app/components/localeSwitch";
+import ThemeSwitch from "@/components/profile/themeSwitch";
+import LocaleSwitch from "@/components/profile/localeSwitch";
 import { Badge } from "@/components/ui/badge";
-import SiteCard from "@/components/site-card";
+import SiteCard from "@/components/ui/site-card";
 
 import { getSites, type Site } from "@/app/api/site";
 
+export const metadata: Metadata = {
+  title: 'Dax\'s Profile',
+  description: 'Freelance Frontend Developer',
+}
 export default async function Home() {
   const t = await getTranslations("profile");
   const sites: Site[] = await getSites();
