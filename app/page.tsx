@@ -6,7 +6,7 @@ import Image from "next/image";
 import ThemeSwitch from "@/components/profile/themeSwitch";
 import LocaleSwitch from "@/components/profile/localeSwitch";
 import { Badge } from "@/components/ui/badge";
-import SiteCard from "@/components/ui/site-card";
+import SiteCard from "@/components/profile/site-card";
 
 import { getSites, type Site } from "@/app/api/site";
 

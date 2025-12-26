@@ -1,6 +1,6 @@
 "use client";
 
-import { MagicCard } from "./magic-card";
+import { MagicCard } from "../ui/magic-card";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight } from 'lucide-react';
 
