@@ -147,7 +147,7 @@
 }
 
 @layer components {
-  .section-container {
+  .section-max-width-wrapper {
     @apply mx-auto w-full md:max-w-screen-xl px-4 md:px-12 lg:px-20;
   }
 }
