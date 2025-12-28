@@ -4,7 +4,7 @@ import FadeInWrapper from "./fadeIn-wrapper";
 export function Footer() {
   return (
     <footer className="section-max-width-wrapper border-t  pt-8  md:pb-0 px-6 lg:px-8 mt-8">
-      <div className="grid gap-8 xl:grid-cols-3 xl:gap-8 w-full">
+      <div className="grid gap-8 xl:grid-cols-3  w-full">
         <div className="grid-cols-2 gap-8 grid  xl:col-span-2 xl:mt-0">
           <div className="md:grid md:grid-cols-2 md:gap-8">
             <FadeInWrapper delay={0.2}>
