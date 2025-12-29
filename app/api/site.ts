@@ -12,8 +12,10 @@ type SiteMeta= {
   previewUrl: string;
   webUrl: string;
   sourceUrl: string;
+  isDeveloping?: boolean,
   en: SiteContent;
   zh: SiteContent;
+ 
 };
 
 export type Site = {
@@ -23,13 +25,16 @@ export type Site = {
   previewUrl: string;
   webUrl: string;
   sourceUrl: string;
+   isDeveloping?: boolean,
+
 };
 
 const sites: SiteMeta[] = [
   {
     previewUrl: "/images/landing-page.webp",
     webUrl: "/landing",
-    sourceUrl: "https://github.com/daolanx/work",
+    sourceUrl: "https://github.com/daolanx/work/tree/main/app/landing",
+   
     en: {
       title: "Landing Page",
       keywords: ["Responsive", "Speed", "Motion", "SEO"],
@@ -45,6 +50,7 @@ const sites: SiteMeta[] = [
     previewUrl: "/images/ai-chat-page.webp",
     webUrl: "x",
     sourceUrl: "x",
+     isDeveloping: true,
     en: {
       title: "AI Chat Page",
       keywords: ["LLM", "Streaming", "Prompts", "Context"],
@@ -60,6 +66,7 @@ const sites: SiteMeta[] = [
     previewUrl: "/images/e-commerce-page.webp",
     webUrl: "x",
     sourceUrl: "x",
+     isDeveloping: true,
     en: {
       title: "E-commerce Page",
       keywords: ["State Logic", "API", "Components"],
@@ -75,6 +82,7 @@ const sites: SiteMeta[] = [
     previewUrl: "/images/social-page.webp",
     webUrl: "x",
     sourceUrl: "x",
+     isDeveloping: true,
     en: {
       title: "Social Media Page",
       keywords: ["Real-time", "Infinite Scroll", "Engagement"],
@@ -90,6 +98,7 @@ const sites: SiteMeta[] = [
     previewUrl: "/images/console-page.webp",
     webUrl: "x",
     sourceUrl: "x",
+     isDeveloping: true,
     en: {
       title: "Console Page",
       keywords: ["Data Viz", "RBAC", "DDD", "Scalable"],
@@ -109,6 +118,7 @@ export async function getSites(): Promise<Site[]> {
     previewUrl: site.previewUrl,
     webUrl: site.webUrl,
     sourceUrl: site.sourceUrl,
+    isDeveloping: site.isDeveloping,
     ...site[locale],
   }));
 }
