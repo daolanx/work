@@ -4,6 +4,7 @@ import { RainbowButton } from "@/components/ui/rainbow-button";
 import { BorderBeam } from "@/components/ui/border-beam";
 import PriceCard from "@/components/landing/price-card";
 import FeedBackCard from "@/components/landing/feedback";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { BarChart3Icon, FolderOpenIcon, WandSparklesIcon } from "lucide-react";
@@ -62,7 +63,7 @@ export default function LandingPage() {
   return (
     <main className="section-max-width-wrapper">
       {/* Hero Section */}
-      <section className="section-max-width-wrapper">
+      <section >
         <FadeInWrapper className="text-center ">
           <h1 className=" py-6 text-4xl font-medium  text-balance sm:text-5xl md:text-6xl lg:text-7xl !leading-[1.15] ">
             Build Landing Page with{" "}
@@ -200,13 +201,31 @@ export default function LandingPage() {
       </section>
       {/* User Section */}
       <section>
-                <FeedBackCard />
-
+        <FeedBackCard />
       </section>
       {/* Reviews Section */}
       <section></section>
       {/* CTA Section */}
-      <section></section>
+      <section>
+        <FadeInWrapper delay={0.1}>
+          <div className="flex flex-col items-center justify-center relative w-full text-center">
+            <h2 className="py-4 bg-clip-text text-center text-4xl md:text-7xl !leading-[1.15] font-medium font-heading tracking-tight  mt-8">
+              Step into the future of link management
+            </h2>
+            <p className="text-muted-foreground mt-6 max-w-md mx-auto">
+              Experience the cutting-edge solution that transforms how you
+              handle your links. Elevate your online presence with our next-gen
+              platform.
+            </p>
+            <div className="mt-6">
+              <Button>
+                Get started for free
+                <ArrowRightIcon className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </div>
+        </FadeInWrapper>
+      </section>
     </main>
   );
 }

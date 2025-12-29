@@ -100,7 +100,7 @@ export default function FeedBackCard() {
       </FadeInWrapper>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-start gap-4 md:gap-8 py-10">
          {REVIEWS.map((review, index) => (
-            <FadeInWrapper delay={0.2 * index} key={review.name}>
+            <FadeInWrapper delay={0.1 * index} key={review.name}>
                 <Card className="flex flex-col w-full border-none h-min">
                   <CardHeader className="space-y-0">
                     <CardTitle className="text-lg font-medium text-muted-foreground">
