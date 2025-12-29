@@ -21,7 +21,6 @@ import { motion } from "motion/react";
 import { CheckCircleIcon } from "lucide-react";
 import Link from "next/link";
 
-
 type Tab = "monthly" | "yearly";
 
 export const PLANS = [
@@ -108,8 +107,6 @@ export const PLANS = [
 ];
 
 const PricingCards = () => {
-
-
   return (
     <Tabs
       defaultValue="monthly"
@@ -122,7 +119,7 @@ const PricingCards = () => {
 
       <TabsContent
         value="monthly"
-        className="grid grid-cols-1 lg:grid-cols-3 gap-5 w-full md:gap-8 flex-wrap max-w-5xl mx-auto pt-6"
+        className="grid grid-cols-1 lg:grid-cols-3 gap-5 w-full md:gap-8 flex-wrap max-w-5xl mx-auto pt-6  "
       >
         {PLANS.map((plan) => (
           <Card
