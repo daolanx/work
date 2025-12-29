@@ -2,6 +2,7 @@ import FadeInWrapper from "@/components/landing/fadeIn-wrapper";
 import { ArrowRightIcon } from "lucide-react";
 import { RainbowButton } from "@/components/ui/rainbow-button";
 import { BorderBeam } from "@/components/ui/border-beam";
+import PriceCard from '@/components/landing/price-card';
 import Link from "next/link";
 import Image from "next/image";
 
@@ -57,7 +58,10 @@ export default function LandingPage() {
       {/* Process Section */}
       <section>Process Section</section>
       {/* Price Section */}
-      <section>Price Section</section>
+      <section>
+      <PriceCard />
+
+      </section>
       {/* Companies Section */}
       <section>Copmainers Section</section>
       {/* User Section */}
