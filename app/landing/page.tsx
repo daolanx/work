@@ -2,28 +2,58 @@ import FadeInWrapper from "@/components/landing/fadeIn-wrapper";
 import { ArrowRightIcon } from "lucide-react";
 import { RainbowButton } from "@/components/ui/rainbow-button";
 import { BorderBeam } from "@/components/ui/border-beam";
-import PriceCard from '@/components/landing/price-card';
+import PriceCard from "@/components/landing/price-card";
 import Link from "next/link";
 import Image from "next/image";
 import { BarChart3Icon, FolderOpenIcon, WandSparklesIcon } from "lucide-react";
 
 export const PROCESS = [
-    {
-        title: "Organize Your Links",
-        description: "Efficiently categorize and tag your links for quick access and easy management.",
-        icon: FolderOpenIcon,
-    },
-    {
-        title: "Shorten and Customize",
-        description: "Create concise, branded links that are easy to share and track.",
-        icon: WandSparklesIcon,
-    },
-    {
-        title: "Analyze and Optimize",
-        description: "Gain insights into link performance and optimize for better engagement.",
-        icon: BarChart3Icon,
-    },
+  {
+    title: "Organize Your Links",
+    description:
+      "Efficiently categorize and tag your links for quick access and easy management.",
+    icon: FolderOpenIcon,
+  },
+  {
+    title: "Shorten and Customize",
+    description:
+      "Create concise, branded links that are easy to share and track.",
+    icon: WandSparklesIcon,
+  },
+  {
+    title: "Analyze and Optimize",
+    description:
+      "Gain insights into link performance and optimize for better engagement.",
+    icon: BarChart3Icon,
+  },
 ] as const;
+
+export const COMPANIES = [
+  {
+    name: "Asana",
+    logo: "company-01.svg",
+  },
+  {
+    name: "Tidal",
+    logo: "company-02.svg",
+  },
+  {
+    name: "Innovaccer",
+    logo: "company-03.svg",
+  },
+  {
+    name: "Linear",
+    logo: "company-04.svg",
+  },
+  {
+    name: "Raycast",
+    logo: "company-05.svg",
+  },
+  {
+    name: "Labelbox",
+    logo: "company-06.svg",
+  },
+];
 
 export default function LandingPage() {
   return (
@@ -73,58 +103,86 @@ export default function LandingPage() {
         </FadeInWrapper>
       </section>
       {/* Feature Section */}
-      <section>Feature Section</section>
+      <section></section>
       {/* Process Section */}
       <section>
-
-     <FadeInWrapper delay={0.1}>
-                    <div className="flex flex-col items-center lg:items-center justify-center w-full py-8 max-w-xl mx-auto">
-                   
-                        <h2 className="text-center lg:text-center text-3xl md:text-5xl !leading-[1.1] font-medium font-heading text-foreground mt-6">
-                            Build Just With 3 Steps
-                        </h2>
-                        <p className="mt-4 text-center lg:text-center text-lg text-muted-foreground max-w-lg">
-                            Follow these simple steps to optimize, organize, and share your links with ease.
-                        </p>
-                    </div>
-                </FadeInWrapper>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  py-8 gap-4 md:gap-8">
-                    {PROCESS.map((process, id) => (
-                        <FadeInWrapper delay={0.2 * id} key={id}>
-                            <div className="group md:p-8 ring-1 rounded-2xl ring-gray-200">
-                                <div className="flex flex-col items-start justify-center w-full">
-                                    <process.icon strokeWidth={1.5} className="w-10 h-10 text-foreground" />
-                                    <div className="flex flex-col relative items-start">
-                                        <span className="absolute -top-6 right-0 border-2 border-border text-foreground font-medium text-2xl rounded-full w-12 h-12 flex items-center justify-center pt-0.5">
-                                            {id + 1}
-                                        </span>
-                                        <h3 className="text-base mt-6 font-medium text-foreground">
-                                            {process.title}
-                                        </h3>
-                                        <p className="mt-2 text-sm text-muted-foreground">
-                                            {process.description}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </FadeInWrapper>
-                    ))}
+        <FadeInWrapper delay={0.1}>
+          <div className="flex flex-col items-center lg:items-center justify-center w-full py-8 max-w-xl mx-auto">
+            <h2 className="text-center lg:text-center text-3xl md:text-5xl !leading-[1.1] font-medium font-heading text-foreground mt-6">
+              Build Just With 3 Steps
+            </h2>
+            <p className="mt-4 text-center lg:text-center text-lg text-muted-foreground max-w-lg">
+              Follow these simple steps to optimize, organize, and share your
+              links with ease.
+            </p>
+          </div>
+        </FadeInWrapper>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  py-8 gap-4 md:gap-8">
+          {PROCESS.map((process, id) => (
+            <FadeInWrapper delay={0.2 * id} key={id}>
+              <div className="group p-4 md:p-8 ring-1 rounded-2xl ring-gray-200">
+                <div className="flex flex-col items-start justify-center w-full">
+                  <process.icon
+                    strokeWidth={1.5}
+                    className="w-10 h-10 text-foreground"
+                  />
+                  <div className="flex flex-col relative items-start">
+                    <span className="absolute -top-6 right-0 border-2 border-border text-foreground font-medium text-2xl rounded-full w-12 h-12 flex items-center justify-center pt-0.5">
+                      {id + 1}
+                    </span>
+                    <h3 className="text-base mt-6 font-medium text-foreground">
+                      {process.title}
+                    </h3>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      {process.description}
+                    </p>
+                  </div>
                 </div>
-
+              </div>
+            </FadeInWrapper>
+          ))}
+        </div>
       </section>
       {/* Price Section */}
       <section>
-      <PriceCard />
-
+        <PriceCard />
       </section>
       {/* Companies Section */}
-      <section>Copmainers Section</section>
+      <section>
+        <FadeInWrapper delay={0.4}>
+          <div className="py-14">
+            <div className="mx-auto px-4 md:px-8">
+              <h2 className="text-center text-sm font-medium font-heading text-neutral-400 uppercase">
+                Trusted by the best in the industry
+              </h2>
+              <div className="mt-8">
+                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 justify-items-center items-center">
+                  {COMPANIES.map((company) => (
+                    <li
+                      key={company.name}
+                      className="flex items-center justify-center w-full h-20 p-4 rounded-xl bg-gray-600 shadow-sm"
+                    >
+                      <Image
+                        src={`/landing/${company.logo}`}
+                        alt={company.name}
+                        width={120}
+                        height={60}
+                        className="max-w-[110px] w-auto h-auto object-contain"
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </FadeInWrapper>
+      </section>
       {/* User Section */}
-      <section>User Section</section>
+      <section></section>
       {/* Reviews Section */}
-      <section>Reviews Section</section>
+      <section></section>
       {/* CTA Section */}
-      <section>CTA Section</section>
+      <section></section>
     </main>
   );
 }
