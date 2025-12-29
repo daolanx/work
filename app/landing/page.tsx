@@ -3,7 +3,7 @@ import FadeInWrapper from "@/components/landing/fadeIn-wrapper";
 import { RainbowButton } from "@/components/ui/rainbow-button";
 import { BorderBeam } from "@/components/ui/border-beam";
 import PriceCard from "@/components/landing/price-card";
-
+import FeedBackCard from "@/components/landing/feedback";
 import Link from "next/link";
 import Image from "next/image";
 import { BarChart3Icon, FolderOpenIcon, WandSparklesIcon } from "lucide-react";
@@ -199,7 +199,10 @@ export default function LandingPage() {
         </FadeInWrapper>
       </section>
       {/* User Section */}
-      <section></section>
+      <section>
+                <FeedBackCard />
+
+      </section>
       {/* Reviews Section */}
       <section></section>
       {/* CTA Section */}
