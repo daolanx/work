@@ -107,7 +107,7 @@ export const PLANS = [
 ];
 
 const PricingCards = () => {
-  return (
+  return (<section>
     <Tabs
       defaultValue="monthly"
       className="w-full flex flex-col items-center justify-center"
@@ -281,7 +281,7 @@ const PricingCards = () => {
           </Card>
         ))}
       </TabsContent>
-    </Tabs>
+    </Tabs></section>
   );
 };
 

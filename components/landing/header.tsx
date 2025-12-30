@@ -9,9 +9,10 @@ export default function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // 滚动超过 20px 就触发
       setIsScrolled(window.scrollY > 20);
     };
+
+    handleScroll();
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);

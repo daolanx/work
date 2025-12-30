@@ -1,5 +1,4 @@
 import FadeInWrapper from "./fadeIn-wrapper";
-import { MagicCard } from "../ui/magic-card";
 import {
   Card,
   CardContent,
@@ -87,7 +86,7 @@ export const REVIEWS = [
 
 export default function FeedBackCard() {
   return (
-    <section className=" section-max">
+    <section className="">
       <FadeInWrapper delay={0.1}>
         <div className="flex flex-col items-center lg:items-center justify-center w-full py-8 max-w-xl mx-auto">
           <h2 className="text-center lg:text-center text-3xl md:text-5xl !leading-[1.1] font-medium font-heading text-foreground mt-6">
