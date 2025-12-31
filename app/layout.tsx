@@ -1,17 +1,19 @@
 import { ThemeProvider } from "next-themes";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from 'next-intl/server';
+import { ClerkProvider } from '@clerk/nextjs'
 import "@/app/globals.css";
 
 export default async function LocaleLayout({
-  children,
+  children
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
 
   const locale = await getLocale();
+  console.log('[clerk]', process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
-  return (
+  return (<ClerkProvider>
     <html lang={locale} suppressHydrationWarning>
       <body>
         <ThemeProvider
@@ -26,5 +28,6 @@ export default async function LocaleLayout({
         </ThemeProvider>
       </body>
     </html>
+    </ClerkProvider>
   );
 }
