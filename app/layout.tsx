@@ -9,9 +9,7 @@ export default async function LocaleLayout({
 }: {
   children: React.ReactNode
 }) {
-
   const locale = await getLocale();
-  console.log('[clerk]', process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
   return (<ClerkProvider>
     <html lang={locale} suppressHydrationWarning>
