@@ -77,13 +77,10 @@ function MiniToolbar() {
             <Menu className="w-5 h-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent className="w-screen p-4">
+        <SheetContent side="top" className="w-screen p-4">
           <SheetHeader className="hidden">
             <SheetTitle className="">Landing Page</SheetTitle>
           </SheetHeader>
-
-          
-
           <ul className="mt-8 mb-2">
             {links.map((link) => (
               <li className="w-full" key={link.href}>
@@ -98,7 +95,6 @@ function MiniToolbar() {
               </li>
             ))}
           </ul>
-
           <div className="grid w-full grid-cols-1 gap-y-2 ">
             <SignedOut>
               <SignInButton>
