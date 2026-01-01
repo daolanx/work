@@ -9,21 +9,21 @@ export default function HeroSection() {
     <section>
       <FadeInWrapper className="text-center ">
         <h1 className=" py-6 text-4xl font-medium  text-balance sm:text-5xl md:text-6xl lg:text-7xl !leading-[1.15] ">
-          Build Landing Page with{" "}
+          Intuitive Landing Page Builder for {" "}
           <span className="text-transparent bg-gradient-to-r from-violet-500 to-fuchsia-500 bg-clip-text ">
-            Fast Speed
+            Revenue Growth
           </span>
         </h1>
         <p className="mb-12 text-lg tracking-tight text-muted-foreground md:text-xl text-balance">
-          Effortlessly build your landing page with It.
+          Design high-performance landing pages that load instantly and convert consistently.
           <br className="hidden md:block" />
           <span className="hidden md:block">
-            Faster, Simper, and Effective .
+           Simple, Fast, Intuitive.
           </span>
         </p>
         <RainbowButton className="px-8 py-6  text-xl" asChild>
           <Link href="#" className="group inline-flex items-center">
-            Start creating for free
+            Start Building for Free
             <ArrowRightIcon className="w-4 h-4  transition-all duration-200 group-hover:translate-x-1" />
           </Link>
         </RainbowButton>

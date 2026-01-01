@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { navs } from "@/app/config/navs";
 
 import {
   SignInButton,
@@ -17,6 +18,13 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 import { Menu } from "lucide-react";
 
@@ -73,29 +81,58 @@ function MiniToolbar() {
     <div className="flex md:hidden items-center justify-end">
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
-          <Button size="icon" variant="ghost">
-            <Menu className="w-5 h-5" />
+          <Button variant="ghost" size="icon" className="md:hidden">
+            <Menu className="h-6 w-6" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="top" className="w-screen p-4">
+        <SheetContent side="top" className="w-screen  pt-10 ">
           <SheetHeader className="hidden">
             <SheetTitle className="">Landing Page</SheetTitle>
           </SheetHeader>
-          <ul className="mt-8 mb-2">
-            {links.map((link) => (
-              <li className="w-full" key={link.href}>
-                <Link
-                  className="block p-2 rounded-sm hover:bg-gray-100"
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <div className="grid w-full grid-cols-1 gap-y-2 ">
+
+          <div className="flex flex-col gap-4">
+            <Accordion type="single" collapsible className="w-full">
+              {navs.map((nav, index) => {
+                // 如果没有二级菜单，直接渲染成链接样式
+                if (nav.subNavs.length === 0) {
+                  return (
+                    <a
+                      key={index}
+                      href="#"
+                      className="text-sm  p-4 block  border-b border-gray-200 font-medium w-full transition-colors hover:bg-gray-100"
+                    >
+                      {nav.label}
+                    </a>
+                  );
+                }
+
+                return (
+                  <AccordionItem key={index} value={`item-${index}`}>
+                    <AccordionTrigger className="text-sm font-medium  p-4 hover:bg-gray-100 hover:no-underline">
+                      {nav.label}
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="flex flex-col gap-3 pl-2  ml-1 py-2 border-l mr-4">
+                        {nav.subNavs.map((sub, subIndex) => (
+                          <a
+                            key={subIndex}
+                            href="#"
+                            className="flex flex-col gap-1 p-2  rounded-lg transition-all hover:bg-gray-100"
+                          >
+                            <span className="text-sm font-semibold  text-zinc-800  ">
+                              {sub.label}
+                            </span>
+                          </a>
+                        ))}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                );
+              })}
+            </Accordion>
+          </div>
+
+          <div className="grid w-full grid-cols-1 gap-y-4 p-4 ">
             <SignedOut>
               <SignInButton>
                 <Button variant={"outline"}>Sign In</Button>
