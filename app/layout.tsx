@@ -10,8 +10,11 @@ export default async function LocaleLayout({
   children: React.ReactNode
 }) {
   const locale = await getLocale();
+  const afterSignOutUrl = process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_OUT_URL || "/";
 
-  return (<ClerkProvider>
+  return (<ClerkProvider
+    afterSignOutUrl={afterSignOutUrl}
+  >
     <html lang={locale} suppressHydrationWarning>
       <body>
         <ThemeProvider
