@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useRef, useState, useMemo } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { renderToString } from "react-dom/server"
 
 interface Icon {
@@ -23,7 +23,7 @@ function easeOutCubic(t: number): number {
 
 export function IconCloud({ icons, images }: IconCloudProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-
+  const [iconPositions, setIconPositions] = useState<Icon[]>([])
   const [rotation, setRotation] = useState({ x: 0, y: 0 })
   const [isDragging, setIsDragging] = useState(false)
   const [lastMousePos, setLastMousePos] = useState({ x: 0, y: 0 })
@@ -95,34 +95,35 @@ export function IconCloud({ icons, images }: IconCloudProps) {
   }, [icons, images])
 
   // Generate initial icon positions on a sphere
-  // 将原本的 state 替换为 memo
-const iconPositions = useMemo(() => {
-  const items = icons || images || [];
-  const numIcons = items.length || 20;
-  const newIcons: Icon[] = [];
+  useEffect(() => {
+    const items = icons || images || []
+    const newIcons: Icon[] = []
+    const numIcons = items.length || 20
 
-  const offset = 2 / numIcons;
-  const increment = Math.PI * (3 - Math.sqrt(5));
+    // Fibonacci sphere parameters
+    const offset = 2 / numIcons
+    const increment = Math.PI * (3 - Math.sqrt(5))
 
-  for (let i = 0; i < numIcons; i++) {
-    const y = i * offset - 1 + offset / 2;
-    const r = Math.sqrt(1 - y * y);
-    const phi = i * increment;
+    for (let i = 0; i < numIcons; i++) {
+      const y = i * offset - 1 + offset / 2
+      const r = Math.sqrt(1 - y * y)
+      const phi = i * increment
 
-    const x = Math.cos(phi) * r;
-    const z = Math.sin(phi) * r;
+      const x = Math.cos(phi) * r
+      const z = Math.sin(phi) * r
 
-    newIcons.push({
-      x: x * 100,
-      y: y * 100,
-      z: z * 100,
-      scale: 1,
-      opacity: 1,
-      id: i,
-    });
-  }
-  return newIcons; // 直接返回结果
-}, [icons, images]); // 只有当输入变化时才重算
+      newIcons.push({
+        x: x * 100,
+        y: y * 100,
+        z: z * 100,
+        scale: 1,
+        opacity: 1,
+        id: i,
+      })
+    }
+    // eslint-disable-next-line
+    setIconPositions(newIcons)
+  }, [icons, images])
 
   // Handle mouse events
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {

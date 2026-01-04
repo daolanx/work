@@ -21,7 +21,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { IconCloud } from "../ui/icon-cloud";
+import { IconCloud } from "@/components/ui/icon-cloud";
+
 import { Label } from "@/components/ui/label";
 
 const CARDS = [
@@ -93,7 +94,32 @@ const CARDS = [
     className: "col-span-3 lg:col-span-2 max-w-full overflow-hidden",
     background: (
       <div className="absolute right-0  w-[70%] origin-to translate-x-0  transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_40%,#000_100%)] group-hover:-translate-y-10 p-2">
-        <IconCloud />
+        <IconCloud
+          images={[
+            "dart",
+            "java",
+            "react",
+            "flutter",
+            "nodedotjs",
+            "express",
+            "nextdotjs",
+            "prisma",
+            "amazonaws",
+            "postgresql",
+            "firebase",
+            "nginx",
+            "vercel",
+            "cypress",
+            "docker",
+            "jira",
+            "github",
+            "gitlab",
+            "visualstudiocode",
+            "androidstudio",
+            "sonarqube",
+            "figma",
+          ].map((slug) => `https://cdn.simpleicons.org/${slug}/${slug}`)}
+        />
       </div>
     ),
   },
