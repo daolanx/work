@@ -22,7 +22,7 @@ export default function Header() {
     <header
       className={cn(
         "sticky top-0 z-50 py-6  transition-all duration-300 w-full",
-        isScrolled && " bg-white/80 backdrop-blur-md shadow-sm"
+        isScrolled && " bg-white/70 backdrop-blur-md shadow-sm dark:bg-black/70"
       )}
     >
       <section className="section-max-width-wrapper flex  items-center  justify-between">

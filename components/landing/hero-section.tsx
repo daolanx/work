@@ -36,7 +36,7 @@ export default function HeroSection() {
         {/* <div className="absolute md:top-[10%] left-1/2 gradient w-3/4 -translate-x-1/2 h-1/4 md:h-1/3 inset-0 blur-[5rem] animate-image-glow"></div> */}
         <div className="-m-2 rounded-xl p-2 ring-1 ring-inset ring-foreground/20 lg:-m-4 lg:rounded-2xl bg-opacity-50 backdrop-blur-3xl">
           <Image
-            src="/landing/dashboard-dark.svg"
+            src="/landing/dashboard.webp"
             alt="Dashboard"
             width={1200}
             height={1200}
