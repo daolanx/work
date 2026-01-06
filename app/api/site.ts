@@ -37,29 +37,28 @@ const sites: SiteMeta[] = [
    
     en: {
       title: "Landing Page",
-      keywords: ["Responsive", "Speed", "Motion", "SEO"],
-      description: "Highly polished landing page featuring smooth scroll animations and pixel-perfect UI implementation. SEO-optimized landing page with high-speed loading performance and interactive storytelling elements."
+      keywords: ["Next.js", "Twindcss", "MagicUI", "Motion"],
+      description: "Responsive Brand Landing Page with Minimalist Animations."
     },
     zh: {
       title: "品牌落地页",
-      keywords: ["响应式", "极致性能", "动效", "SEO"],
-      description: "高度打磨的落地页，具备平滑的滚动动画和像素级 UI 实现。针对搜索引擎优化的同时，提供高速加载性能和互动式叙事体验。"
+      keywords: ["Next.js", "TwindCSS", "MagicUI", "Motion"],
+      description: "品牌落地页，能响应式展现信息，具备少量的动态效果。"
     }
   },
   {
     previewUrl: "/images/ai-chat-page.webp",
-    webUrl: "x",
-    sourceUrl: "x",
-     isDeveloping: true,
+    webUrl: "/ai-chat",
+     sourceUrl: "https://github.com/daolanx/work/tree/main/app/ai-chat",
     en: {
       title: "AI Chat Page",
-      keywords: ["LLM", "Streaming", "Prompts", "Context"],
-      description: "Intelligent conversational interface featuring real-time stream response and multi-turn context management. Optimized for seamless human-AI interaction with markdown rendering and code highlighting."
+      keywords: ["Next.js", "Vercel AI SDK", "OpenRouter SDK"],
+      description: "AI Large Language Model (LLM) chat interface with streaming response input"
     },
     zh: {
       title: "AI 对话页",
-      keywords: ["大模型", "流式响应", "提示词", "上下文"],
-      description: "智能对话界面，支持实时流式响应和多轮对话上下文管理。针对人机交互进行了深度优化，集成 Markdown 解析与代码高亮显示。"
+      keywords: ["Next.js", "Vercel AI SDK", "Openrouter"],
+      description: "AI 大模型对话界面，输入问题流式响应。"
     }
   },
   {
