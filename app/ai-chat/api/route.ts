@@ -12,8 +12,5 @@ export async function POST(req: Request) {
     messages: await convertToModelMessages(messages),
   });
 
-  // 3. 返回响应
-  return result.toUIMessageStreamResponse({
-    sendSources: true,
-  });
+  return result.toUIMessageStreamResponse();
 }

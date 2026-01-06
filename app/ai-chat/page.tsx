@@ -1,46 +1,116 @@
-'use client';
+"use client";
 
-import { useChat } from '@ai-sdk/react';
-import { useState } from 'react';
-import { DefaultChatTransport } from 'ai';
+import { DefaultChatTransport } from "ai";
+import {
+  Conversation,
+  ConversationContent,
+  ConversationScrollButton,
+} from "@/components/ai-elements/conversation";
+import {
+  Message,
+  MessageContent,
+  MessageResponse,
+  MessageActions,
+  MessageAction,
+} from "@/components/ai-elements/message";
+import {
+  PromptInput,
+  PromptInputBody,
+  PromptInputHeader,
+  type PromptInputMessage,
+  PromptInputSubmit,
+  PromptInputTextarea,
+  PromptInputFooter,
+} from "@/components/ai-elements/prompt-input";
+import { useState } from "react";
+import { useChat } from "@ai-sdk/react";
+import { CopyIcon, RefreshCcwIcon, LoaderCircle, Bot } from "lucide-react";
 
-export default function Chat() {
-  const [input, setInput] = useState('');
-  const { messages, sendMessage } = useChat({
+export default function AIChatPage() {
+  const [input, setInput] = useState("");
+  const { messages, sendMessage, status, regenerate } = useChat({
     transport: new DefaultChatTransport({
-      api: '/ai-chat/api',
-   }),
+      api: "/ai-chat/api",
+    }),
   });
-  console.log('[client.messages]', messages);
-
+  const handleSubmit = (message: PromptInputMessage) => {
+    const hasText = Boolean(message.text);
+    const hasAttachments = Boolean(message.files?.length);
+    if (!(hasText || hasAttachments)) {
+      return;
+    }
+    sendMessage({ text: input });
+    setInput("");
+  };
   return (
-    <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
-      {messages.map(message => (
-        <div key={message.id} className="whitespace-pre-wrap">
-          {message.role === 'user' ? 'User: ' : 'AI: '}
-          {message.parts.map((part, i) => {
-            switch (part.type) {
-              case 'text':
-                return <div key={`${message.id}-${i}`}>{part.text}</div>;
-            }
-          })}
-        </div>
-      ))}
+    <div className="max-w-4xl mx-auto p-6 relative size-full h-screen">
+      <div className="flex flex-col h-full">
+        <Conversation className="h-full">
+          <ConversationContent>
+            {messages.map((message) => (
+              <div key={message.id}>
+                {message.parts.map((part, i) => {
+                  switch (part.type) {
+                    case "text":
+                      return (
+                        <Message key={`${message.id}-${i}`} from={message.role}>
+                          <MessageContent>
+                            {message.role === "assistant" && <Bot />}
 
-      <form
-        onSubmit={e => {
-          e.preventDefault();
-          sendMessage({ text: input });
-          setInput('');
-        }}
-      >
-        <input
-          className="fixed dark:bg-zinc-900 bottom-0 w-full max-w-md p-2 mb-8 border border-zinc-300 dark:border-zinc-800 rounded shadow-xl"
-          value={input}
-          placeholder="Say something..."
-          onChange={e => setInput(e.currentTarget.value)}
-        />
-      </form>
+                            <MessageResponse>{part.text}</MessageResponse>
+                          </MessageContent>
+                          {message.role === "assistant" && (
+                            <MessageActions>
+                              <MessageAction
+                                onClick={() => regenerate()}
+                                label="Retry"
+                              >
+                                <RefreshCcwIcon className="size-3" />
+                              </MessageAction>
+                              <MessageAction
+                                onClick={() =>
+                                  navigator.clipboard.writeText(part.text)
+                                }
+                                label="Copy"
+                              >
+                                <CopyIcon className="size-3" />
+                              </MessageAction>
+                            </MessageActions>
+                          )}
+                        </Message>
+                      );
+                    default:
+                      return null;
+                  }
+                })}
+              </div>
+            ))}
+
+            {status === "submitted" && (
+              <LoaderCircle className="animate-spin h-5 w-5 text-gray-500" />
+            )}
+          </ConversationContent>
+          <ConversationScrollButton />
+        </Conversation>
+        <PromptInput
+          onSubmit={handleSubmit}
+          className="mt-4"
+          globalDrop
+          multiple
+        >
+          <PromptInputHeader>
+          </PromptInputHeader>
+          <PromptInputBody>
+            <PromptInputTextarea
+              onChange={(e) => setInput(e.target.value)}
+              value={input}
+            />
+          </PromptInputBody>
+          <PromptInputFooter className="flex w-full justify-end">
+            <PromptInputSubmit disabled={!input && !status} status={status} />
+          </PromptInputFooter>
+        </PromptInput>
+      </div>
     </div>
   );
-}
+};
