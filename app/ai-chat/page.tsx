@@ -22,9 +22,10 @@ import {
   PromptInputTextarea,
   PromptInputFooter,
 } from "@/components/ai-elements/prompt-input";
+import { MessageLoading } from "@/components/ui/message-loading";
 import { useState } from "react";
 import { useChat } from "@ai-sdk/react";
-import { CopyIcon, RefreshCcwIcon, LoaderCircle, Bot } from "lucide-react";
+import { CopyIcon, RefreshCcwIcon, Bot } from "lucide-react";
 
 export default function AIChatPage() {
   const [input, setInput] = useState("");
@@ -42,10 +43,13 @@ export default function AIChatPage() {
     sendMessage({ text: input });
     setInput("");
   };
+  
   return (
-    <div className="max-w-4xl mx-auto p-6 relative size-full h-screen">
+    <div
+      className="max-w-4xl mx-auto px-6 relative size-full h-screen overflow-auto [&::-webkit-scrollbar]:w-2"
+    >
       <div className="flex flex-col h-full">
-        <Conversation className="h-full">
+        <Conversation>
           <ConversationContent>
             {messages.map((message) => (
               <div key={message.id}>
@@ -86,9 +90,7 @@ export default function AIChatPage() {
               </div>
             ))}
 
-            {status === "submitted" && (
-              <LoaderCircle className="animate-spin h-5 w-5 text-gray-500" />
-            )}
+            {status === "submitted" && <MessageLoading />}
           </ConversationContent>
           <ConversationScrollButton />
         </Conversation>
@@ -98,8 +100,7 @@ export default function AIChatPage() {
           globalDrop
           multiple
         >
-          <PromptInputHeader>
-          </PromptInputHeader>
+          <PromptInputHeader></PromptInputHeader>
           <PromptInputBody>
             <PromptInputTextarea
               onChange={(e) => setInput(e.target.value)}
@@ -113,4 +114,4 @@ export default function AIChatPage() {
       </div>
     </div>
   );
-};
+}
