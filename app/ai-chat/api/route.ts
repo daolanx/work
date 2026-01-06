@@ -4,17 +4,16 @@ import { z } from "zod";
 
 const PartSchema = z.object({
   type: z.string(),
-  text: z.string(),
+  text: z.string().optional(), 
+  state: z.string().optional()
 });
-
 
 const MessageSchema = z.object({
   id: z.string(),
-  role: z.enum(["user", "assistant", "system"]), // 使用 enum 限制角色
+  role: z.enum(["user", "assistant", "system"]), 
   parts: z.array(PartSchema),
 });
 
-// 3. 定义最外层的完整格式
 const ConversationSchema = z.object({
   id: z.string(),
   messages: z.array(MessageSchema),
@@ -27,13 +26,8 @@ const openrouter = createOpenRouter({
 
 export async function POST(req: Request) {
   try {
-    // 2. 解析 JSON
     const json = await req.json();
-
-    // 3. 执行 Zod 校验
     const validationResult = ConversationSchema.safeParse(json);
-
-    // 4. 处理校验失败
     if (!validationResult.success) {
       return new Response(
         JSON.stringify({

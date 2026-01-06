@@ -43,7 +43,7 @@ export default function AIChatPage() {
     sendMessage({ text: input });
     setInput("");
   };
-  
+
   return (
     <div
       className="max-w-4xl mx-auto px-6 relative size-full h-screen overflow-auto [&::-webkit-scrollbar]:w-2"

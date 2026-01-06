@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import SiteCard from "@/components/profile/site-card";
 
 
-import { getSites, type Site } from "@/app/api/site";
+import { getSites, type Site } from "@/app/api/profile/site";
 
 export const metadata: Metadata = {
   title: 'Dax\'s Profile',

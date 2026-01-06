@@ -8,7 +8,7 @@ import Image from "next/image";
 import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
-import { type Site } from "@/app/api/site";
+import { type Site } from "@/app/api/profile/site";
 import { motion } from "motion/react";
 import Link from "next/link";
 
