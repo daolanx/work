@@ -1,10 +1,8 @@
 "use client";
 
 import * as React from "react";
-import useSWR from 'swr'
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
-
-import { Skeleton } from "@/components/ui/skeleton";
+import useSWR from "swr";
 import {
 	Card,
 	CardAction,
@@ -26,6 +24,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -48,9 +47,17 @@ const chartConfig = {
 export function ChartAreaInteractive() {
 	const isMobile = useIsMobile();
 	const [timeRange, setTimeRange] = React.useState("90d");
-	const { data: response, error, isLoading } = useSWR(`/api/console/chart`, (url) => fetch(url).then(res => res.json()), {
-		suspense: true
-	})
+	const {
+		data: response,
+		error,
+		isLoading,
+	} = useSWR(
+		`/api/console/chart`,
+		(url) => fetch(url).then((res) => res.json()),
+		{
+			suspense: true,
+		},
+	);
 	const chartData = response?.data || [];
 
 	React.useEffect(() => {
@@ -59,9 +66,7 @@ export function ChartAreaInteractive() {
 		}
 	}, [isMobile]);
 
-
-
-	const filteredData = chartData.filter((item) => {
+	const filteredData = chartData.filter((item: any) => {
 		const date = new Date(item.date);
 		const referenceDate = new Date("2024-06-30");
 		let daysToSubtract = 90;
