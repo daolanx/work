@@ -6,6 +6,7 @@ const isPublicRoute = createRouteMatcher([
 	"/",
 	"/landing",
 	"/ai-chat(.*)",
+	"/api(.*)",
 	"/console",
 ]);
 
