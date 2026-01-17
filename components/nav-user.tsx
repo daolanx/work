@@ -7,7 +7,7 @@ import {
 	IconNotification,
 	IconUserCircle,
 } from "@tabler/icons-react";
-
+import { useUser } from "@/app/hooks/useUser";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
 	DropdownMenu,
@@ -25,16 +25,9 @@ import {
 	useSidebar,
 } from "@/components/ui/sidebar";
 
-export function NavUser({
-	user,
-}: {
-	user: {
-		name: string;
-		email: string;
-		avatar: string;
-	};
-}) {
+export function NavUser() {
 	const { isMobile } = useSidebar();
+	const { user } = useUser();
 
 	return (
 		<SidebarMenu>
@@ -46,13 +39,13 @@ export function NavUser({
 							size="lg"
 						>
 							<Avatar className="h-8 w-8 rounded-lg grayscale">
-								<AvatarImage alt={user.name} src={user.avatar} />
+								<AvatarImage alt={user?.name} src={user?.avatar} />
 								<AvatarFallback className="rounded-lg">CN</AvatarFallback>
 							</Avatar>
 							<div className="grid flex-1 text-left text-sm leading-tight">
-								<span className="truncate font-medium">{user.name}</span>
+								<span className="truncate font-medium">{user?.name}</span>
 								<span className="truncate text-muted-foreground text-xs">
-									{user.email}
+									{user?.email}
 								</span>
 							</div>
 							<IconDotsVertical className="ml-auto size-4" />
@@ -67,13 +60,13 @@ export function NavUser({
 						<DropdownMenuLabel className="p-0 font-normal">
 							<div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
 								<Avatar className="h-8 w-8 rounded-lg">
-									<AvatarImage alt={user.name} src={user.avatar} />
+									<AvatarImage alt={user?.name} src={user?.avatar} />
 									<AvatarFallback className="rounded-lg">CN</AvatarFallback>
 								</Avatar>
 								<div className="grid flex-1 text-left text-sm leading-tight">
-									<span className="truncate font-medium">{user.name}</span>
+									<span className="truncate font-medium">{user?.name}</span>
 									<span className="truncate text-muted-foreground text-xs">
-										{user.email}
+										{user?.email}
 									</span>
 								</div>
 							</div>
