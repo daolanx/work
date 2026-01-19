@@ -1,25 +1,67 @@
 import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
+import fetcher from "../lib/fetcher";
 
-// 1. 定义 fetcher 函数，它可以是原生的 fetch 或 axios
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+interface User {
+	id: string;
+	name: string;
+	email: string;
+	avatar?: string;
+}
+
+interface UpdateUserArgs {
+	name: string;
+}
+
+const USER_KEY = "/api/user";
 
 export function useUser() {
-	// 2. 使用 useSWR
-	// 如果 userId 为 null，SWR 将不会发送请求
-	const {
-		data: response,
-		error,
-		isLoading,
-		mutate,
-	} = useSWR("/api/user", fetcher, {
-		revalidateOnFocus: false, // 可选：窗口聚焦时不自动重新请求
-		dedupingInterval: 5000, // 可选：5秒内重复请求会被过滤
-	});
+	const { data, error, isLoading } = useSWR<User, Error>(
+		USER_KEY,
+		(url: string) => fetcher<User>(url),
+	);
+
+	const { trigger, isMutating } = useSWRMutation<
+		User,
+		Error,
+		string,
+		UpdateUserArgs
+	>(
+		USER_KEY,
+		(url, { arg }) =>
+			fetcher<User>(url, {
+				method: "POST",
+				body: JSON.stringify(arg),
+				headers: { "Content-Type": "application/json" },
+			}),
+		{
+			populateCache: true,
+			revalidate: false,
+		},
+	);
+
+	const updateUser = async (args: any) => {
+		try {
+			const result = await trigger(args);
+			return {
+				success: true,
+				data: result,
+			};
+		} catch (e) {
+			const err = e as Error;
+			console.error("Update failed:", err.message);
+			return {
+				success: false,
+				message: err.message || "An unexpected error occurred.",
+			};
+		}
+	};
 
 	return {
-		user: response?.data,
+		user: data,
 		isLoading,
-		isError: error,
-		mutate, // 手动触发更新的方法
+		isMutating,
+		error,
+		updateUser,
 	};
 }

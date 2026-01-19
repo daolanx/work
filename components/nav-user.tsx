@@ -27,7 +27,7 @@ import {
 
 export function NavUser() {
 	const { isMobile } = useSidebar();
-	const { user } = useUser();
+	const { user, updateUser } = useUser();
 
 	return (
 		<SidebarMenu>
@@ -84,6 +84,10 @@ export function NavUser() {
 							<DropdownMenuItem>
 								<IconNotification />
 								Notifications
+							</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => updateUser({ name: 124 })}>
+								<IconNotification />
+								Settings
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
