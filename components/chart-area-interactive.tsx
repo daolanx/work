@@ -47,18 +47,8 @@ const chartConfig = {
 export function ChartAreaInteractive() {
 	const isMobile = useIsMobile();
 	const [timeRange, setTimeRange] = React.useState("90d");
-	const {
-		data: response,
-		error,
-		isLoading,
-	} = useSWR(
-		`/api/console/chart`,
-		(url) => fetch(url).then((res) => res.json()),
-		{
-			suspense: true,
-		},
-	);
-	const chartData = response?.data || [];
+	const { data, error, isLoading } = useSWR(`/api/console/chart`);
+	const chartData = data || [];
 
 	React.useEffect(() => {
 		if (isMobile) {

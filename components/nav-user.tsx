@@ -85,7 +85,9 @@ export function NavUser() {
 								<IconNotification />
 								Notifications
 							</DropdownMenuItem>
-							<DropdownMenuItem onClick={() => updateUser({ name: 124 })}>
+							<DropdownMenuItem
+								onClick={() => updateUser({ name: "new-name" })}
+							>
 								<IconNotification />
 								Settings
 							</DropdownMenuItem>
