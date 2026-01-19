@@ -9,39 +9,17 @@ export const GET = api(async () => {
 	 * throw new ApiError('some error', 300);
 	 */
 
-	/**
-	 * errorType:2
-	 * mock route buiness error
-	 *
-	 * return NextResponse.json({
-	 *	success: false,
-	 *		message: '1123',
-	 *		data: { name: "dax" },
-	 *	});
-	 *
-	 * return NextResponse.json({
-	 *	success: false,
-	 *  error: { code: 'VALID_ERROR', message: 'valid error'}
-	 *	});
-	 */
-
-	return NextResponse.json({
-		success: true,
-		data: { name: "dax" },
-	});
+	return NextResponse.json({ name: "dax" });
 });
 
 export const POST = api(async (request: Request) => {
 	await sleep(800);
 
 	return NextResponse.json({
-		success: true,
-		data: {
-			id: "user_123456",
-			name: "user_123456", // Reflecting the updated name
-			email: "dev.user@example.com",
-			updatedAt: new Date().toISOString(),
-		},
+		id: "user_123456",
+		name: "user_123456", // Reflecting the updated name
+		email: "dev.user@example.com",
+		updatedAt: new Date().toISOString(),
 	});
 });
 
