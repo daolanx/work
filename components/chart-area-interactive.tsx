@@ -47,7 +47,7 @@ const chartConfig = {
 export function ChartAreaInteractive() {
 	const isMobile = useIsMobile();
 	const [timeRange, setTimeRange] = React.useState("90d");
-	const { data, error, isLoading } = useSWR(`/api/console/chart`);
+	const { data, error, isLoading } = useSWR(`/console/chart/api`);
 	const chartData = data || [];
 
 	React.useEffect(() => {

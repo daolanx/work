@@ -6,7 +6,7 @@ interface User {
 	name: string;
 }
 
-const USER_KEY = "/api/user";
+const USER_KEY = "/console/user/api/";
 
 export function useUser() {
 	const { data, error, isLoading } = useSWR(USER_KEY);

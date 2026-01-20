@@ -11,7 +11,7 @@ export interface PaginationParams {
 	pageSize: number;
 }
 
-const TASK_KEY = "/api/console/task";
+const TASK_KEY = "/console/task/api";
 
 export function useTasks({ pageIndex, pageSize }: PaginationParams) {
 	const query = new URLSearchParams({
@@ -20,7 +20,7 @@ export function useTasks({ pageIndex, pageSize }: PaginationParams) {
 	}).toString();
 
 	const { data, error, isLoading } = useSWR(`${TASK_KEY}?${query}`, {
-		keepPreviousData: true
+		keepPreviousData: true,
 	});
 
 	const { trigger: updateUser, isMutating } = useSWRMutation(

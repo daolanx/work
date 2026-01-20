@@ -121,7 +121,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
 	{
 		accessorKey: "header",
 		header: "Header",
-		cell: ({ row }) => <TableCellViewer item={row.original} />,
+		cell: ({ row }) => <TableCell>{row.original.header}</TableCell>,
 		enableHiding: false,
 	},
 	{
@@ -357,52 +357,5 @@ export function DataTable() {
 				</div>
 			</TabsContent>
 		</Tabs>
-	);
-}
-
-function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
-	const isMobile = useIsMobile();
-	return (
-		<Drawer direction={isMobile ? "bottom" : "right"}>
-			<DrawerTrigger asChild>
-				<Button
-					className="h-auto p-0 font-medium text-foreground"
-					variant="link"
-				>
-					{item.header}
-				</Button>
-			</DrawerTrigger>
-			<DrawerContent>
-				<div className="mx-auto w-full max-w-sm p-6">
-					<DrawerHeader>
-						<DrawerTitle>{item.header}</DrawerTitle>
-						<DrawerDescription>
-							Details for section: {item.type}
-						</DrawerDescription>
-					</DrawerHeader>
-					<div className="space-y-4 py-4">
-						<div className="grid gap-2">
-							<Label>Status</Label>
-							<Input readOnly value={item.status} />
-						</div>
-						<div className="grid grid-cols-2 gap-4">
-							<div className="grid gap-2">
-								<Label>Target</Label>
-								<Input readOnly value={item.target} />
-							</div>
-							<div className="grid gap-2">
-								<Label>Limit</Label>
-								<Input readOnly value={item.limit} />
-							</div>
-						</div>
-					</div>
-					<DrawerFooter className="px-0">
-						<DrawerClose asChild>
-							<Button variant="outline">Close</Button>
-						</DrawerClose>
-					</DrawerFooter>
-				</div>
-			</DrawerContent>
-		</Drawer>
 	);
 }
