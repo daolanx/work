@@ -3,6 +3,7 @@ import { api } from "@/app/lib/api-handler";
 
 export const GET = api(async () => {
 	await sleep(600);
+
 	return NextResponse.json(
 		Array.from({ length: 91 }, (_, i) => {
 			const d = new Date("2024-04-01");

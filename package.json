@@ -12,6 +12,8 @@
 		"format": "biome format . --write",
 		"pre-commit": "pnpm test:e2e && pnpm lint-staged",
 		"test:e2e": "playwright test",
+		"db:migrate": "drizzle-kit migrate",
+		"db:studio": "drizzle-kit studio",
 		"prepare": "husky"
 	},
 	"dependencies": {

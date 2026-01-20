@@ -11,8 +11,6 @@ import { SectionCards } from "@/components/section-cards";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
-import data from "./data.json";
-
 export default function Page() {
 	return (
 		<SWRProvider>
@@ -36,7 +34,7 @@ export default function Page() {
 										<ChartAreaInteractive />
 									</Suspense>
 								</div>
-								<DataTable data={data} />
+								<DataTable />
 							</div>
 						</div>
 					</div>
