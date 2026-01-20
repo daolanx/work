@@ -6,10 +6,22 @@ interface User {
 	name: string;
 }
 
+export interface PaginationParams {
+	pageIndex: number;
+	pageSize: number;
+}
+
 const TASK_KEY = "/api/console/task";
 
-export function useTasks() {
-	const { data, error, isLoading } = useSWR(TASK_KEY);
+export function useTasks({ pageIndex, pageSize }: PaginationParams) {
+	const query = new URLSearchParams({
+		current: (pageIndex + 1).toString(), // 后端通常是 1-based
+		pageSize: pageSize.toString(),
+	}).toString();
+
+	const { data, error, isLoading } = useSWR(`${TASK_KEY}?${query}`, {
+		keepPreviousData: true
+	});
 
 	const { trigger: updateUser, isMutating } = useSWRMutation(
 		TASK_KEY,
@@ -24,7 +36,7 @@ export function useTasks() {
 		},
 	);
 	return {
-		tasks: data,
+		res: data, // { list, total, current, pageSize }
 		isLoading,
 		isMutating,
 		error,

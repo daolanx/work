@@ -24,9 +24,9 @@ import {
 	type VisibilityState,
 } from "@tanstack/react-table";
 import * as React from "react";
-import useSWR from "swr";
 
 import { z } from "zod";
+import { type PaginationParams, useTasks } from "@/app/hooks/useTasks";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -51,7 +51,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-
 import {
 	Table,
 	TableBody,
@@ -62,8 +61,6 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from "@/hooks/use-mobile";
-
-const TASK_KEY = "/api/console/task";
 
 function TableSkeleton() {
 	const rows = ["sk1", "sk2", "sk3", "sk4", "sk5"];
@@ -84,11 +81,6 @@ function TableSkeleton() {
 			</div>
 		</div>
 	);
-}
-
-export function useTasks() {
-	const { data, error, isLoading } = useSWR(TASK_KEY);
-	return { tasks: data, isLoading, error };
 }
 
 export const schema = z.object({
@@ -194,7 +186,12 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
 ];
 
 export function DataTable() {
-	const { tasks = [], isLoading } = useTasks();
+	const [pagination, setPagination] = React.useState<PaginationParams>({
+		pageIndex: 0,
+		pageSize: 10,
+	});
+
+	const { res, isLoading } = useTasks(pagination);
 	const [rowSelection, setRowSelection] = React.useState({});
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
@@ -202,27 +199,25 @@ export function DataTable() {
 		[],
 	);
 	const [sorting, setSorting] = React.useState<SortingState>([]);
-	const [pagination, setPagination] = React.useState({
-		pageIndex: 0,
-		pageSize: 10,
-	});
-
 	const table = useReactTable({
-		data: tasks,
+		data: res?.list ?? [],
 		columns,
 		state: {
+			pagination,
 			sorting,
 			columnVisibility,
 			rowSelection,
 			columnFilters,
-			pagination,
 		},
+		manualPagination: true,
+		rowCount: res?.total ?? 0,
+		onPaginationChange: setPagination,
 		getRowId: (row) => row.id.toString(),
 		onRowSelectionChange: setRowSelection,
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
 		onColumnVisibilityChange: setColumnVisibility,
-		onPaginationChange: setPagination,
+
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
@@ -318,25 +313,40 @@ export function DataTable() {
 				)}
 
 				<div className="flex items-center justify-between py-4">
-					<div className="text-muted-foreground text-sm">
-						{table.getFilteredSelectedRowModel().rows.length} of{" "}
-						{table.getFilteredRowModel().rows.length} selected
+					<div className="flex items-center gap-4">
+						<div className="text-muted-foreground text-sm">
+							Total {res?.total ?? 0} items
+						</div>
+						<select
+							className="h-8 w-[70px] rounded-md border bg-transparent text-xs"
+							onChange={(e) => {
+								table.setPageSize(Number(e.target.value));
+							}}
+							value={pagination.pageSize}
+						>
+							{[10, 20, 30, 40, 50].map((pageSize) => (
+								<option key={pageSize} value={pageSize}>
+									{pageSize} / page
+								</option>
+							))}
+						</select>
 					</div>
 					<div className="flex items-center gap-2">
 						<Button
-							disabled={!table.getCanPreviousPage()}
+							disabled={!table.getCanPreviousPage() || isLoading}
 							onClick={() => table.previousPage()}
 							size="icon"
 							variant="outline"
 						>
 							<IconChevronLeft className="size-4" />
 						</Button>
+
 						<span className="font-medium text-sm">
-							Page {table.getState().pagination.pageIndex + 1} of{" "}
-							{table.getPageCount()}
+							{pagination.pageIndex + 1} / {table.getPageCount()}
 						</span>
+
 						<Button
-							disabled={!table.getCanNextPage()}
+							disabled={!table.getCanNextPage() || isLoading}
 							onClick={() => table.nextPage()}
 							size="icon"
 							variant="outline"
