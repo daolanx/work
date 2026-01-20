@@ -1,15 +1,21 @@
+import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
+import { db } from "@/app/db/drizzle";
+import { users } from "@/app/db/schema";
 import { api } from "@/app/lib/api-handler";
-// import { ApiError } from "@/app/lib/exceptions";
+import { ApiError } from "@/app/lib/exceptions";
 
 export const GET = api(async () => {
-	/**
-	 * errorType:1
-	 * mock api error
-	 * throw new ApiError('some error', 300);
-	 */
+	const [user] = await db
+		.select()
+		.from(users)
+		.where(eq(users.name, "Dax"))
+		.limit(1);
 
-	return NextResponse.json({ name: "dax" });
+	if (!user) {
+		throw new ApiError("User Query Error", 300);
+	}
+	return NextResponse.json(user);
 });
 
 export const POST = api(async (request: Request) => {
