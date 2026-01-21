@@ -7,6 +7,7 @@ import {
 	IconNotification,
 	IconUserCircle,
 } from "@tabler/icons-react";
+import Link from "next/link";
 import { useUser } from "@/app/hooks/useUser";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -73,9 +74,14 @@ export function NavUser() {
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup>
-							<DropdownMenuItem>
-								<IconUserCircle />
-								Account
+							<DropdownMenuItem asChild>
+								<Link
+									className="flex w-full items-center"
+									href="/console/account"
+								>
+									<IconUserCircle />
+									Account
+								</Link>
 							</DropdownMenuItem>
 							<DropdownMenuItem>
 								<IconCreditCard />
@@ -84,12 +90,6 @@ export function NavUser() {
 							<DropdownMenuItem>
 								<IconNotification />
 								Notifications
-							</DropdownMenuItem>
-							<DropdownMenuItem
-								onClick={() => updateUser({ name: "new-name" })}
-							>
-								<IconNotification />
-								Settings
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />

@@ -1,6 +1,6 @@
 "use client";
-
 import { Toaster, toast } from "sonner";
+
 import { SWRConfig } from "swr";
 import { fetcher } from "@/app/lib/fetcher";
 
@@ -15,7 +15,6 @@ export const SWRProvider = ({ children }: { children: React.ReactNode }) => {
 				shouldRetryOnError: false,
 			}}
 		>
-			<Toaster position="top-center" richColors visibleToasts={1} />
 			{children}
 		</SWRConfig>
 	);
