@@ -44,7 +44,7 @@ const chartConfig = {
 	},
 } satisfies ChartConfig;
 
-export function ChartAreaInteractive() {
+export function VisitorChart() {
 	const isMobile = useIsMobile();
 	const [timeRange, setTimeRange] = React.useState("90d");
 	const { data, error, isLoading } = useSWR(`/console/chart/api`);
@@ -191,23 +191,6 @@ export function ChartAreaInteractive() {
 						/>
 					</AreaChart>
 				</ChartContainer>
-			</CardContent>
-		</Card>
-	);
-}
-
-export function ChartSkeleton() {
-	return (
-		<Card>
-			<CardHeader className="flex flex-row items-center justify-between">
-				<div className="grid gap-2">
-					<Skeleton className="h-5 w-32" />
-					<Skeleton className="h-4 w-48" />
-				</div>
-				<Skeleton className="h-9 w-40" />
-			</CardHeader>
-			<CardContent className="pt-4">
-				<Skeleton className="h-[250px] w-full" />
 			</CardContent>
 		</Card>
 	);

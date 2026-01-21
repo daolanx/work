@@ -1,26 +1,15 @@
 "use client";
-import { Suspense } from "react";
-import { AppSidebar } from "@/components/app-sidebar";
-import {
-	ChartAreaInteractive,
-	ChartSkeleton,
-} from "@/components/chart-area-interactive";
-import { SWRProvider } from "@/components/console/swr-provider";
-import { DataTable } from "@/components/data-table";
-import { SectionCards } from "@/components/section-cards";
-import { SiteHeader } from "@/components/site-header";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
-export default function Page() {
+import { SummaryCards } from "@/components/console/summary-cards";
+import TaskTable from "@/components/console/task-table";
+import { VisitorChart } from "@/components/console/vistior-chart";
+
+export default function ConsolePage() {
 	return (
-		<div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-			<SectionCards />
-			<div className="px-4 lg:px-6">
-				<Suspense fallback={<ChartSkeleton />}>
-					<ChartAreaInteractive />
-				</Suspense>
-			</div>
-			<DataTable />
+		<div className="flex flex-col gap-4 px-4 py-4 md:gap-6 md:px-6 md:py-6">
+			<SummaryCards />
+			<VisitorChart />
+			<TaskTable />
 		</div>
 	);
 }
