@@ -1,10 +1,10 @@
 "use client";
 
-import { AppSidebar } from "@/components/app-sidebar";
-import { SWRProvider } from "@/components/console/swr-provider";
-import { SiteHeader } from "@/components/site-header";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "sonner";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "./components/app-sidebar";
+import { SiteHeader } from "./components/app-sidebar/site-header";
+import { SWRProvider } from "./components/swr-provider";
 
 export default function ConsoleLayout({
 	children,

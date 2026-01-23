@@ -1,5 +1,5 @@
 import { getLocale } from "next-intl/server";
-import type { Locale } from "@/app/i18n/config";
+import type { Locale } from "@/i18n/config";
 
 type SiteContent = {
 	title: string;

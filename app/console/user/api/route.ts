@@ -1,10 +1,10 @@
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { db } from "@/app/db/drizzle";
-import { users } from "@/app/db/schema";
-import { api } from "@/app/lib/api-handler";
-import { ApiError } from "@/app/lib/exceptions";
+import { db } from "@/db/drizzle";
+import { users } from "@/db/schema";
+import { api } from "@/lib/api-handler";
+import { ApiError } from "@/lib/exceptions";
 
 const CreateUserSchema = z.object({
 	id: z.number(),
@@ -12,13 +12,8 @@ const CreateUserSchema = z.object({
 	email: z.string().email("Invalid email format"),
 });
 
-type CreateUserInput = z.infer<typeof CreateUserSchema>;
-
 export const GET = api(async () => {
-	const [user] = await db
-		.select()
-		.from(users)
-		.limit(1);
+	const [user] = await db.select().from(users).limit(1);
 
 	if (!user) {
 		throw new ApiError("User Query Error", 300);
@@ -60,9 +55,3 @@ export const PATCH = api(async (request: Request) => {
 
 	return NextResponse.json(updatedUser);
 });
-
-async function sleep(ms: number) {
-	await new Promise((resolve) => {
-		setTimeout(resolve, ms);
-	});
-}

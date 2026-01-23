@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { getSites, type Site } from "@/app/(profile)/api/profile/site";
-import LocaleSwitch from "@/components/profile/localeSwitch";
-import SiteCard from "@/components/profile/site-card";
-import ThemeSwitch from "@/components/profile/themeSwitch";
 import { Badge } from "@/components/ui/badge";
+import { getSites, type Site } from "./api/profile/site";
+import LocaleSwitch from "./components/locale-switch";
+import SiteCard from "./components/site-card";
+import ThemeSwitch from "./components/theme-switch";
 
 export const metadata: Metadata = {
 	title: "Dax's Profile",

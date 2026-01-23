@@ -1,13 +1,16 @@
 import { count } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
-import { db } from "@/app/db/drizzle";
-import { tasks } from "@/app/db/schema";
-import { api } from "@/app/lib/api-handler";
+import { db } from "@/db/drizzle";
+import { tasks } from "@/db/schema";
+import { api } from "@/lib/api-handler";
 
 export const GET = api(async (req: NextRequest) => {
 	const { searchParams } = new URL(req.url);
-	const current = Math.max(1, parseInt(searchParams.get("current") ?? "1"));
-	const pageSize = Math.max(1, parseInt(searchParams.get("pageSize") ?? "10"));
+	const current = Math.max(1, parseInt(searchParams.get("current") ?? "1", 10));
+	const pageSize = Math.max(
+		1,
+		parseInt(searchParams.get("pageSize") ?? "10", 10),
+	);
 	const offset = (current - 1) * pageSize;
 
 	const [data, totalResult] = await Promise.all([

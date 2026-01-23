@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { api } from "@/app/lib/api-handler";
+import { api } from "@/lib/api-handler";
 
 export const GET = api(async () => {
 	await sleep(600);
