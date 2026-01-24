@@ -3,6 +3,7 @@ import type { ColumnDef, Row } from "@tanstack/react-table";
 export interface PaginationParams {
 	pageIndex: number;
 	pageSize: number;
+	searchKey?: string;
 }
 
 export interface PaginatedResponse<T> {

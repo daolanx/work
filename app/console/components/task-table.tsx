@@ -20,13 +20,6 @@ import {
 import { useTasks } from "../hooks/useTasks";
 import { CardTable } from "./card-table";
 
-// interface Task {
-// 	id: string;
-// 	header: string;
-// 	status: string;
-// 	type: string;
-// }
-
 export default function TaskPage() {
 	const columns = useMemo<ColumnDef<any>[]>(
 		() => [

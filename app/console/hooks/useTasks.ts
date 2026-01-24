@@ -9,14 +9,16 @@ interface User {
 export interface PaginationParams {
 	pageIndex: number;
 	pageSize: number;
+	searchKey?: string;
 }
 
 const TASK_KEY = "/console/task/api";
 
-export function useTasks({ pageIndex, pageSize }: PaginationParams) {
+export function useTasks({ pageIndex, pageSize, searchKey }: PaginationParams) {
 	const query = new URLSearchParams({
 		current: (pageIndex + 1).toString(), // 后端通常是 1-based
 		pageSize: pageSize.toString(),
+		...(searchKey ? { searchKey } : {}),
 	}).toString();
 
 	const { data, error, isLoading } = useSWR(`${TASK_KEY}?${query}`, {

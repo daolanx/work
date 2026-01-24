@@ -4,12 +4,11 @@ import { IconLayoutColumns } from "@tabler/icons-react";
 import {
 	flexRender,
 	getCoreRowModel,
-	type PaginationState,
 	type RowSelectionState,
 	useReactTable,
 	type VisibilityState,
 } from "@tanstack/react-table";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -32,7 +31,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-
+import { SearchInput } from "@/components/search-input";
 import { TablePagination } from "./table-pagination";
 import { TableRowsSkeleton } from "./table-rows-skeleton";
 import type { DataTableProps, TableBodyContentProps } from "./types";
@@ -43,37 +42,55 @@ export function CardTable<T>({
 	useDataHook,
 	initialPageSize = 10,
 }: DataTableProps<T>) {
-	const [pagination, setPagination] = useState<PaginationState>({
+	const [filters, setFilters] = useState({
 		pageIndex: 0,
 		pageSize: initialPageSize,
+		searchKey: "",
 	});
+
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-
-	const { res, isLoading } = useDataHook({
-		pageIndex: pagination.pageIndex,
-		pageSize: pagination.pageSize,
-	});
+	const { res, isLoading } = useDataHook(filters);
 
 	const table = useReactTable({
 		data: res?.list ?? [],
 		columns,
-		state: { pagination, columnVisibility, rowSelection },
+		state: {
+			pagination: { pageIndex: filters.pageIndex, pageSize: filters.pageSize },
+			columnVisibility,
+			rowSelection,
+		},
 		manualPagination: true,
 		rowCount: res?.total ?? 0,
-		onPaginationChange: setPagination,
+		onPaginationChange: (updater) => {
+			setFilters((prev) => {
+				const next =
+					typeof updater === "function"
+						? updater({ pageIndex: prev.pageIndex, pageSize: prev.pageSize })
+						: updater;
+				return { ...prev, ...next };
+			});
+		},
 		onColumnVisibilityChange: setColumnVisibility,
 		onRowSelectionChange: setRowSelection,
 		getCoreRowModel: getCoreRowModel(),
 	});
 
+	const handleSearch = useCallback((val: string) => {
+		setFilters((prev) => ({
+			...prev,
+			searchKey: val,
+			pageIndex: 0,
+		}));
+	}, []);
+
 	return (
 		<Card>
-			<CardHeader className="flex items-center justify-between">
+			<CardHeader className="flex flex-row items-center justify-between space-y-0">
 				<CardTitle>{header}</CardTitle>
 				<CardAction>
-					{" "}
-					<div className="flex items-center justify-between">
+					<div className="flex items-center gap-2">
+						<SearchInput onSearch={handleSearch} />
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
 								<Button size="sm" variant="outline">
@@ -119,7 +136,7 @@ export function CardTable<T>({
 							<TableBodyContent
 								columnCount={columns.length}
 								isLoading={isLoading}
-								pageSize={pagination.pageSize}
+								pageSize={filters.pageSize}
 								rows={table.getRowModel().rows}
 							/>
 						</TableBody>
@@ -128,8 +145,8 @@ export function CardTable<T>({
 				<TablePagination
 					onPageChange={table.setPageIndex}
 					onPageSizeChange={table.setPageSize}
-					pageIndex={pagination.pageIndex}
-					pageSize={pagination.pageSize}
+					pageIndex={filters.pageIndex}
+					pageSize={filters.pageSize}
 					total={res?.total ?? 0}
 				/>
 			</CardContent>
