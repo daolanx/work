@@ -5,14 +5,18 @@
 	"scripts": {
 		"dev": "next dev",
 		"type-check": "tsc --noEmit",
-		"build": "drizzle-kit migrate && next build",
+		"build": "next build",
 		"start": "next start",
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",
 		"format": "biome format . --write",
 		"pre-commit": "pnpm test:e2e && pnpm lint-staged",
 		"test:e2e": "playwright test",
+		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
+		"db:push": "drizzle-kit push",
+		"db:pull": "drizzle-kit pull",
+		"db:seed": "tsx seed.ts",
 		"db:studio": "drizzle-kit studio",
 		"prepare": "husky"
 	},
@@ -91,6 +95,7 @@
 		"husky": "^8.0.0",
 		"lint-staged": "^16.2.7",
 		"tailwindcss": "^4",
+		"tsx": "^4.21.0",
 		"tw-animate-css": "^1.4.0",
 		"typescript": "^5"
 	},

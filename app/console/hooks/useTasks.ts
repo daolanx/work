@@ -12,7 +12,7 @@ export interface PaginationParams {
 	searchKey?: string;
 }
 
-const TASK_KEY = "/console/task/api";
+const TASK_KEY = "/console/tasks/api";
 
 export function useTasks({ pageIndex, pageSize, searchKey }: PaginationParams) {
 	const query = new URLSearchParams({
