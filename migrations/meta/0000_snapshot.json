@@ -1,5 +1,5 @@
 {
-	"id": "8f564229-8944-4f3b-a03c-994eab34d96c",
+	"id": "6e9cbd01-619f-44bc-995d-aa51d0e524a0",
 	"prevId": "00000000-0000-0000-0000-000000000000",
 	"version": "7",
 	"dialect": "postgresql",
@@ -28,8 +28,7 @@
 				},
 				"status": {
 					"name": "status",
-					"type": "status",
-					"typeSchema": "public",
+					"type": "text",
 					"primaryKey": false,
 					"notNull": true,
 					"default": "'To Do'"
@@ -166,13 +165,7 @@
 			"isRLSEnabled": false
 		}
 	},
-	"enums": {
-		"public.status": {
-			"name": "status",
-			"schema": "public",
-			"values": ["Done", "In Process", "To Do", "Canceled"]
-		}
-	},
+	"enums": {},
 	"schemas": {},
 	"sequences": {},
 	"roles": {},

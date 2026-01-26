@@ -1,21 +1,21 @@
 "use client";
 import {
 	IconCircleCheckFilled,
-	IconDotsVertical,
+	IconDots,
+	IconTrash,
 	IconLoader,
+	IconEye,
 } from "@tabler/icons-react";
 import type { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useTasks } from "../_hooks/useTasks";
@@ -79,25 +79,22 @@ export default function TaskPage() {
 				header: "Actions",
 				enableHiding: false,
 				cell: ({ row }) => (
+
+
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button className="h-8 w-8 p-0" variant="ghost">
-								<IconDotsVertical className="h-4 w-4" />
+								<IconDots className="h-4 w-4" />
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="end">
-							<DropdownMenuLabel>Actions</DropdownMenuLabel>
-							<DropdownMenuItem
-								onClick={() =>
-									navigator.clipboard.writeText(row.original.id.toString())
-								}
-							>
-								Copy Task ID
+							<DropdownMenuItem asChild >
+								<Link href={`/console/tasks/${row.original.id}`}>
+									<IconEye />Detail
+								</Link>
 							</DropdownMenuItem>
-							<DropdownMenuSeparator />
-							<DropdownMenuItem>View details</DropdownMenuItem>
 							<DropdownMenuItem className="text-destructive">
-								Delete
+								<IconTrash /> Delete
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>

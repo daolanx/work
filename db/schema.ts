@@ -15,23 +15,21 @@ export const users = pgTable("users", {
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export const statusEnum = pgEnum("status", [
-	"Done",
-	"In Process",
-	"To Do",
-	"Canceled",
-]);
-
 export const tasks = pgTable("tasks", {
 	id: serial("id").primaryKey(),
 	header: text("header").notNull(),
 	type: text("type").notNull(),
-	status: statusEnum("status").default("To Do").notNull(),
+	status: text("status", { enum: ["Done", "In Process", "To Do", "Canceled"] })
+		.notNull()
+		.default("To Do"),
 	target: integer("target"),
 	limit: integer("limit"),
 	reviewer: text("reviewer").default("Assign reviewer"),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
-	updatedAt: timestamp("updated_at").defaultNow().notNull(),
+	updatedAt: timestamp("updated_at")
+		.defaultNow()
+		.notNull()
+		.$onUpdate(() => new Date()),
 });
 
 export const visitStats = pgTable("visit_stats", {

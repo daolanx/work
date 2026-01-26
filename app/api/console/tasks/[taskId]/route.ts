@@ -62,7 +62,6 @@ export const PATCH = api(
 		req: NextRequest,
 		{ params }: { params: Promise<{ taskId: string }> },
 	) => {
-		// 1. Validate URL Params
 		const paramResult = paramsSchema.safeParse(await params);
 		if (!paramResult.success) {
 			return NextResponse.json(
@@ -71,8 +70,6 @@ export const PATCH = api(
 			);
 		}
 		const { taskId } = paramResult.data;
-
-		// 2. Validate Request Body
 		const body = await req.json();
 		const bodyResult = updateTaskSchema.safeParse(body);
 		if (!bodyResult.success) {
@@ -81,8 +78,6 @@ export const PATCH = api(
 				{ status: 400 },
 			);
 		}
-
-		// 3. Update Database
 		const [updatedTask] = await db
 			.update(tasks)
 			.set(bodyResult.data)

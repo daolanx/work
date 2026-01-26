@@ -242,9 +242,9 @@ function StatusSelectField({
 								</SelectTrigger>
 								<SelectContent>
 									<SelectItem value="Done">Done</SelectItem>
-									<SelectItem value="In Progress">In Progress</SelectItem>
-									<SelectItem value="Reviewing">Reviewing</SelectItem>
-									<SelectItem value="Pending">Pending</SelectItem>
+									<SelectItem value="In Process">In Progress</SelectItem>
+									<SelectItem value="To Do">Reviewing</SelectItem>
+									<SelectItem value="Canceled">Pending</SelectItem>
 								</SelectContent>
 							</Select>
 						) : (
