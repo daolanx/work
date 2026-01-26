@@ -32,57 +32,77 @@ export default function SiteCard(props: Site) {
 			whileInView={{ opacity: 1, y: 0 }}
 		>
 			<MagicCard
-				className="relative mb-6 rounded-xl p-6 transition-all duration-300 hover:shadow-sm"
-				gradientColor={theme === "dark" ? "#000" : "#fff"}
+				className="relative h-full overflow-hidden rounded-xl p-5 transition-all duration-300 hover:shadow-md md:p-6"
+				gradientColor={theme === "dark" ? "#262626" : "#f5f5f5"}
 			>
 				{isDeveloping && (
 					<div className="absolute inset-0 z-50 flex cursor-not-allowed items-center justify-center bg-white/60 backdrop-blur-[2px] dark:bg-black/40">
-						<Badge className="rounded-sm bg-gray-600 text-sm">
-							<TrafficCone className="text-orange-400" /> Developing...
+						<Badge className="flex gap-2 rounded-full bg-slate-900 px-4 py-1 text-sm text-white dark:bg-white dark:text-black">
+							<TrafficCone className="size-4 text-orange-400" />
+							Developing...
 						</Badge>
 					</div>
 				)}
 
-				<h3 className="mb-2 mb-4 flex justify-between border-b-1 pb-2 font-bold font-sans text-xl">
-					<span>{title}</span>
-				</h3>
+				<div className="mb-4 flex items-center justify-between border-b pb-3">
+					<h3 className="font-bold font-sans text-xl tracking-tight">
+						{title}
+					</h3>
+				</div>
 
-				<div className="relative space-x-4 md:flex">
-					<div className="mb-4 w-3/5 shrink-0 md:w-[40%]">
-						<Image
-							alt="Landing Page Preview"
-							className="h-auto w-full rounded-lg object-cover shadow"
-							height={200}
-							src={previewUrl}
-							width={300}
-						/>
+				<div className="flex flex-col gap-5 md:flex-row">
+					<div className="w-full shrink-0 md:w-[42%]">
+						<div className="group overflow-hidden rounded-lg border bg-muted shadow-sm">
+							<Image
+								alt={`${title} preview`}
+								className="h-auto w-full object-cover transition-transform duration-500 group-hover:scale-105"
+								height={240}
+								priority
+								src={previewUrl}
+								width={400}
+							/>
+						</div>
 					</div>
 
-					<div className="flex flex-col">
-						<p>{description}</p>
-						<div className="mt-2 space-x-2 md:pb-16">
-							{keywords.map((keyword) => (
-								<Badge className="rounded-sm" key={keyword} variant="secondary">
-									{keyword}
-								</Badge>
-							))}
+					<div className="flex flex-1 flex-col justify-between">
+						<div>
+							<p className=" text-sm leading-relaxed md:text-base">
+								{description}
+							</p>
+
+							<div className="mt-3 flex flex-wrap gap-2">
+								{keywords.map((keyword) => (
+									<Badge
+										className="rounded-md px-2 py-0 text-sm  "
+										key={keyword}
+										variant="secondary"
+									>
+										{keyword}
+									</Badge>
+								))}
+							</div>
 						</div>
-						<div className="space-x-2 pt-4 md:absolute md:right-0 md:bottom-0 md:text-right">
+
+						<div className="mt-6 flex flex-wrap items-center gap-3 md:justify-end">
 							<Button
 								asChild
-								className="bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-800/60 dark:hover:text-blue-300"
+								className="h-9 gap-1.5 border-blue-200 bg-blue-50/50 text-blue-600 hover:bg-blue-100 dark:border-blue-900/50 dark:bg-blue-900/20 dark:text-blue-400"
+								size="sm"
+								variant="outline"
 							>
 								<Link href={webUrl} target="_blank">
-									{t("view-site")} <ArrowUpRight />
+									{t("view-site")} <ArrowUpRight className="size-4" />
 								</Link>
 							</Button>
 
 							<Button
 								asChild
-								className="bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-800/60 dark:hover:text-blue-300"
+								className="h-9 gap-1.5 border-slate-200 bg-slate-50/50 text-slate-600 hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-800/40 dark:text-slate-400"
+								size="sm"
+								variant="outline"
 							>
 								<Link href={sourceUrl} target="_blank">
-									{t("view-source")} <ArrowUpRight />
+									{t("view-source")} <ArrowUpRight className="size-4" />
 								</Link>
 							</Button>
 						</div>
