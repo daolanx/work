@@ -5,6 +5,7 @@ import {
 	IconLoader,
 } from "@tabler/icons-react";
 import type { ColumnDef } from "@tanstack/react-table";
+import Link from "next/link";
 import { useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,25 +25,20 @@ export default function TaskPage() {
 	const columns = useMemo<ColumnDef<any>[]>(
 		() => [
 			{
-				id: "select",
-				header: ({ table }) => (
-					<Checkbox
-						checked={
-							table.getIsAllPageRowsSelected() ||
-							(table.getIsSomePageRowsSelected() && "indeterminate")
-						}
-						onCheckedChange={(v) => table.toggleAllPageRowsSelected(!!v)}
-					/>
-				),
-				cell: ({ row }) => (
-					<Checkbox
-						checked={row.getIsSelected()}
-						onCheckedChange={(v) => row.toggleSelected(!!v)}
-					/>
-				),
-				enableHiding: false,
+				accessorKey: "header",
+				id: "header",
+				header: "Header",
+				cell: ({ row }) => {
+					return (
+						<Link
+							className="underline-offset-4 transition-colors hover:text-primary hover:underline"
+							href={`/console/tasks/${row.original.id}`}
+						>
+							{row.original.header}
+						</Link>
+					);
+				},
 			},
-			{ accessorKey: "header", id: "header", header: "Header" },
 			{
 				accessorKey: "type",
 				id: "type",

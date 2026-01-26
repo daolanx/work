@@ -9,6 +9,17 @@ const paramsSchema = z.object({
 	taskId: z.coerce.number().int().positive(),
 });
 
+const statusEnum = z.enum(["Done", "In Process", "To Do", "Canceled"]);
+
+const updateTaskSchema = z.object({
+	header: z.string().min(2).optional(),
+	reviewer: z.string().min(2).optional(),
+	type: z.string().min(1).optional(),
+	status: statusEnum.optional(),
+	target: z.number().min(0).optional(),
+	limit: z.number().min(0).optional(),
+});
+
 export const GET = api(
 	async (
 		req: NextRequest,
@@ -43,5 +54,49 @@ export const GET = api(
 			);
 		}
 		return NextResponse.json(task);
+	},
+);
+
+export const PATCH = api(
+	async (
+		req: NextRequest,
+		{ params }: { params: Promise<{ taskId: string }> },
+	) => {
+		// 1. Validate URL Params
+		const paramResult = paramsSchema.safeParse(await params);
+		if (!paramResult.success) {
+			return NextResponse.json(
+				{ message: "Invalid Task ID", errors: paramResult.error.flatten() },
+				{ status: 400 },
+			);
+		}
+		const { taskId } = paramResult.data;
+
+		// 2. Validate Request Body
+		const body = await req.json();
+		const bodyResult = updateTaskSchema.safeParse(body);
+		if (!bodyResult.success) {
+			return NextResponse.json(
+				{ message: "Validation Error", errors: bodyResult.error.flatten() },
+				{ status: 400 },
+			);
+		}
+
+		// 3. Update Database
+		const [updatedTask] = await db
+			.update(tasks)
+			.set(bodyResult.data)
+			.where(eq(tasks.id, taskId))
+			.returning();
+
+		// 4. Handle Not Found
+		if (!updatedTask) {
+			return NextResponse.json(
+				{ message: `Task with id ${taskId} not found` },
+				{ status: 404 },
+			);
+		}
+
+		return NextResponse.json(updatedTask);
 	},
 );
