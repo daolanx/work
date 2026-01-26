@@ -7,6 +7,7 @@ const isPublicRoute = createRouteMatcher([
 	"/landing",
 	"/ai-chat(.*)",
 	"/console(.*)",
+	"/api(.*)",
 ]);
 
 export default clerkMiddleware(async (auth, req) => {

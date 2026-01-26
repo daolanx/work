@@ -17,7 +17,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useTasks } from "../hooks/useTasks";
+import { useTasks } from "../_hooks/useTasks";
 import { CardTable } from "./card-table";
 
 export default function TaskPage() {

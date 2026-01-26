@@ -1,5 +1,5 @@
 import Image from "next/image";
-import FadeInWrapper from "@/app/landing/components/fadeIn-wrapper";
+import FadeInWrapper from ".//fadeIn-wrapper";
 
 export const COMPANIES = [
 	{

@@ -6,7 +6,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { useUser } from "@/app/console/hooks/useUser";
+import { useUser } from "../_hooks/useUser";
 import { Button } from "@/components/ui/button";
 import {
 	Form,

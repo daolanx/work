@@ -9,7 +9,7 @@ import { useTheme } from "next-themes";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MagicCard } from "@/components/ui/magic-card";
-import type { Site } from "../api/profile/site";
+import type { Site } from "../config";
 
 export default function SiteCard(props: Site) {
 	const { theme } = useTheme();

@@ -3,10 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
-import { getSites, type Site } from "./api/profile/site";
-import LocaleSwitch from "./components/locale-switch";
-import SiteCard from "./components/site-card";
-import ThemeSwitch from "./components/theme-switch";
+import LocaleSwitch from "./_components/locale-switch";
+import SiteCard from "./_components/site-card";
+import ThemeSwitch from "./_components/theme-switch";
+import { getSites, type Site } from "./config";
 
 export const metadata: Metadata = {
 	title: "Dax's Profile",

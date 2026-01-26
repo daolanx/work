@@ -2,9 +2,9 @@
 
 import { Toaster } from "sonner";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "./components/app-sidebar";
-import { SiteHeader } from "./components/app-sidebar/site-header";
-import { SWRProvider } from "./components/swr-provider";
+import { AppSidebar } from "./_components/app-sidebar";
+import { SiteHeader } from "./_components/app-sidebar/site-header";
+import { SWRProvider } from "./_components/swr-provider";
 
 export default function ConsoleLayout({
 	children,

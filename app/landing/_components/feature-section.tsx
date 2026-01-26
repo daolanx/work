@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import FadeInWrapper from "@/app/landing/components/fadeIn-wrapper";
+import FadeInWrapper from ".//fadeIn-wrapper";
 import { buttonVariants } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {

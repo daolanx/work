@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import useSWR from "swr";
 import {
@@ -36,7 +36,7 @@ const chartConfig = {
 export function VisitorChart() {
 	const isMobile = useIsMobile();
 	const [timeRange, setTimeRange] = useState("90d");
-	const { data, isLoading } = useSWR(`/console/visitors/api`);
+	const { data, isLoading } = useSWR(`/api/console/visitors`);
 
 	useEffect(() => {
 		if (isMobile) setTimeRange("7d");
@@ -57,7 +57,9 @@ export function VisitorChart() {
 			<CardHeader>
 				<CardTitle>Total Visitors</CardTitle>
 				<CardDescription>
-					<span className="@[540px]/card:block hidden">Total for the last 3 months</span>
+					<span className="@[540px]/card:block hidden">
+						Total for the last 3 months
+					</span>
 					<span className="@[540px]/card:hidden">Last 3 months</span>
 				</CardDescription>
 				<CardAction>
@@ -80,9 +82,15 @@ export function VisitorChart() {
 							<SelectValue placeholder="Last 3 months" />
 						</SelectTrigger>
 						<SelectContent className="rounded-xl">
-							<SelectItem value="90d" className="rounded-lg">Last 3 months</SelectItem>
-							<SelectItem value="30d" className="rounded-lg">Last 30 days</SelectItem>
-							<SelectItem value="7d" className="rounded-lg">Last 7 days</SelectItem>
+							<SelectItem className="rounded-lg" value="90d">
+								Last 3 months
+							</SelectItem>
+							<SelectItem className="rounded-lg" value="30d">
+								Last 30 days
+							</SelectItem>
+							<SelectItem className="rounded-lg" value="7d">
+								Last 7 days
+							</SelectItem>
 						</SelectContent>
 					</Select>
 				</CardAction>
@@ -96,12 +104,28 @@ export function VisitorChart() {
 						<AreaChart data={filteredData}>
 							<defs>
 								<linearGradient id="fillDesktop" x1="0" x2="0" y1="0" y2="1">
-									<stop offset="5%" stopColor="var(--color-desktop)" stopOpacity={1} />
-									<stop offset="95%" stopColor="var(--color-desktop)" stopOpacity={0.1} />
+									<stop
+										offset="5%"
+										stopColor="var(--color-desktop)"
+										stopOpacity={1}
+									/>
+									<stop
+										offset="95%"
+										stopColor="var(--color-desktop)"
+										stopOpacity={0.1}
+									/>
 								</linearGradient>
 								<linearGradient id="fillMobile" x1="0" x2="0" y1="0" y2="1">
-									<stop offset="5%" stopColor="var(--color-mobile)" stopOpacity={0.8} />
-									<stop offset="95%" stopColor="var(--color-mobile)" stopOpacity={0.1} />
+									<stop
+										offset="5%"
+										stopColor="var(--color-mobile)"
+										stopOpacity={0.8}
+									/>
+									<stop
+										offset="95%"
+										stopColor="var(--color-mobile)"
+										stopOpacity={0.1}
+									/>
 								</linearGradient>
 							</defs>
 							<CartesianGrid vertical={false} />
@@ -110,7 +134,10 @@ export function VisitorChart() {
 								dataKey="date"
 								minTickGap={32}
 								tickFormatter={(val) =>
-									new Date(val).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+									new Date(val).toLocaleDateString("en-US", {
+										month: "short",
+										day: "numeric",
+									})
 								}
 								tickLine={false}
 								tickMargin={8}
@@ -120,29 +147,32 @@ export function VisitorChart() {
 									<ChartTooltipContent
 										indicator="dot"
 										labelFormatter={(val) =>
-											new Date(val).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+											new Date(val).toLocaleDateString("en-US", {
+												month: "short",
+												day: "numeric",
+											})
 										}
 									/>
 								}
 								cursor={false}
 							/>
 							<Area
+								animationDuration={1000}
 								dataKey="mobile"
 								fill="url(#fillMobile)"
+								isAnimationActive={true}
 								stackId="a"
 								stroke="var(--color-mobile)"
 								type="natural"
-								isAnimationActive={true}
-								animationDuration={1000}
 							/>
 							<Area
+								animationDuration={1200}
 								dataKey="desktop"
 								fill="url(#fillDesktop)"
+								isAnimationActive={true}
 								stackId="a"
 								stroke="var(--color-desktop)"
 								type="natural"
-								isAnimationActive={true}
-								animationDuration={1200}
 							/>
 						</AreaChart>
 					</ChartContainer>

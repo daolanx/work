@@ -9,7 +9,7 @@ interface User {
 	email: string;
 }
 
-const USER_KEY = "/console/user/api/";
+const USER_KEY = "/api/console/user";
 
 export function useUser() {
 	const { data, error, isLoading } = useSWR(USER_KEY);

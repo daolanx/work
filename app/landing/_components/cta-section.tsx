@@ -1,5 +1,5 @@
 import { ArrowRightIcon } from "lucide-react";
-import FadeInWrapper from "@/app/landing/components/fadeIn-wrapper";
+import FadeInWrapper from ".//fadeIn-wrapper";
 import { Button } from "@/components/ui/button";
 
 export default function CTASection() {

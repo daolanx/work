@@ -1,5 +1,5 @@
-import Footer from "@/app/landing/components/footer";
-import Header from "@/app/landing/components/header";
+import Footer from "./_components/footer";
+import Header from "./_components/header";
 
 export default function LandingLayout({
 	children,

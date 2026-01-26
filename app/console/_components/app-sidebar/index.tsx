@@ -18,7 +18,7 @@ import {
 	IconUsers,
 } from "@tabler/icons-react";
 import type * as React from "react";
-import { useUser } from "@/app/console/hooks/useUser";
+import { useUser } from "../../_hooks/useUser";
 import {
 	Sidebar,
 	SidebarContent,

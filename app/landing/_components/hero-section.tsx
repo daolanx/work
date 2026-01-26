@@ -1,7 +1,7 @@
 import { ArrowRightIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import FadeInWrapper from "@/app/landing/components/fadeIn-wrapper";
+import FadeInWrapper from ".//fadeIn-wrapper";
 import { RainbowButton } from "@/components/ui/rainbow-button";
 
 export default function HeroSection() {

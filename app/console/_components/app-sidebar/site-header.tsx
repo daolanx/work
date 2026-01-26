@@ -11,19 +11,7 @@ export function SiteHeader() {
 					className="mx-2 data-[orientation=vertical]:h-4"
 					orientation="vertical"
 				/>
-				<h1 className="font-medium text-base">Documents</h1>
-				<div className="ml-auto flex items-center gap-2">
-					<Button asChild className="hidden sm:flex" size="sm" variant="ghost">
-						<a
-							className="dark:text-foreground"
-							href="https://github.com/shadcn-ui/ui/tree/main/apps/v4/app/(examples)/dashboard"
-							rel="noopener noreferrer"
-							target="_blank"
-						>
-							GitHub
-						</a>
-					</Button>
-				</div>
+				<h1 className="font-medium text-base">Dashboard</h1>
 			</div>
 		</header>
 	);
