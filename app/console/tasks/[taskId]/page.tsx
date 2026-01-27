@@ -38,18 +38,15 @@ import {
 
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { createTaskSchema, type Task } from "@/lib/validations/task";
 import { DeleteButton } from "../../_components/delete-button";
 import { useTask } from "../../_hooks/useTasks";
 
-const taskSchema = z.object({
-	header: z.string().min(2, "Header is too short"),
-	reviewer: z.string().min(2, "Reviewer name is required"),
-	type: z.string().min(1, "Type is required"),
-	status: z.string().min(1, "Status is required"),
-	target: z.number().min(0, "Must be positive"),
-	limit: z.number().min(0, "Must be positive"),
+const taskFormSchema = createTaskSchema.extend({
+	id: z.number().optional(),
 });
-type TaskFormValues = z.output<typeof taskSchema>;
+
+type TaskFormValues = z.infer<typeof taskFormSchema>;
 
 export default function TaskDetailPage() {
 	const params = useParams();
@@ -69,12 +66,12 @@ export default function TaskDetailPage() {
 	});
 
 	const form = useForm<TaskFormValues>({
-		resolver: zodResolver(taskSchema),
+		resolver: zodResolver(taskFormSchema),
 		defaultValues: {
 			header: "",
 			reviewer: "",
 			type: "",
-			status: "",
+			status: "To Do",
 			target: 0,
 			limit: 0,
 		},
@@ -95,7 +92,7 @@ export default function TaskDetailPage() {
 
 	const onSubmit = async (data: TaskFormValues) => {
 		try {
-			await updateTask({ ...data, id: task?.id });
+			await updateTask({ ...data });
 			setIsEditing(false);
 		} catch (e) {
 			console.error("Update failed", e);

@@ -1,135 +1,104 @@
 import { eq } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 import { db } from "@/db/drizzle";
 import { tasks } from "@/db/schema";
 import { api } from "@/lib/api-handler";
+import { taskResourceIdSchema, updateTaskSchema } from "@/lib/validations/task";
 
-const paramsSchema = z.object({
-	taskId: z.coerce.number().int().positive(),
+export const GET = api(async (req: NextRequest, { params }) => {
+	const result = taskResourceIdSchema.safeParse(await params);
+	if (!result.success) {
+		return NextResponse.json(
+			{
+				message: "Validation Error",
+				errors: result.error.issues.map((issue) => ({
+					field: issue.path.join("."),
+					message: issue.message,
+				})),
+			},
+			{ status: 400 },
+		);
+	}
+
+	const { taskId } = result.data;
+	const [task] = await db
+		.select()
+		.from(tasks)
+		.where(eq(tasks.id, taskId))
+		.limit(1);
+
+	if (!task) {
+		return NextResponse.json(
+			{ message: `Task with id ${taskId} not found` },
+			{ status: 404 },
+		);
+	}
+	return NextResponse.json(task);
 });
 
-const statusEnum = z.enum(["Done", "In Process", "To Do", "Canceled"]);
+export const PATCH = api(async (req: NextRequest, { params }) => {
+	const paramResult = taskResourceIdSchema.safeParse(await params);
+	if (!paramResult.success) {
+		return NextResponse.json(
+			{ message: "Invalid Task ID", errors: paramResult.error.flatten() },
+			{ status: 400 },
+		);
+	}
+	const { taskId } = paramResult.data;
+	const body = await req.json();
+	const bodyResult = updateTaskSchema.safeParse(body);
+	if (!bodyResult.success) {
+		return NextResponse.json(
+			{ message: "Validation Error", errors: bodyResult.error.flatten() },
+			{ status: 400 },
+		);
+	}
+	const [updatedTask] = await db
+		.update(tasks)
+		.set(bodyResult.data)
+		.where(eq(tasks.id, taskId))
+		.returning();
 
-const updateTaskSchema = z.object({
-	header: z.string().min(2).optional(),
-	reviewer: z.string().min(2).optional(),
-	type: z.string().min(1).optional(),
-	status: statusEnum.optional(),
-	target: z.number().min(0).optional(),
-	limit: z.number().min(0).optional(),
+	// 4. Handle Not Found
+	if (!updatedTask) {
+		return NextResponse.json(
+			{ message: `Task with id ${taskId} not found` },
+			{ status: 404 },
+		);
+	}
+
+	return NextResponse.json(updatedTask);
 });
 
-export const GET = api(
-	async (
-		req: NextRequest,
-		{ params }: { params: Promise<{ taskId: string }> },
-	) => {
-		const result = paramsSchema.safeParse(await params);
+export const DELETE = api(async (req: NextRequest, { params }) => {
+	const result = taskResourceIdSchema.safeParse(await params);
 
-		if (!result.success) {
-			return NextResponse.json(
-				{
-					message: "Validation Error",
-					errors: result.error.issues.map((issue) => ({
-						field: issue.path.join("."),
-						message: issue.message,
-					})),
-				},
-				{ status: 400 },
-			);
-		}
+	if (!result.success) {
+		return NextResponse.json(
+			{
+				message: "Invalid Task ID",
+				errors: result.error.flatten(),
+			},
+			{ status: 400 },
+		);
+	}
 
-		const { taskId } = result.data;
-		const [task] = await db
-			.select()
-			.from(tasks)
-			.where(eq(tasks.id, taskId))
-			.limit(1);
+	const { taskId } = result.data;
 
-		if (!task) {
-			return NextResponse.json(
-				{ message: `Task with id ${taskId} not found` },
-				{ status: 404 },
-			);
-		}
-		return NextResponse.json(task);
-	},
-);
+	const [deletedTask] = await db
+		.delete(tasks)
+		.where(eq(tasks.id, taskId))
+		.returning();
 
-export const PATCH = api(
-	async (
-		req: NextRequest,
-		{ params }: { params: Promise<{ taskId: string }> },
-	) => {
-		const paramResult = paramsSchema.safeParse(await params);
-		if (!paramResult.success) {
-			return NextResponse.json(
-				{ message: "Invalid Task ID", errors: paramResult.error.flatten() },
-				{ status: 400 },
-			);
-		}
-		const { taskId } = paramResult.data;
-		const body = await req.json();
-		const bodyResult = updateTaskSchema.safeParse(body);
-		if (!bodyResult.success) {
-			return NextResponse.json(
-				{ message: "Validation Error", errors: bodyResult.error.flatten() },
-				{ status: 400 },
-			);
-		}
-		const [updatedTask] = await db
-			.update(tasks)
-			.set(bodyResult.data)
-			.where(eq(tasks.id, taskId))
-			.returning();
+	if (!deletedTask) {
+		return NextResponse.json(
+			{ message: `Task with id ${taskId} not found` },
+			{ status: 404 },
+		);
+	}
 
-		// 4. Handle Not Found
-		if (!updatedTask) {
-			return NextResponse.json(
-				{ message: `Task with id ${taskId} not found` },
-				{ status: 404 },
-			);
-		}
-
-		return NextResponse.json(updatedTask);
-	},
-);
-
-export const DELETE = api(
-	async (
-		req: NextRequest,
-		{ params }: { params: Promise<{ taskId: string }> },
-	) => {
-		const result = paramsSchema.safeParse(await params);
-
-		if (!result.success) {
-			return NextResponse.json(
-				{
-					message: "Invalid Task ID",
-					errors: result.error.flatten(),
-				},
-				{ status: 400 },
-			);
-		}
-
-		const { taskId } = result.data;
-
-		const [deletedTask] = await db
-			.delete(tasks)
-			.where(eq(tasks.id, taskId))
-			.returning();
-
-		if (!deletedTask) {
-			return NextResponse.json(
-				{ message: `Task with id ${taskId} not found` },
-				{ status: 404 },
-			);
-		}
-
-		return NextResponse.json({
-			message: "Task deleted successfully",
-			deletedTask,
-		});
-	},
-);
+	return NextResponse.json({
+		message: "Task deleted successfully",
+		deletedTask,
+	});
+});

@@ -1,6 +1,7 @@
 "use client";
 
-import { IconLayoutColumns } from "@tabler/icons-react";
+import { IconLayoutColumns, IconPlus } from "@tabler/icons-react";
+
 import {
 	flexRender,
 	getCoreRowModel,
@@ -9,6 +10,7 @@ import {
 	type VisibilityState,
 } from "@tanstack/react-table";
 import { useCallback, useState } from "react";
+import { SearchInput } from "@/components/search-input";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -31,7 +33,6 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { SearchInput } from "@/components/search-input";
 import { TablePagination } from "./table-pagination";
 import { TableRowsSkeleton } from "./table-rows-skeleton";
 import type { DataTableProps, TableBodyContentProps } from "./types";
@@ -40,6 +41,7 @@ export function CardTable<T>({
 	header,
 	columns,
 	useDataHook,
+	toolbar,
 	initialPageSize = 10,
 }: DataTableProps<T>) {
 	const [filters, setFilters] = useState({
@@ -66,7 +68,7 @@ export function CardTable<T>({
 			setFilters((prev) => {
 				const next =
 					typeof updater === "function"
-						? updater({ pageIndex: prev.pageIndex, pageSize: prev.pageSize })
+						? updater({ pageIndex: filters.pageIndex, pageSize: prev.pageSize })
 						: updater;
 				return { ...prev, ...next };
 			});
@@ -113,6 +115,8 @@ export function CardTable<T>({
 									))}
 							</DropdownMenuContent>
 						</DropdownMenu>
+
+						{toolbar}
 					</div>
 				</CardAction>
 			</CardHeader>

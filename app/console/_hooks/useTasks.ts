@@ -2,34 +2,18 @@ import { toast } from "sonner";
 import useSWR, { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
 import { fetcher } from "@/lib/fetcher";
-
-export interface TasksParams {
-	pageIndex: number;
-	pageSize: number;
-	searchKey?: string;
-}
-
-export interface TaskParams {
-	taskId: string;
-}
-
-export interface Task {
-	id: number;
-	header: string;
-	type: string;
-	status: string;
-	target: number;
-	limit: number;
-	reviewer: string;
-	createdAt: string;
-	updatedAt: string;
-}
+import type {
+	CreateTaskInput,
+	Task,
+	TaskPagination,
+	UpdateTaskInput,
+} from "@/lib/validations/task";
 
 const TASK_KEY = "/api/console/tasks";
 
-export function useTasks({ pageIndex, pageSize, searchKey }: TasksParams) {
+export function useTasks({ pageIndex, pageSize, searchKey }: TaskPagination) {
 	const query = new URLSearchParams({
-		current: (pageIndex + 1).toString(),
+		pageIndex: pageIndex.toString(),
 		pageSize: pageSize.toString(),
 		...(searchKey ? { searchKey } : {}),
 	}).toString();
@@ -39,7 +23,7 @@ export function useTasks({ pageIndex, pageSize, searchKey }: TasksParams) {
 	});
 
 	return {
-		res: data, // { list, total, current, pageSize }
+		res: data,
 		isLoading,
 		error,
 	};
@@ -53,11 +37,33 @@ export function useTask({ taskId }) {
 		fetcher,
 	);
 
-	const { trigger: updateTask, isMutating: isUpdating } = useSWRMutation<
+	const { trigger: createTask, isMutating: isCreating } = useSWRMutation<
 		Task,
 		any,
+		string,
+		CreateTaskInput
+	>(
+		TASK_KEY,
+		(url, { arg }) =>
+			fetcher(url, {
+				method: "PUT",
+				body: JSON.stringify(arg),
+			}),
+		{
+			onSuccess: () => {
+				toast.success("Task created successfully!");
+			},
+			onError: (err) => {
+				toast.error(err.message || "Failed to create task");
+			},
+		},
+	);
+
+	const { trigger: updateTask, isMutating: isUpdating } = useSWRMutation<
+		any,
+		any,
 		string | null, // Force the key type to allow null
-		Partial<Task>
+		UpdateTaskInput
 	>(
 		urlParam,
 		(url, { arg }) => {
@@ -115,10 +121,44 @@ export function useTask({ taskId }) {
 		task: data,
 		error,
 		isLoading,
-		isMutating: isUpdating || isDeleting,
+		isMutating: isCreating || isUpdating || isDeleting,
+		isCreating,
 		isUpdating,
 		isDeleting,
+		createTask,
 		updateTask,
 		deleteTask,
 	};
+}
+
+/**
+ * Hook for creating a new task
+ */
+export function useCreateTask() {
+	const { mutate } = useSWRConfig();
+
+	const { trigger: createTask, isMutating: isCreating } = useSWRMutation<
+		Task,
+		any,
+		string,
+		CreateTaskInput
+	>(
+		TASK_KEY,
+		(url, { arg }) =>
+			fetcher(url, {
+				method: "POST",
+				body: JSON.stringify(arg),
+			}),
+		{
+			onSuccess: () => {
+				mutate((key) => typeof key === "string" && key.startsWith(TASK_KEY));
+				toast.success("Task created successfully!");
+			},
+			onError: (err) => {
+				toast.error(err.message || "Failed to create task");
+			},
+		},
+	);
+
+	return { createTask, isCreating };
 }
