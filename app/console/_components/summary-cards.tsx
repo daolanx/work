@@ -1,5 +1,6 @@
-import { IconTrendingUp } from "@tabler/icons-react";
+"use client";
 
+import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
 import { Badge } from "@/components/ui/badge";
 import {
 	Card,
@@ -54,6 +55,9 @@ export async function SummaryCards() {
 		<div className="grid @5xl/main:grid-cols-4 @xl/main:grid-cols-2 grid-cols-1 gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs dark:*:data-[slot=card]:bg-card">
 			{success &&
 				data.map((card) => {
+					const isPositive = card.changePercentage > 0;
+					const TrendIcon = isPositive ? IconTrendingUp : IconTrendingDown;
+
 					return (
 						<Card className="@container/card" key={card.id}>
 							<CardHeader>
@@ -62,18 +66,30 @@ export async function SummaryCards() {
 									${card.amount}
 								</CardTitle>
 								<CardAction>
-									<Badge variant="outline">
-										<IconTrendingUp />
-										{card.changePercentage}%
+									{/* Dynamic color and icon based on trend */}
+									<Badge
+										className={
+											isPositive
+												? "border-emerald-200 bg-emerald-50/50 text-emerald-600"
+												: "border-rose-200 bg-rose-50/50 text-rose-600"
+										}
+										variant="outline"
+									>
+										<TrendIcon className="mr-1 size-3.5" />
+										{isPositive ? "+" : ""}
+										{card.changePercentage * 100}%
 									</Badge>
 								</CardAction>
 							</CardHeader>
 							<CardFooter className="flex-col items-start gap-1.5 text-sm">
-								<div className="line-clamp-1 flex gap-2 font-medium">
-									Trending up this month <IconTrendingUp className="size-4" />
+								<div
+									className={`line-clamp-1 flex gap-2 font-medium ${isPositive ? "text-emerald-600" : "text-rose-600"}`}
+								>
+									{isPositive ? "Trending up" : "Trending down"} this month
+									<TrendIcon className="size-4" />
 								</div>
 								<div className="text-muted-foreground">
-									Visitors for the last 6 months
+									Compared to {card.period}
 								</div>
 							</CardFooter>
 						</Card>

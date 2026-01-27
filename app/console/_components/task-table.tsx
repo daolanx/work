@@ -178,8 +178,12 @@ function CreateTaskDialog() {
 	);
 }
 
+interface TaskTableProps {
+	variant?: "default" | "ghost";
+}
+
 // --- Main Page ---
-export default function TaskPage() {
+export default function TaskTable({ variant }: TaskTableProps) {
 	const columns = useMemo<ColumnDef<any>[]>(
 		() => [
 			{
@@ -266,7 +270,8 @@ export default function TaskPage() {
 			columns={columns}
 			header="Tasks"
 			toolbar={<CreateTaskDialog />}
-			useDataHook={useTasks} // Using the new component here
+			useDataHook={useTasks}
+			variant={variant} // Using the new component here
 		/>
 	);
 }

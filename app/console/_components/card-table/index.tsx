@@ -1,7 +1,6 @@
 "use client";
 
-import { IconLayoutColumns, IconPlus } from "@tabler/icons-react";
-
+import { IconLayoutColumns } from "@tabler/icons-react";
 import {
 	flexRender,
 	getCoreRowModel,
@@ -33,9 +32,14 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 import { TablePagination } from "./table-pagination";
 import { TableRowsSkeleton } from "./table-rows-skeleton";
 import type { DataTableProps, TableBodyContentProps } from "./types";
+
+interface ExtendedDataTableProps<T> extends DataTableProps<T> {
+	variant?: "default" | "ghost";
+}
 
 export function CardTable<T>({
 	header,
@@ -43,12 +47,15 @@ export function CardTable<T>({
 	useDataHook,
 	toolbar,
 	initialPageSize = 10,
-}: DataTableProps<T>) {
+	variant = "default",
+}: ExtendedDataTableProps<T>) {
 	const [filters, setFilters] = useState({
 		pageIndex: 0,
 		pageSize: initialPageSize,
 		searchKey: "",
 	});
+
+	const isGhost = variant === "ghost";
 
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -79,16 +86,22 @@ export function CardTable<T>({
 	});
 
 	const handleSearch = useCallback((val: string) => {
-		setFilters((prev) => ({
-			...prev,
-			searchKey: val,
-			pageIndex: 0,
-		}));
+		setFilters((prev) => ({ ...prev, searchKey: val, pageIndex: 0 }));
 	}, []);
 
 	return (
-		<Card>
-			<CardHeader className="flex flex-row items-center justify-between space-y-0">
+		<Card
+			className={cn(
+				"transition-all",
+				isGhost && "border-none bg-transparent shadow-none",
+			)}
+		>
+			<CardHeader
+				className={cn(
+					"flex flex-row items-center justify-between space-y-0",
+					isGhost && "px-0 pt-0",
+				)}
+			>
 				<CardTitle>{header}</CardTitle>
 				<CardAction>
 					<div className="flex items-center gap-2">
@@ -115,12 +128,11 @@ export function CardTable<T>({
 									))}
 							</DropdownMenuContent>
 						</DropdownMenu>
-
 						{toolbar}
 					</div>
 				</CardAction>
 			</CardHeader>
-			<CardContent>
+			<CardContent className={isGhost ? "px-0 pb-0" : ""}>
 				<div className="overflow-hidden">
 					<Table>
 						<TableHeader className="bg-muted/50">
@@ -157,7 +169,6 @@ export function CardTable<T>({
 		</Card>
 	);
 }
-
 function TableBodyContent<T>({
 	rows,
 	isLoading,
