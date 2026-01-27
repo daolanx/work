@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
 	IconArrowLeft,
 	IconCheck,
@@ -34,8 +35,10 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { DeleteButton } from "../../_components/delete-button";
 import { useTask } from "../../_hooks/useTasks";
 
 const taskSchema = z.object({
@@ -50,9 +53,18 @@ type TaskFormValues = z.output<typeof taskSchema>;
 
 export default function TaskDetailPage() {
 	const params = useParams();
+	const router = useRouter();
 	const [isEditing, setIsEditing] = useState(false);
 
-	const { task, isLoading, isMutating, updateTask, error } = useTask({
+	const {
+		task,
+		isLoading,
+		isUpdating,
+		isDeleting,
+		updateTask,
+		deleteTask,
+		error,
+	} = useTask({
 		taskId: params.taskId as string,
 	});
 
@@ -122,7 +134,7 @@ export default function TaskDetailPage() {
 							)}
 						</div>
 
-						<div className="flex items-center gap-2">
+						<div className="flex items-center gap-4">
 							{isEditing ? (
 								<>
 									<Button
@@ -136,24 +148,35 @@ export default function TaskDetailPage() {
 									>
 										<IconX className="mr-1 h-4 w-4" /> Cancel
 									</Button>
-									<Button disabled={isMutating} size="sm" type="submit">
-										{isMutating ? (
+									<Button disabled={isUpdating} size="sm" type="submit">
+										{isUpdating ? (
 											<IconLoader2 className="mr-1 h-4 w-4 animate-spin" />
 										) : (
 											<IconCheck className="mr-1 h-4 w-4" />
 										)}
-										Save Changes
+										Update
 									</Button>
 								</>
 							) : (
-								<Button
-									onClick={() => setIsEditing(true)}
-									size="sm"
-									type="button"
-									variant="outline"
-								>
-									<IconEdit className="mr-1 h-4 w-4" /> Edit Task
-								</Button>
+								<>
+									<Button
+										onClick={() => setIsEditing(true)}
+										size="sm"
+										type="button"
+										variant="outline"
+									>
+										<IconEdit className="mr-1 h-4 w-4" /> Edit
+									</Button>
+									<DeleteButton
+										dialogDescription={`You Will Delete Task ${task.header}`}
+										dialogTitle="Delete Task?"
+										isDeleting={isDeleting}
+										onDelete={async () => {
+											await deleteTask();
+											router.back();
+										}}
+									/>
+								</>
 							)}
 						</div>
 					</div>

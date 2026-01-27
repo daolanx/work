@@ -13,6 +13,7 @@ export const SWRProvider = ({ children }: { children: React.ReactNode }) => {
 					toast.error(err.message);
 				},
 				shouldRetryOnError: false,
+				revalidateOnFocus: false,
 			}}
 		>
 			{children}

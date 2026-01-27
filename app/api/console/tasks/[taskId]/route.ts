@@ -95,3 +95,41 @@ export const PATCH = api(
 		return NextResponse.json(updatedTask);
 	},
 );
+
+export const DELETE = api(
+	async (
+		req: NextRequest,
+		{ params }: { params: Promise<{ taskId: string }> },
+	) => {
+		const result = paramsSchema.safeParse(await params);
+
+		if (!result.success) {
+			return NextResponse.json(
+				{
+					message: "Invalid Task ID",
+					errors: result.error.flatten(),
+				},
+				{ status: 400 },
+			);
+		}
+
+		const { taskId } = result.data;
+
+		const [deletedTask] = await db
+			.delete(tasks)
+			.where(eq(tasks.id, taskId))
+			.returning();
+
+		if (!deletedTask) {
+			return NextResponse.json(
+				{ message: `Task with id ${taskId} not found` },
+				{ status: 404 },
+			);
+		}
+
+		return NextResponse.json({
+			message: "Task deleted successfully",
+			deletedTask,
+		});
+	},
+);
