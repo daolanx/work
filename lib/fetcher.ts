@@ -3,6 +3,14 @@ interface FetchError extends Error {
 	data?: unknown;
 }
 
+const createMutationFetcher =
+	(method: string) =>
+	<T = any, R = any>(url: string, { arg }: { arg: R }): Promise<T> =>
+		fetcher<T>(url, {
+			method,
+			body: arg ? JSON.stringify(arg) : undefined,
+		});
+
 export async function fetcher<T>(
 	url: string,
 	options?: RequestInit,
@@ -41,3 +49,8 @@ export async function fetcher<T>(
 
 	return result as T;
 }
+
+export const poster = createMutationFetcher("POST");
+export const patcher = createMutationFetcher("PATCH");
+export const putter = createMutationFetcher("PUT");
+export const deleter = createMutationFetcher("DELETE");

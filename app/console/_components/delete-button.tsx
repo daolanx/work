@@ -14,44 +14,54 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Button, type ButtonProps } from "@/components/ui/button";
 
 export interface DeleteButtonProps {
-	isDeleting: boolean;
+	/** Loading state from the mutation hook */
+	isLoading: boolean;
+	/** The text on the main button (defaults to "Delete") */
 	label?: ReactNode;
+	/** Title inside the dialog */
 	dialogTitle: ReactNode;
+	/** Description inside the dialog */
 	dialogDescription: ReactNode;
-	onDelete: () => void | Promise<void>;
+	/** Callback to trigger the deletion logic */
+	onConfirm: () => void | Promise<void>;
+	/** Optional button variant customization */
+	variant?: ButtonProps["variant"];
+	className?: string;
 }
 
 export function DeleteButton({
 	dialogTitle,
 	dialogDescription,
-	onDelete,
-	isDeleting,
-	label,
+	onConfirm,
+	isLoading,
+	label = "Delete",
+	variant = "destructive",
+	className,
 }: DeleteButtonProps) {
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
 				<Button
-					className="gap-2"
-					disabled={isDeleting}
+					className={className}
+					disabled={isLoading}
 					size="sm"
-					variant="destructive"
+					variant={variant}
 				>
-					{isDeleting ? (
-						<Loader2 className="h-4 w-4 animate-spin" />
+					{isLoading ? (
+						<Loader2 className="mr-2 h-4 w-4 animate-spin" />
 					) : (
-						<Trash2Icon className="h-4 w-4" />
+						<Trash2Icon className="mr-2 h-4 w-4" />
 					)}
-					{label || "Delete"}
+					{label}
 				</Button>
 			</AlertDialogTrigger>
 
 			<AlertDialogContent size="sm">
 				<AlertDialogHeader>
-					<AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
+					<AlertDialogMedia className="bg-destructive/10 text-destructive">
 						<Trash2Icon className="h-5 w-5" />
 					</AlertDialogMedia>
 					<AlertDialogTitle>{dialogTitle}</AlertDialogTitle>
@@ -59,19 +69,17 @@ export function DeleteButton({
 				</AlertDialogHeader>
 
 				<AlertDialogFooter>
-					<AlertDialogCancel disabled={isDeleting} variant="outline">
-						Cancel
-					</AlertDialogCancel>
+					<AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
 					<AlertDialogAction
-						disabled={isDeleting}
+						disabled={isLoading}
 						onClick={async (e) => {
-							e.stopPropagation();
+							// Prevent the dialog from closing prematurely if logic is async
 							e.preventDefault();
-							await onDelete();
+							await onConfirm();
 						}}
 						variant="destructive"
 					>
-						{isDeleting ? "Deleting..." : "Delete"}
+						{isLoading ? "Deleting..." : "Delete"}
 					</AlertDialogAction>
 				</AlertDialogFooter>
 			</AlertDialogContent>

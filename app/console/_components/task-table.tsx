@@ -46,13 +46,13 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { type CreateTaskInput, createTaskSchema } from "@/lib/validations/task";
-import { useCreateTask, useTasks } from "../_hooks/useTasks";
+import { useCreateTask, useTasks } from "../_hooks/use-task";
 import { CardTable } from "./card-table";
 
 // --- Create Task Modal Component ---
-function CreateTaskDialog() {
+function CreateTaskButton() {
 	const [open, setOpen] = useState(false);
-	const { createTask, isCreating } = useCreateTask();
+	const { trigger: createTask, isMutating: isCreating } = useCreateTask();
 
 	const form = useForm<CreateTaskInput>({
 		resolver: zodResolver(createTaskSchema),
@@ -269,7 +269,7 @@ export default function TaskTable({ variant }: TaskTableProps) {
 		<CardTable
 			columns={columns}
 			header="Tasks"
-			toolbar={<CreateTaskDialog />}
+			toolbar={<CreateTaskButton />}
 			useDataHook={useTasks}
 			variant={variant} // Using the new component here
 		/>
