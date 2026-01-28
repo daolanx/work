@@ -21,16 +21,11 @@ export const taskResourceIdSchema = z.object({
  * 2. Base Entity Schemas
  */
 
-export const taskStatusEnum = z.enum([
-	"To Do",
-	"In Process",
-	"Done",
-	"Canceled",
-]);
+const taskStatusEnum = z.enum(["To Do", "In Process", "Done", "Canceled"]);
 
 // Core Task schema reflecting the database structure
 export const taskSchema = z.object({
-	id: z.number(),
+	id: z.string(),
 	header: z.string().min(1, "Header is required").trim(),
 	type: z.string().min(1, "Type is required"),
 	status: taskStatusEnum,
