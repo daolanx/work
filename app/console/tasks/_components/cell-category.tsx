@@ -17,7 +17,7 @@ export function CellCategory({ value }: CellCategoryProps) {
 	}
 
 	return (
-		<span className="flex items-center gap-x-1 font-medium text-gray-600 dark:text-gray-400">
+		<span className="flex items-center gap-x-1 font-medium text-gray-600 text-xs dark:text-gray-400">
 			<IconTag className={config.className} size="14" />
 			{config.label}
 		</span>

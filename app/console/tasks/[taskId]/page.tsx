@@ -14,6 +14,7 @@ import type React from "react";
 import { useState } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import type * as z from "zod";
+import { MarkdownWrapper } from "@/components/markdown-wrapper";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -47,7 +48,6 @@ import { CellPriority } from "../_components/cell-priority";
  */
 import { CellStatus } from "../_components/cell-status";
 import { DeleteTaskButton } from "../_components/delete-task-button";
-import { MarkdownWrapper } from "@/components/markdown-wrapper";
 
 type TaskFormValues = z.infer<typeof createTaskSchema>;
 
@@ -195,8 +195,9 @@ function TaskContentField({
 					isEditing={isEditing}
 					render={
 						<div className="prose prose-slate prose-lg min-h-[200px] max-w-none whitespace-pre-wrap py-2 text-slate-700">
-
-							{field.value ? <MarkdownWrapper>{field.value}</MarkdownWrapper> : (
+							{field.value ? (
+								<MarkdownWrapper>{field.value}</MarkdownWrapper>
+							) : (
 								<span className="text-slate-300 italic">
 									No content provided.
 								</span>
@@ -246,7 +247,7 @@ export default function TaskDetailPage() {
 		);
 
 	return (
-		<div className="mx-auto w-full  px-4 py-10 lg:px-24">
+		<div className="mx-auto w-full px-4 py-10 lg:px-24">
 			<Form {...form}>
 				<form className="space-y-6" onSubmit={form.handleSubmit(onSave)}>
 					{/* Header Actions */}
@@ -255,18 +256,18 @@ export default function TaskDetailPage() {
 
 						<div className="flex shrink-0 items-center gap-1 pt-1">
 							{isEditing ? (
-								<div className="fade-in zoom-in-95 flex animate-in gap-1 duration-200">
+								<div className="fade-in zoom-in-95 flex animate-in gap-2 duration-200">
 									<Button
-										className="h-8 w-8 p-0 text-slate-400 hover:text-red-500"
+										className=" text-slate-400 hover:text-red-500"
 										onClick={() => {
 											setIsEditing(false);
 											form.reset();
 										}}
 										size="sm"
 										type="button"
-										variant="ghost"
+										variant="outline"
 									>
-										<IconX size={18} />
+										<IconX size={18} /> Canel
 									</Button>
 									<Button
 										className="h-8 rounded-lg bg-slate-900 px-4 font-bold text-white text-xs shadow-lg transition-all active:scale-95"

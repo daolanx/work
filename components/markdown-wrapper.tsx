@@ -1,10 +1,6 @@
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm';
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export function MarkdownWrapper({ children }) {
-  return (
-    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-      {children}
-    </ReactMarkdown>
-  )
+	return <ReactMarkdown remarkPlugins={[remarkGfm]}>{children}</ReactMarkdown>;
 }
