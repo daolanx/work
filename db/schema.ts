@@ -8,6 +8,11 @@ import {
 	timestamp,
 } from "drizzle-orm/pg-core";
 
+import {
+	TASK_CATEGORY_ENUM_KEYS,
+	TASK_PRIORITY_ENUM_KEYS,
+} from "@/constants/task-enums";
+
 export const users = pgTable("users", {
 	id: serial("id").primaryKey(),
 	name: text("name").notNull(),
@@ -19,6 +24,10 @@ export const tasks = pgTable("tasks", {
 	id: serial("id").primaryKey(),
 	header: text("header").notNull(),
 	type: text("type").notNull(),
+	title: text("title").notNull(),
+	content: text("content"),
+	priority: text("priority", { enum: TASK_PRIORITY_ENUM_KEYS }),
+	category: text("category", { enum: TASK_CATEGORY_ENUM_KEYS }),
 	status: text("status", { enum: ["Done", "In Process", "To Do", "Canceled"] })
 		.notNull()
 		.default("To Do"),

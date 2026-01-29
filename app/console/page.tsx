@@ -1,8 +1,8 @@
 "use client";
 
 import { SummaryCards } from "./_components/summary-cards";
-import TaskTable from "./_components/task-table";
 import { VisitorChart } from "./_components/vistior-chart";
+import TaskTable from "./tasks/_components/task-table";
 
 export default function ConsolePage() {
 	return (

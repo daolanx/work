@@ -1,19 +1,20 @@
 import { z } from "zod";
+import {
+	TASK_CATEGORY_ENUM_KEYS,
+	TASK_PRIORITY_ENUM_KEYS,
+} from "@/constants/task-enums";
 
 /**
  * 1. Request Parameter Schemas
  */
 
-// Schema for list filtering and pagination (e.g., GET /api/console/tasks?page=1&pageSize=10)
 export const taskPaginationSchema = z.object({
 	pageIndex: z.coerce.number().min(0).default(0),
 	pageSize: z.coerce.number().min(1).max(100).default(10),
 	searchKey: z.string().trim().optional(),
 });
 
-// Schema for path parameters to identify a specific task (e.g., /api/console/tasks/[taskId])
 export const taskResourceIdSchema = z.object({
-	// Use coerce to handle string-to-number conversion from URL path
 	taskId: z.coerce.number().int().min(1, "Invalid Task ID"),
 });
 
@@ -22,15 +23,20 @@ export const taskResourceIdSchema = z.object({
  */
 
 const taskStatusEnum = z.enum(["To Do", "In Process", "Done", "Canceled"]);
+const taskPriorityEnum = z.enum(TASK_PRIORITY_ENUM_KEYS);
+const taskCategoryEnum = z.enum(TASK_CATEGORY_ENUM_KEYS);
 
-// Core Task schema reflecting the database structure
 export const taskSchema = z.object({
-	id: z.string(),
+	id: z.number().int(), // Switched to number to match serial ID
+	title: z.string().min(1, "Title is required").trim(),
 	header: z.string().min(1, "Header is required").trim(),
 	type: z.string().min(1, "Type is required"),
+	content: z.string().nullish(),
 	status: taskStatusEnum,
-	target: z.number().int().nonnegative(),
-	limit: z.number().int().nonnegative(),
+	priority: taskPriorityEnum.nullish(),
+	category: taskCategoryEnum.nullish(),
+	target: z.number().int().nonnegative().nullish(),
+	limit: z.number().int().nonnegative().nullish(),
 	reviewer: z.string().min(2, "Reviewer name is required").nullish(),
 	createdAt: z.coerce.date(),
 	updatedAt: z.coerce.date(),
@@ -41,7 +47,6 @@ export const taskSchema = z.object({
  */
 
 // Schema for creating a new task (POST)
-// System-managed fields like 'id' and timestamps are omitted
 export const createTaskSchema = taskSchema
 	.omit({
 		id: true,
@@ -49,12 +54,10 @@ export const createTaskSchema = taskSchema
 		updatedAt: true,
 	})
 	.extend({
-		// Re-apply the default only for the creation phase
 		status: taskStatusEnum,
 	});
 
 // Schema for updating an existing task (PATCH/PUT)
-// Makes all fields optional as updates might be partial
 export const updateTaskSchema = createTaskSchema.partial();
 
 /**
@@ -63,6 +66,8 @@ export const updateTaskSchema = createTaskSchema.partial();
 
 export type Task = z.infer<typeof taskSchema>;
 export type TaskStatus = z.infer<typeof taskStatusEnum>;
+export type TaskPriority = z.infer<typeof taskPriorityEnum>;
+export type TaskCategory = z.infer<typeof taskCategoryEnum>;
 export type TaskPagination = z.infer<typeof taskPaginationSchema>;
 export type CreateTaskInput = z.infer<typeof createTaskSchema>;
 export type UpdateTaskInput = z.infer<typeof updateTaskSchema>;

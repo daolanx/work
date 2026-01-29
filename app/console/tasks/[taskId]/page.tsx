@@ -1,351 +1,350 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-	IconCheck,
-	IconCircleCheckFilled,
-	IconEdit,
-	IconLoader,
-	IconLoader2,
-	IconTarget,
-	IconX,
-} from "@tabler/icons-react";
+import { SelectLabel } from "@radix-ui/react-select";
+import { IconCheck, IconEdit, IconLoader2, IconX } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
-import React, { createContext, useContext, useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
-import * as z from "zod";
-
-import { Badge } from "@/components/ui/badge";
+import type * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import {
 	Select,
 	SelectContent,
+	SelectGroup,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-
-import { createTaskSchema, type Task } from "@/lib/validations/task";
+import { Textarea } from "@/components/ui/textarea";
+import {
+	TASK_CATEGORY_ENUMS,
+	TASK_PRIORITY_ENUMS,
+	TASK_STATUS_ENUMS,
+} from "@/constants/task-enums";
+import { createTaskSchema } from "@/lib/validations/task";
 import { useTask, useUpdateTask } from "../../_hooks/use-task";
+import { CellCategory } from "../_components/cell-category";
+import { CellPriority } from "../_components/cell-priority";
+/** * REUSED COMPONENTS
+ * These handle the domain-specific logic (colors, icons, labels)
+ */
+import { CellStatus } from "../_components/cell-status";
 import { DeleteTaskButton } from "../_components/delete-task-button";
 
-// --- Context & Helper Components ---
-interface DetailContextValue {
-	isEditing: boolean;
-}
+type TaskFormValues = z.infer<typeof createTaskSchema>;
 
-const DetailContext = createContext<DetailContextValue>({
-	isEditing: false,
-});
-
-// 修改：移除 id 字段，因为 id 在 URL 中，不需要在表单中
-const taskFormSchema = createTaskSchema; // 不需要扩展 id
-type TaskFormValues = z.infer<typeof taskFormSchema>;
+// ==================== 1. Core Abstraction ====================
 
 interface EditableFieldProps {
-	form: UseFormReturn<TaskFormValues>;
-	name: keyof TaskFormValues;
-	label: string;
-	type?: React.HTMLInputTypeAttribute;
+	isEditing: boolean;
+	render: React.ReactNode;
+	editRender: React.ReactNode;
 }
 
-interface StatusSelectFieldProps {
-	form: UseFormReturn<TaskFormValues>;
+/**
+ * Switcher component to toggle between View and Edit modes
+ */
+const EditableField = ({
+	isEditing,
+	render,
+	editRender,
+}: EditableFieldProps) => {
+	return isEditing ? <>{editRender}</> : <>{render}</>;
+};
+
+// ==================== 2. Specialized Fields ====================
+
+/**
+ * Unified Enum Field: Uses injected "renderCell" for viewing
+ */
+interface TaskEnumFieldProps {
+	form: UseFormReturn<any>;
+	name: "status" | "priority" | "category";
+	isEditing: boolean;
+	options: { key: string; label: string }[];
+	renderCell: (value: any) => React.ReactNode;
 }
 
-interface MetricFieldProps {
-	form: UseFormReturn<TaskFormValues>;
-	name: keyof TaskFormValues;
-	label: string;
-	icon: React.ReactNode;
+function TaskEnumField({
+	form,
+	name,
+	isEditing,
+	options,
+	renderCell,
+}: TaskEnumFieldProps) {
+	return (
+		<FormField
+			control={form.control}
+			name={name}
+			render={({ field }) => (
+				<EditableField
+					editRender={
+						<Select onValueChange={field.onChange} value={field.value ?? ""}>
+							<FormControl>
+								{/* 移除 SelectLabel，因为它不能在这里直接使用 */}
+								<SelectTrigger className="h-9 w-fit min-w-[140px] border border-slate-200 bg-white px-3 font-bold text-[11px] uppercase shadow-sm transition-all focus:ring-slate-900">
+									<SelectValue />
+								</SelectTrigger>
+							</FormControl>
+							<SelectContent>
+								<SelectGroup>
+									<SelectLabel className="px-2 py-1.5 text-[10px] text-slate-400 uppercase">
+										Choose {field.name}
+									</SelectLabel>
+									{options.map((opt) => (
+										<SelectItem
+											className="font-bold text-[11px] uppercase"
+											key={opt.key}
+											value={opt.key}
+										>
+											{opt.label}
+										</SelectItem>
+									))}
+								</SelectGroup>
+							</SelectContent>
+						</Select>
+					}
+					isEditing={isEditing}
+					render={renderCell(field.value)}
+				/>
+			)}
+		/>
+	);
 }
 
-interface ActionButtonsProps {
-	isMutating: boolean;
-	onEdit: () => void;
-	onCancel: () => void;
-	extra?: React.ReactNode;
+/**
+ * Title Field: Large typography with native input for editing
+ */
+function TaskTitleField({
+	form,
+	isEditing,
+}: {
+	form: UseFormReturn<any>;
+	isEditing: boolean;
+}) {
+	return (
+		<FormField
+			control={form.control}
+			name="title"
+			render={({ field }) => (
+				<EditableField
+					editRender={
+						<input
+							{...field}
+							className="flex-1 border-none bg-transparent px-0 py-1 font-extrabold text-4xl placeholder:text-slate-200 focus:outline-none"
+						/>
+					}
+					isEditing={isEditing}
+					render={
+						<h1 className="flex-1 break-all font-extrabold text-4xl text-slate-900 leading-tight tracking-tight">
+							{field.value}
+						</h1>
+					}
+				/>
+			)}
+		/>
+	);
 }
+
+/**
+ * Content Field: Markdown preview (simple div) vs Textarea
+ */
+function TaskContentField({
+	form,
+	isEditing,
+}: {
+	form: UseFormReturn<any>;
+	isEditing: boolean;
+}) {
+	return (
+		<FormField
+			control={form.control}
+			name="content"
+			render={({ field }) => (
+				<EditableField
+					editRender={
+						<FormItem>
+							<FormControl>
+								<Textarea
+									{...field}
+									className="min-h-[500px] resize-none border-none bg-transparent p-0 font-mono text-base leading-relaxed shadow-none focus-visible:ring-0"
+									placeholder="Task description (Markdown supported)..."
+									value={field.value ?? ""}
+								/>
+							</FormControl>
+						</FormItem>
+					}
+					isEditing={isEditing}
+					render={
+						<div className="prose prose-slate prose-lg min-h-[200px] max-w-none whitespace-pre-wrap py-2 text-slate-700">
+							{field.value || (
+								<span className="text-slate-300 italic">
+									No content provided.
+								</span>
+							)}
+						</div>
+					}
+				/>
+			)}
+		/>
+	);
+}
+
+// ==================== 3. Main Page Component ====================
 
 export default function TaskDetailPage() {
 	const params = useParams<{ taskId: string }>();
 	const [isEditing, setIsEditing] = useState(false);
 
+	// Data Hooks
 	const { task, isLoading, error } = useTask(params.taskId);
 	const { isMutating, trigger: handleUpdateTask } = useUpdateTask(
 		params.taskId,
 	);
 
 	const form = useForm<TaskFormValues>({
-		resolver: zodResolver(taskFormSchema),
-		values: task
-			? {
-				header: task.header,
-				reviewer: task.reviewer || "", // 确保 reviewer 不是 null
-				type: task.type,
-				status: task.status as "To Do" | "In Process" | "Done" | "Canceled",
-				target: task.target,
-				limit: task.limit,
-			}
-			: undefined,
+		resolver: zodResolver(createTaskSchema),
+		values: task as TaskFormValues,
 	});
 
-	const onSubmit = async (data: TaskFormValues) => {
+	const onSave = async (data: TaskFormValues) => {
 		try {
 			await handleUpdateTask(data);
 			setIsEditing(false);
 		} catch (e) {
-			console.error("Update failed", e);
+			console.error("Save failed:", e);
 		}
 	};
 
 	if (isLoading) return <TaskDetailSkeleton />;
 	if (error || !task)
 		return (
-			<div className="p-10 text-center text-muted-foreground">
+			<div className="p-10 text-center font-bold text-muted-foreground">
 				Task not found.
 			</div>
 		);
 
 	return (
-		<DetailContext.Provider value={{ isEditing }}>
-			<div className="flex flex-col gap-6 px-4 py-8 lg:px-12">
-				<Form {...form}>
-					<form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-						{/* Header Section */}
-						<div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
-							<div className="flex items-center gap-3">
-								<h2 className="font-bold text-3xl tracking-tight">
-									{isEditing ? "Edit Task" : task.header}
-								</h2>
-								{!isEditing && <StatusBadge status={task.status} />}
-							</div>
+		<div className="mx-auto w-full max-w-4xl px-4 py-10 lg:px-24">
+			<Form {...form}>
+				<form className="space-y-6" onSubmit={form.handleSubmit(onSave)}>
+					{/* Header Actions */}
+					<div className="flex items-start justify-between gap-4">
+						<TaskTitleField form={form} isEditing={isEditing} />
 
-							<div className="flex items-center gap-2">
-								<ActionButtons
-									extra={
-										<DeleteTaskButton
-											taskId={task.id}
-											taskTitle={task.header}
-										/>
-									}
-									isMutating={isMutating}
-									onCancel={() => {
-										setIsEditing(false);
-										form.reset();
-									}}
-									onEdit={() => setIsEditing(true)}
-								/>
-							</div>
+						<div className="flex shrink-0 items-center gap-1 pt-1">
+							{isEditing ? (
+								<div className="fade-in zoom-in-95 flex animate-in gap-1 duration-200">
+									<Button
+										className="h-8 w-8 p-0 text-slate-400 hover:text-red-500"
+										onClick={() => {
+											setIsEditing(false);
+											form.reset();
+										}}
+										size="sm"
+										type="button"
+										variant="ghost"
+									>
+										<IconX size={18} />
+									</Button>
+									<Button
+										className="h-8 rounded-lg bg-slate-900 px-4 font-bold text-white text-xs shadow-lg transition-all active:scale-95"
+										disabled={isMutating}
+										size="sm"
+										type="submit"
+									>
+										{isMutating ? (
+											<IconLoader2 className="animate-spin" size={14} />
+										) : (
+											<IconCheck className="mr-1" size={14} />
+										)}
+										Save Changes
+									</Button>
+								</div>
+							) : (
+								<div className="flex gap-2">
+									<Button
+										className="h-8 w-8 p-0 text-slate-400 transition-colors hover:text-slate-900"
+										onClick={() => setIsEditing(true)}
+										size="sm"
+										type="button"
+										variant="ghost"
+									>
+										<IconEdit size={18} />
+									</Button>
+									<DeleteTaskButton
+										taskId={String(task.id)}
+										taskTitle={task.title}
+									/>
+								</div>
+							)}
 						</div>
+					</div>
 
-						<p className="font-mono text-[11px] text-muted-foreground">
-							Last Update: {new Date(task.updatedAt).toLocaleString()}
-						</p>
+					{/* Meta Information - Reusing List View Logic */}
+					<div className="flex flex-wrap items-center justify-between gap-3">
+						<TaskEnumField
+							form={form}
+							isEditing={isEditing}
+							name="status"
+							options={TASK_STATUS_ENUMS}
+							renderCell={(val) => <CellStatus value={val} />}
+						/>
 
-						<Separator />
-
-						<Card className="border-none bg-slate-50/50 shadow-none">
-							<CardContent className="grid gap-8 p-6">
-								<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-									<EditableField form={form} label="Title" name="header" />
-									<EditableField form={form} label="Type" name="type" />
-									<EditableField form={form} label="Reviewer" name="reviewer" />
-									<EditableStatusSelect form={form} />
-								</div>
-
-								<Separator className="opacity-50" />
-
-								<div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-									<MetricField
-										form={form}
-										icon={<IconTarget className="text-blue-500" size={20} />}
-										label="Target"
-										name="target"
-									/>
-									<MetricField
-										form={form}
-										icon={<IconTarget className="text-orange-500" size={20} />}
-										label="Limit"
-										name="limit"
-									/>
-								</div>
-							</CardContent>
-						</Card>
-					</form>
-				</Form>
-			</div>
-		</DetailContext.Provider>
-	);
-}
-
-// --- Sub-components ---
-
-function ActionButtons({ isMutating, onEdit, onCancel, extra }: ActionButtonsProps) {
-	const { isEditing } = useContext(DetailContext);
-
-	if (isEditing) {
-		return (
-			<>
-				<Button
-					disabled={isMutating}
-					onClick={onCancel}
-					size="sm"
-					type="button"
-					variant="ghost"
-				>
-					<IconX className="mr-2 h-4 w-4" /> Cancel
-				</Button>
-				<Button disabled={isMutating} size="sm" type="submit">
-					{isMutating ? (
-						<IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
-					) : (
-						<IconCheck className="mr-2 h-4 w-4" />
-					)}
-					Update
-				</Button>
-			</>
-		);
-	}
-
-	return (
-		<>
-			<Button onClick={onEdit} size="sm" type="button" variant="outline">
-				<IconEdit className="mr-2 h-4 w-4" /> Edit
-			</Button>
-			{extra}
-		</>
-	);
-}
-
-function EditableField({ form, name, label, type = "text" }: EditableFieldProps) {
-	const { isEditing } = useContext(DetailContext);
-	return (
-		<FormField
-			control={form.control}
-			name={name}
-			render={({ field }) => (
-				<FormItem className="space-y-1.5">
-					<FormLabel className="font-bold text-[10px] text-slate-400 uppercase tracking-widest">
-						{label}
-					</FormLabel>
-					<FormControl>
-						{isEditing ? (
-							<Input
-								{...field}
-								className="h-9 border-slate-200 bg-white"
-								value={field.value ?? ""}
-								onChange={(e) =>
-									field.onChange(
-										type === "number" ? e.target.valueAsNumber : e.target.value,
-									)
-								}
-								type={type}
+						<div className="flex gap-3">
+							<TaskEnumField
+								form={form}
+								isEditing={isEditing}
+								name="priority"
+								options={TASK_PRIORITY_ENUMS}
+								renderCell={(val) => <CellPriority value={val} />}
 							/>
-						) : (
-							<p className="py-1 font-medium text-base text-slate-900 leading-snug">
-								{field.value || "—"}
-							</p>
-						)}
-					</FormControl>
-					<FormMessage className="text-[10px]" />
-				</FormItem>
-			)}
-		/>
-	);
-}
+							<TaskEnumField
+								form={form}
+								isEditing={isEditing}
+								name="category"
+								options={TASK_CATEGORY_ENUMS}
+								renderCell={(val) => <CellCategory value={val} />}
+							/>
+						</div>
+					</div>
 
-function EditableStatusSelect({ form }: StatusSelectFieldProps) {
-	const { isEditing } = useContext(DetailContext);
-	return (
-		<FormField
-			control={form.control}
-			name="status"
-			render={({ field }) => (
-				<FormItem className="space-y-1.5">
-					<FormLabel className="font-bold text-[10px] text-slate-400 uppercase tracking-widest">
-						Status
-					</FormLabel>
-					<FormControl>
-						{isEditing ? (
-							<Select value={field.value ?? ""} onValueChange={field.onChange}>
-								<SelectTrigger className="h-9 border-slate-200 bg-white">
-									<SelectValue placeholder="Select status" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="Done">Done</SelectItem>
-									<SelectItem value="In Process">In Progress</SelectItem>
-									<SelectItem value="To Do">Reviewing</SelectItem>
-									<SelectItem value="Canceled">Pending</SelectItem>
-								</SelectContent>
-							</Select>
-						) : (
-							<p className="py-1 font-medium text-base text-slate-900 leading-snug">
-								{field.value}
-							</p>
-						)}
-					</FormControl>
-					<FormMessage className="text-[10px]" />
-				</FormItem>
-			)}
-		/>
-	);
-}
+					<Separator className="opacity-50" />
 
-function MetricField({ form, name, label, icon }: MetricFieldProps) {
-	return (
-		<div className="flex items-start gap-4">
-			<div className="mt-6 rounded-md border bg-white p-2 shadow-sm">
-				{icon}
-			</div>
-			<div className="flex-1">
-				<EditableField form={form} label={label} name={name} type="number" />
-			</div>
+					{/* Task Content */}
+					<TaskContentField form={form} isEditing={isEditing} />
+				</form>
+			</Form>
 		</div>
 	);
 }
 
-function StatusBadge({ status }: { status: string }) {
-	const isDone = status === "Done";
-	return (
-		<Badge
-			className="flex items-center gap-1.5 py-1"
-			variant={isDone ? "default" : "secondary"}
-		>
-			{isDone ? (
-				<IconCircleCheckFilled className="size-4 fill-current text-green-400" />
-			) : (
-				<IconLoader className="size-4 animate-spin" />
-			)}
-			{status}
-		</Badge>
-	);
-}
+// ==================== 4. Skeleton UI ====================
 
 function TaskDetailSkeleton() {
 	return (
-		<div className="flex flex-col gap-8 px-4 py-8 lg:px-12">
-			<div className="flex items-center justify-between">
-				<Skeleton className="h-8 w-48" />
-				<Skeleton className="h-8 w-24" />
+		<div className="mx-auto w-full max-w-4xl space-y-10 px-4 py-10 lg:px-24">
+			<div className="space-y-4">
+				<div className="flex items-center justify-between">
+					<Skeleton className="h-12 w-2/3 rounded-lg" />
+					<div className="flex gap-2">
+						<Skeleton className="h-8 w-8 rounded-md" />
+						<Skeleton className="h-8 w-8 rounded-md" />
+					</div>
+				</div>
 			</div>
 			<Separator />
-			<div className="grid grid-cols-4 gap-6">
-				{[1, 2, 3, 4].map((i) => (
-					<Skeleton className="h-20 w-full" key={i} />
-				))}
+			<div className="space-y-4">
+				<div className="flex gap-4">
+					<Skeleton className="h-6 w-24 rounded-full" />
+					<Skeleton className="h-6 w-24 rounded-full" />
+				</div>
+				<Skeleton className="h-[400px] w-full rounded-xl" />
 			</div>
 		</div>
 	);
