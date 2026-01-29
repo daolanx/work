@@ -22,8 +22,6 @@ export const users = pgTable("users", {
 
 export const tasks = pgTable("tasks", {
 	id: serial("id").primaryKey(),
-	header: text("header").notNull(),
-	type: text("type").notNull(),
 	title: text("title").notNull(),
 	content: text("content"),
 	priority: text("priority", { enum: TASK_PRIORITY_ENUM_KEYS }),
@@ -31,9 +29,6 @@ export const tasks = pgTable("tasks", {
 	status: text("status", { enum: ["Done", "In Process", "To Do", "Canceled"] })
 		.notNull()
 		.default("To Do"),
-	target: integer("target"),
-	limit: integer("limit"),
-	reviewer: text("reviewer").default("Assign reviewer"),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 	updatedAt: timestamp("updated_at")
 		.defaultNow()

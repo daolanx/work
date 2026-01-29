@@ -26,7 +26,7 @@ export const GET = api(async (req: NextRequest) => {
 
 	const filter =
 		searchKey && searchKey.trim() !== ""
-			? ilike(tasks.header, `%${searchKey.trim()}%`)
+			? ilike(tasks.title, `%${searchKey.trim()}%`)
 			: undefined;
 
 	const [data, totalResult] = await Promise.all([
