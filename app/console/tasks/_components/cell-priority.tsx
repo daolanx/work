@@ -20,7 +20,7 @@ export function CellPriority({ value }: CellPriorityProps) {
 	return (
 		<Badge
 			className={cn(
-				"rounded-sm border px-1.5 py-0.5 font-semibold transition-none",
+				"rounded-sm border px-1.5 py-0.5 transition-none",
 				config.className,
 			)}
 		>

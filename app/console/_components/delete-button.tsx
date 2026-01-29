@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader2, Trash2Icon } from "lucide-react";
+import type React from "react";
 import type { ReactNode } from "react";
 import {
 	AlertDialog,
@@ -15,21 +16,18 @@ import {
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button, type ButtonProps } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export interface DeleteButtonProps {
-	/** Loading state from the mutation hook */
 	isLoading: boolean;
-	/** The text on the main button (defaults to "Delete") */
 	label?: ReactNode;
-	/** Title inside the dialog */
 	dialogTitle: ReactNode;
-	/** Description inside the dialog */
 	dialogDescription: ReactNode;
-	/** Callback to trigger the deletion logic */
 	onConfirm: () => void | Promise<void>;
-	/** Optional button variant customization */
 	variant?: ButtonProps["variant"];
 	className?: string;
+	asChild?: boolean;
+	children?: React.ReactNode;
 }
 
 export function DeleteButton({
@@ -40,23 +38,29 @@ export function DeleteButton({
 	label = "Delete",
 	variant = "destructive",
 	className,
+	asChild = false,
+	children,
 }: DeleteButtonProps) {
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
-				<Button
-					className={className}
-					disabled={isLoading}
-					size="sm"
-					variant={variant}
-				>
-					{isLoading ? (
-						<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-					) : (
-						<Trash2Icon className="mr-2 h-4 w-4" />
-					)}
-					{label}
-				</Button>
+				{asChild ? (
+					children
+				) : (
+					<Button
+						className={cn(className)}
+						disabled={isLoading}
+						size="sm"
+						variant={variant}
+					>
+						{isLoading ? (
+							<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+						) : (
+							<Trash2Icon className="mr-2 h-4 w-4" />
+						)}
+						{label}
+					</Button>
+				)}
 			</AlertDialogTrigger>
 
 			<AlertDialogContent size="sm">
@@ -73,7 +77,6 @@ export function DeleteButton({
 					<AlertDialogAction
 						disabled={isLoading}
 						onClick={async (e) => {
-							// Prevent the dialog from closing prematurely if logic is async
 							e.preventDefault();
 							await onConfirm();
 						}}

@@ -23,7 +23,7 @@ export function CellStatus({ value }: CellStatusProps) {
 	return (
 		<Badge
 			className={cn(
-				"flex w-fit items-center border-none px-2 py-0.5 font-medium shadow-none",
+				"flex items-center border-none px-2 py-0.5 font-medium",
 				config.className,
 			)}
 			variant="outline"

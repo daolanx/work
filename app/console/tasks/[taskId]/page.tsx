@@ -2,13 +2,25 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectLabel } from "@radix-ui/react-select";
-import { IconCheck, IconEdit, IconLoader2, IconX } from "@tabler/icons-react";
+import {
+	IconCheck,
+	IconDots,
+	IconEdit,
+	IconLoader2,
+	IconX,
+} from "@tabler/icons-react";
 import { useParams } from "next/navigation";
 import type React from "react";
 import { useState } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import type * as z from "zod";
 import { Button } from "@/components/ui/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import {
 	Select,
@@ -35,6 +47,7 @@ import { CellPriority } from "../_components/cell-priority";
  */
 import { CellStatus } from "../_components/cell-status";
 import { DeleteTaskButton } from "../_components/delete-task-button";
+import { MarkdownWrapper } from "@/components/markdown-wrapper";
 
 type TaskFormValues = z.infer<typeof createTaskSchema>;
 
@@ -182,7 +195,8 @@ function TaskContentField({
 					isEditing={isEditing}
 					render={
 						<div className="prose prose-slate prose-lg min-h-[200px] max-w-none whitespace-pre-wrap py-2 text-slate-700">
-							{field.value || (
+
+							{field.value ? <MarkdownWrapper>{field.value}</MarkdownWrapper> : (
 								<span className="text-slate-300 italic">
 									No content provided.
 								</span>
@@ -212,6 +226,8 @@ export default function TaskDetailPage() {
 		values: task as TaskFormValues,
 	});
 
+	console.log("Form Errors:", form.formState.errors);
+
 	const onSave = async (data: TaskFormValues) => {
 		try {
 			await handleUpdateTask(data);
@@ -230,7 +246,7 @@ export default function TaskDetailPage() {
 		);
 
 	return (
-		<div className="mx-auto w-full max-w-4xl px-4 py-10 lg:px-24">
+		<div className="mx-auto w-full  px-4 py-10 lg:px-24">
 			<Form {...form}>
 				<form className="space-y-6" onSubmit={form.handleSubmit(onSave)}>
 					{/* Header Actions */}
@@ -263,31 +279,41 @@ export default function TaskDetailPage() {
 										) : (
 											<IconCheck className="mr-1" size={14} />
 										)}
-										Save Changes
+										Save
 									</Button>
 								</div>
 							) : (
 								<div className="flex gap-2">
 									<Button
-										className="h-8 w-8 p-0 text-slate-400 transition-colors hover:text-slate-900"
+										className="cursor-pointer text-slate-600 transition-colors hover:text-slate-900"
 										onClick={() => setIsEditing(true)}
 										size="sm"
 										type="button"
-										variant="ghost"
+										variant="outline"
 									>
-										<IconEdit size={18} />
+										<IconEdit /> Edit
 									</Button>
-									<DeleteTaskButton
-										taskId={String(task.id)}
-										taskTitle={task.title}
-									/>
+									<DropdownMenu>
+										<DropdownMenuTrigger asChild>
+											<Button className="h-8 w-8 p-0" size="sm" variant="ghost">
+												<IconDots size={18} />
+											</Button>
+										</DropdownMenuTrigger>
+										<DropdownMenuContent align="end">
+											<DeleteTaskButton
+												taskId={String(task.id)}
+												taskTitle={task.title}
+												variant="dropdown"
+											/>
+										</DropdownMenuContent>
+									</DropdownMenu>
 								</div>
 							)}
 						</div>
 					</div>
 
 					{/* Meta Information - Reusing List View Logic */}
-					<div className="flex flex-wrap items-center justify-between gap-3">
+					<div className="flex gap-3">
 						<TaskEnumField
 							form={form}
 							isEditing={isEditing}
@@ -296,22 +322,20 @@ export default function TaskDetailPage() {
 							renderCell={(val) => <CellStatus value={val} />}
 						/>
 
-						<div className="flex gap-3">
-							<TaskEnumField
-								form={form}
-								isEditing={isEditing}
-								name="priority"
-								options={TASK_PRIORITY_ENUMS}
-								renderCell={(val) => <CellPriority value={val} />}
-							/>
-							<TaskEnumField
-								form={form}
-								isEditing={isEditing}
-								name="category"
-								options={TASK_CATEGORY_ENUMS}
-								renderCell={(val) => <CellCategory value={val} />}
-							/>
-						</div>
+						<TaskEnumField
+							form={form}
+							isEditing={isEditing}
+							name="priority"
+							options={TASK_PRIORITY_ENUMS}
+							renderCell={(val) => <CellPriority value={val} />}
+						/>
+						<TaskEnumField
+							form={form}
+							isEditing={isEditing}
+							name="category"
+							options={TASK_CATEGORY_ENUMS}
+							renderCell={(val) => <CellCategory value={val} />}
+						/>
 					</div>
 
 					<Separator className="opacity-50" />
@@ -328,7 +352,7 @@ export default function TaskDetailPage() {
 
 function TaskDetailSkeleton() {
 	return (
-		<div className="mx-auto w-full max-w-4xl space-y-10 px-4 py-10 lg:px-24">
+		<div className="mx-auto w-full space-y-10 px-4 py-10 lg:px-24">
 			<div className="space-y-4">
 				<div className="flex items-center justify-between">
 					<Skeleton className="h-12 w-2/3 rounded-lg" />

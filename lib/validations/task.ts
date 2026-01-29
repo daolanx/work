@@ -29,15 +29,10 @@ const taskCategoryEnum = z.enum(TASK_CATEGORY_ENUM_KEYS);
 export const taskSchema = z.object({
 	id: z.number().int(), // Switched to number to match serial ID
 	title: z.string().min(1, "Title is required").trim(),
-	header: z.string().min(1, "Header is required").trim(),
-	type: z.string().min(1, "Type is required"),
 	content: z.string().nullish(),
 	status: taskStatusEnum,
 	priority: taskPriorityEnum.nullish(),
 	category: taskCategoryEnum.nullish(),
-	target: z.number().int().nonnegative().nullish(),
-	limit: z.number().int().nonnegative().nullish(),
-	reviewer: z.string().min(2, "Reviewer name is required").nullish(),
 	createdAt: z.coerce.date(),
 	updatedAt: z.coerce.date(),
 });
