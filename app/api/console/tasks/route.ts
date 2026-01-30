@@ -32,7 +32,6 @@ export const GET = api(async (req: NextRequest) => {
 		);
 	}
 
-	// Note: Ensure taskPaginationSchema includes 'sort' as an optional string
 	const { pageIndex, pageSize, searchKey, status, priority, category, sort } =
 		queryResult.data;
 	const offset = Math.max(0, pageIndex) * pageSize;
@@ -40,35 +39,33 @@ export const GET = api(async (req: NextRequest) => {
 	// 3. Construct Dynamic SQL Filters
 	const filters: SQL[] = [];
 
-	if (searchKey && searchKey.trim().length > 0) {
+	if (searchKey?.trim()) {
 		filters.push(ilike(tasks.title, `%${searchKey.trim()}%`));
 	}
 
-	if (status && status.length > 0) {
-		filters.push(inArray(tasks.status, status));
-	}
-
-	if (priority && priority.length > 0) {
-		filters.push(inArray(tasks.priority, priority));
-	}
-
-	if (category && category.length > 0) {
-		filters.push(inArray(tasks.category, category));
-	}
+	if (status?.length) filters.push(inArray(tasks.status, status));
+	if (priority?.length) filters.push(inArray(tasks.priority, priority));
+	if (category?.length) filters.push(inArray(tasks.category, category));
 
 	const whereClause = filters.length > 0 ? and(...filters) : undefined;
 
 	// 4. Determine Sort Order
+	// Logic: Defaulting to tasks.id ensures the position remains stable after updates
 	const [rawField, rawOrder] = (sort || "").split(":");
 	const SORT_COLUMNS = {
+		id: tasks.id,
 		createdAt: tasks.createdAt,
 		updatedAt: tasks.updatedAt,
 	};
+
+	// Use tasks.id as the fallback column to maintain consistent positioning
 	const targetColumn =
-		SORT_COLUMNS[rawField as keyof typeof SORT_COLUMNS] || tasks.createdAt;
+		SORT_COLUMNS[rawField as keyof typeof SORT_COLUMNS] || tasks.id;
+
+	// Default to descending (newest IDs at the top) if no order is specified
 	const orderFn = rawOrder === "asc" ? asc : desc;
 
-	// 5. Parallel execution
+	// 5. Parallel execution for data and total count
 	const [data, totalResult] = await Promise.all([
 		db
 			.select()
@@ -90,6 +87,7 @@ export const GET = api(async (req: NextRequest) => {
 		totalPage: Math.ceil(total / pageSize),
 	});
 });
+
 export const POST = api(async (req: NextRequest) => {
 	const body = await req.json();
 
