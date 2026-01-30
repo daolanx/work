@@ -1,3 +1,7 @@
+"use client";
+
+import type { ColumnFiltersState } from "@tanstack/react-table";
+import { useMemo } from "react";
 import { toast } from "sonner";
 import useSWR, { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
@@ -14,19 +18,51 @@ import type {
  */
 const TASK_KEY = "/api/console/tasks";
 
+/**
+ * Extends pagination schema with TanStack Table's internal filter state
+ */
+interface UseTasksProps extends TaskPagination {
+	columnFilters?: ColumnFiltersState;
+}
+
 // --- Queries (Read) ---
 
 /**
  * Fetches a paginated and optionally filtered list of tasks.
  * Uses 'keepPreviousData' to prevent UI flickering during pagination.
  */
-export function useTasks({ pageIndex, pageSize, searchKey }: TaskPagination) {
-	const query = new URLSearchParams({
-		pageIndex: pageIndex.toString(),
-		pageSize: pageSize.toString(),
-		...(searchKey ? { searchKey } : {}),
-	}).toString();
+export function useTasks({
+	pageIndex,
+	pageSize,
+	searchKey,
+	columnFilters,
+}: UseTasksProps) {
+	const query = useMemo(() => {
+		const params = new URLSearchParams({
+			pageIndex: pageIndex.toString(),
+			pageSize: pageSize.toString(),
+			...(searchKey ? { searchKey } : {}),
+		});
 
+		// Map columnFilters state to URL query parameters
+		columnFilters?.forEach((filter) => {
+			if (Array.isArray(filter.value)) {
+				// Handle multi-select arrays: ?status=todo&status=done
+				filter.value.forEach((val) => {
+					if (val !== undefined && val !== null) {
+						params.append(filter.id, val.toString());
+					}
+				});
+			} else if (filter.value !== undefined && filter.value !== null) {
+				// Handle single-select values: ?category=work
+				params.append(filter.id, filter.value as string);
+			}
+		});
+
+		return params.toString();
+	}, [pageIndex, pageSize, searchKey, columnFilters]);
+
+	// SWR automatically re-fetches when the key (query string) changes
 	const { data, error, isLoading, mutate } = useSWR(`${TASK_KEY}?${query}`, {
 		keepPreviousData: true,
 	});
@@ -41,7 +77,7 @@ export function useTasks({ pageIndex, pageSize, searchKey }: TaskPagination) {
 
 /**
  * Fetches details for a specific task.
- * @param taskId - The ID of the task to fetch. If null, the request won't execute.
+ * @param taskId - The ID of the task to fetch.
  */
 export function useTask(taskId?: string) {
 	const url = taskId ? `${TASK_KEY}/${taskId}` : null;
@@ -59,7 +95,7 @@ export function useTask(taskId?: string) {
 
 /**
  * Hook to create a new task.
- * Refreshes the task list cache upon successful creation.
+ * Revalidates the task list cache upon success.
  */
 export function useCreateTask() {
 	const { mutate: globalMutate } = useSWRConfig();
@@ -86,23 +122,13 @@ export function useUpdateTask(taskId?: string) {
 		patcher,
 		{
 			/**
-			 * populateCache: true
-			 * Automatically updates the local cache for the current task with the response
-			 * returned from the PATCH request. This ensures the detail page reflects
-			 * changes immediately without needing an explicit global mutate call.
+			 * Automatically updates the local cache for the specific task
+			 * using the response data to avoid extra GET requests.
 			 */
 			populateCache: true,
-			/**
-			 * revalidate: false
-			 * Since the cache is already populated with the latest data from the PATCH response,
-			 * we disable the automatic GET request (revalidation). This prevents UI "flickering"
-			 * or extra network overhead after a successful update.
-			 */
 			revalidate: false,
 			onSuccess: async () => {
-				// The detail cache is already updated via populateCache.
-				// We only need to invalidate the task list cache so that the list view
-				// stays in sync when the user navigates back.
+				// List view needs revalidation to reflect changes (e.g., status updates)
 				await revalidateTasks(globalMutate);
 				toast.success("Task updated!");
 			},
@@ -115,7 +141,6 @@ export function useUpdateTask(taskId?: string) {
 
 /**
  * Hook to delete a task.
- * Performs a local cache cleanup and revalidates the task list.
  * @param taskId - The ID of the task to delete.
  */
 export function useDeleteTask(taskId?: string) {
@@ -123,8 +148,8 @@ export function useDeleteTask(taskId?: string) {
 	const url = taskId ? `${TASK_KEY}/${taskId}` : null;
 
 	return useSWRMutation<void, any, string | null, void>(url, deleter, {
-		populateCache: false, // Nothing to store in cache after deletion
-		revalidate: false, // We handle revalidation manually below
+		populateCache: false,
+		revalidate: false,
 		onSuccess: async () => {
 			await revalidateTasks(globalMutate);
 			toast.success("Task deleted successfully");
@@ -136,17 +161,14 @@ export function useDeleteTask(taskId?: string) {
 }
 
 /**
- * Revalidate task lists.
- * @param mutate - The mutate function from useSWRConfig.
- * @param taskId - The ID of the task to revalidate.
- * @returns
+ * Revalidates all SWR keys associated with the task list.
+ * @param mutate - Global SWR mutate function.
  */
-async function revalidateTasks(mutate: any, taskId?: string) {
+async function revalidateTasks(mutate: any) {
 	return await mutate((key: unknown) => {
 		if (typeof key !== "string") return false;
 
-		// e.g., /tasks, /tasks?page=1
-		const isList = key === TASK_KEY || key.startsWith(`${TASK_KEY}?`);
-		return isList;
+		// Matches the base key or keys with query strings (e.g., pagination/filters)
+		return key === TASK_KEY || key.startsWith(`${TASK_KEY}?`);
 	});
 }

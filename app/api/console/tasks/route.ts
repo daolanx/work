@@ -1,15 +1,26 @@
-import { count, desc, ilike } from "drizzle-orm";
+import { and, asc, count, desc, ilike, inArray, type SQL } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/db/drizzle";
 import { tasks } from "@/db/schema";
 import { api } from "@/lib/api-handler";
-
 import { createTaskSchema, taskPaginationSchema } from "@/lib/validations/task";
 
 export const GET = api(async (req: NextRequest) => {
-	const queryResult = taskPaginationSchema.safeParse(
-		Object.fromEntries(req.nextUrl.searchParams),
-	);
+	const { searchParams } = req.nextUrl;
+
+	// 1. Extract and normalize parameters
+	const rawParams = {
+		pageIndex: searchParams.get("pageIndex"),
+		pageSize: searchParams.get("pageSize"),
+		searchKey: searchParams.get("searchKey"),
+		status: searchParams.getAll("status").filter(Boolean),
+		priority: searchParams.getAll("priority").filter(Boolean),
+		category: searchParams.getAll("category").filter(Boolean),
+		sort: searchParams.get("sort"),
+	};
+
+	// 2. Validate with Zod
+	const queryResult = taskPaginationSchema.safeParse(rawParams);
 
 	if (!queryResult.success) {
 		return NextResponse.json(
@@ -21,23 +32,52 @@ export const GET = api(async (req: NextRequest) => {
 		);
 	}
 
-	const { pageIndex, pageSize, searchKey } = queryResult.data;
+	// Note: Ensure taskPaginationSchema includes 'sort' as an optional string
+	const { pageIndex, pageSize, searchKey, status, priority, category, sort } =
+		queryResult.data;
 	const offset = Math.max(0, pageIndex) * pageSize;
 
-	const filter =
-		searchKey && searchKey.trim() !== ""
-			? ilike(tasks.title, `%${searchKey.trim()}%`)
-			: undefined;
+	// 3. Construct Dynamic SQL Filters
+	const filters: SQL[] = [];
 
+	if (searchKey && searchKey.trim().length > 0) {
+		filters.push(ilike(tasks.title, `%${searchKey.trim()}%`));
+	}
+
+	if (status && status.length > 0) {
+		filters.push(inArray(tasks.status, status));
+	}
+
+	if (priority && priority.length > 0) {
+		filters.push(inArray(tasks.priority, priority));
+	}
+
+	if (category && category.length > 0) {
+		filters.push(inArray(tasks.category, category));
+	}
+
+	const whereClause = filters.length > 0 ? and(...filters) : undefined;
+
+	// 4. Determine Sort Order
+	const [rawField, rawOrder] = (sort || "").split(":");
+	const SORT_COLUMNS = {
+		createdAt: tasks.createdAt,
+		updatedAt: tasks.updatedAt,
+	};
+	const targetColumn =
+		SORT_COLUMNS[rawField as keyof typeof SORT_COLUMNS] || tasks.createdAt;
+	const orderFn = rawOrder === "asc" ? asc : desc;
+
+	// 5. Parallel execution
 	const [data, totalResult] = await Promise.all([
 		db
 			.select()
 			.from(tasks)
-			.where(filter)
-			.orderBy(desc(tasks.updatedAt))
+			.where(whereClause)
+			.orderBy(orderFn(targetColumn))
 			.limit(pageSize)
 			.offset(offset),
-		db.select({ value: count() }).from(tasks).where(filter),
+		db.select({ value: count() }).from(tasks).where(whereClause),
 	]);
 
 	const total = totalResult[0]?.value ?? 0;
@@ -50,11 +90,10 @@ export const GET = api(async (req: NextRequest) => {
 		totalPage: Math.ceil(total / pageSize),
 	});
 });
-
 export const POST = api(async (req: NextRequest) => {
 	const body = await req.json();
 
-	// 3. Validate Request Body
+	// Validate Request Body for creation
 	const bodyResult = createTaskSchema.safeParse(body);
 
 	if (!bodyResult.success) {
@@ -64,11 +103,8 @@ export const POST = api(async (req: NextRequest) => {
 		);
 	}
 
-	// 4. Database Insertion
-	const [newTask] = await db
-		.insert(tasks)
-		.values(bodyResult.data) // Zod ensures this matches the table structure
-		.returning();
+	// Database Insertion with Zod-verified data
+	const [newTask] = await db.insert(tasks).values(bodyResult.data).returning();
 
 	return NextResponse.json(newTask, { status: 201 });
 });

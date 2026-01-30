@@ -19,7 +19,6 @@ import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
@@ -55,8 +54,8 @@ type TaskFormValues = z.infer<typeof createTaskSchema>;
 
 interface EditableFieldProps {
 	isEditing: boolean;
-	render: React.ReactNode;
-	editRender: React.ReactNode;
+	render: () => React.ReactNode;
+	editRender: () => React.ReactNode;
 }
 
 /**
@@ -67,7 +66,7 @@ const EditableField = ({
 	render,
 	editRender,
 }: EditableFieldProps) => {
-	return isEditing ? <>{editRender}</> : <>{render}</>;
+	return isEditing ? editRender() : render();
 };
 
 // ==================== 2. Specialized Fields ====================
@@ -79,10 +78,10 @@ interface TaskEnumFieldProps {
 	form: UseFormReturn<any>;
 	name: "status" | "priority" | "category";
 	isEditing: boolean;
-	options: { key: string; label: string }[];
+
+	options: { value: string; label: string; [key: string]: any }[];
 	renderCell: (value: any) => React.ReactNode;
 }
-
 function TaskEnumField({
 	form,
 	name,
@@ -96,7 +95,7 @@ function TaskEnumField({
 			name={name}
 			render={({ field }) => (
 				<EditableField
-					editRender={
+					editRender={() => (
 						<Select onValueChange={field.onChange} value={field.value ?? ""}>
 							<FormControl>
 								{/* 移除 SelectLabel，因为它不能在这里直接使用 */}
@@ -112,8 +111,8 @@ function TaskEnumField({
 									{options.map((opt) => (
 										<SelectItem
 											className="font-bold text-[11px] uppercase"
-											key={opt.key}
-											value={opt.key}
+											key={opt.value}
+											value={opt.value}
 										>
 											{opt.label}
 										</SelectItem>
@@ -121,9 +120,9 @@ function TaskEnumField({
 								</SelectGroup>
 							</SelectContent>
 						</Select>
-					}
+					)}
 					isEditing={isEditing}
-					render={renderCell(field.value)}
+					render={() => renderCell(field.value)}
 				/>
 			)}
 		/>
@@ -146,18 +145,18 @@ function TaskTitleField({
 			name="title"
 			render={({ field }) => (
 				<EditableField
-					editRender={
+					editRender={() => (
 						<input
 							{...field}
 							className="flex-1 border-none bg-transparent px-0 py-1 font-extrabold text-4xl placeholder:text-slate-200 focus:outline-none"
 						/>
-					}
+					)}
 					isEditing={isEditing}
-					render={
+					render={() => (
 						<h1 className="flex-1 break-all font-extrabold text-4xl text-slate-900 leading-tight tracking-tight">
 							{field.value}
 						</h1>
-					}
+					)}
 				/>
 			)}
 		/>
@@ -180,7 +179,7 @@ function TaskContentField({
 			name="content"
 			render={({ field }) => (
 				<EditableField
-					editRender={
+					editRender={() => (
 						<FormItem>
 							<FormControl>
 								<Textarea
@@ -191,9 +190,9 @@ function TaskContentField({
 								/>
 							</FormControl>
 						</FormItem>
-					}
+					)}
 					isEditing={isEditing}
-					render={
+					render={() => (
 						<div className="prose prose-slate prose-lg min-h-[200px] max-w-none whitespace-pre-wrap py-2 text-slate-700">
 							{field.value ? (
 								<MarkdownWrapper>{field.value}</MarkdownWrapper>
@@ -203,7 +202,7 @@ function TaskContentField({
 								</span>
 							)}
 						</div>
-					}
+					)}
 				/>
 			)}
 		/>
@@ -258,7 +257,7 @@ export default function TaskDetailPage() {
 							{isEditing ? (
 								<div className="fade-in zoom-in-95 flex animate-in gap-2 duration-200">
 									<Button
-										className=" text-slate-400 hover:text-red-500"
+										className="text-slate-400 hover:text-red-500"
 										onClick={() => {
 											setIsEditing(false);
 											form.reset();

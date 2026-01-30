@@ -2,13 +2,13 @@
 
 import { IconLayoutColumns } from "@tabler/icons-react";
 import {
+	type ColumnFiltersState,
 	flexRender,
 	getCoreRowModel,
-	type RowSelectionState,
 	useReactTable,
 	type VisibilityState,
 } from "@tanstack/react-table";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { SearchInput } from "@/components/search-input";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,6 +33,8 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { DataTableColumnHeader } from "./table-column-header";
+import { TableFacedFilters } from "./table-faced-fliters";
 import { TablePagination } from "./table-pagination";
 import { TableRowsSkeleton } from "./table-rows-skeleton";
 import type { DataTableProps, TableBodyContentProps } from "./types";
@@ -49,39 +51,52 @@ export function CardTable<T>({
 	initialPageSize = 10,
 	variant = "default",
 }: ExtendedDataTableProps<T>) {
+	// Centralized state for server-side operations
 	const [filters, setFilters] = useState({
 		pageIndex: 0,
 		pageSize: initialPageSize,
 		searchKey: "",
+		columnFilters: [] as ColumnFiltersState,
 	});
 
+	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const isGhost = variant === "ghost";
 
-	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-	const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+	// Fetch data based on current filter/pagination state
 	const { res, isLoading } = useDataHook(filters);
 
+	const memoData = useMemo(() => res?.list ?? [], [res?.list]);
+	const memoColumn = useMemo(() => columns, [columns]);
+
 	const table = useReactTable({
-		data: res?.list ?? [],
-		columns,
+		data: memoData,
+		columns: memoColumn,
 		state: {
 			pagination: { pageIndex: filters.pageIndex, pageSize: filters.pageSize },
 			columnVisibility,
-			rowSelection,
+			columnFilters: filters.columnFilters,
 		},
 		manualPagination: true,
+		manualFiltering: true,
 		rowCount: res?.total ?? 0,
 		onPaginationChange: (updater) => {
 			setFilters((prev) => {
 				const next =
 					typeof updater === "function"
-						? updater({ pageIndex: filters.pageIndex, pageSize: prev.pageSize })
+						? updater({ pageIndex: prev.pageIndex, pageSize: prev.pageSize })
 						: updater;
 				return { ...prev, ...next };
 			});
 		},
+		onColumnFiltersChange: (updater) => {
+			setFilters((prev) => {
+				const next =
+					typeof updater === "function" ? updater(prev.columnFilters) : updater;
+				// Reset to first page when filters change
+				return { ...prev, columnFilters: next, pageIndex: 0 };
+			});
+		},
 		onColumnVisibilityChange: setColumnVisibility,
-		onRowSelectionChange: setRowSelection,
 		getCoreRowModel: getCoreRowModel(),
 	});
 
@@ -106,6 +121,8 @@ export function CardTable<T>({
 				<CardAction>
 					<div className="flex items-center gap-2">
 						<SearchInput onSearch={handleSearch} />
+
+						{/* Column Visibility Toggle */}
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
 								<Button size="sm" variant="outline">
@@ -119,7 +136,6 @@ export function CardTable<T>({
 									.map((column) => (
 										<DropdownMenuCheckboxItem
 											checked={column.getIsVisible()}
-											className="capitalize"
 											key={column.id}
 											onCheckedChange={(v) => column.toggleVisibility(!!v)}
 										>
@@ -132,17 +148,25 @@ export function CardTable<T>({
 					</div>
 				</CardAction>
 			</CardHeader>
+
 			<CardContent className={isGhost ? "px-0 pb-0" : ""}>
-				<div className="overflow-hidden">
+				{/* Active Filter Badges */}
+				<TableFacedFilters table={table} />
+
+				<div className="rounded-md border">
 					<Table>
 						<TableHeader className="bg-muted/50">
 							{table.getHeaderGroups().map((hg) => (
 								<TableRow key={hg.id}>
 									{hg.headers.map((h) => (
-										<TableHead key={h.id}>
-											{h.isPlaceholder
-												? null
-												: flexRender(h.column.columnDef.header, h.getContext())}
+										<TableHead className="p-0" key={h.id}>
+											<DataTableColumnHeader
+												column={h.column}
+												title={flexRender(
+													h.column.columnDef.header,
+													h.getContext(),
+												)}
+											/>
 										</TableHead>
 									))}
 								</TableRow>
@@ -158,9 +182,10 @@ export function CardTable<T>({
 						</TableBody>
 					</Table>
 				</div>
+
 				<TablePagination
-					onPageChange={table.setPageIndex}
-					onPageSizeChange={table.setPageSize}
+					onPageChange={(idx) => table.setPageIndex(idx)}
+					onPageSizeChange={(size) => table.setPageSize(size)}
 					pageIndex={filters.pageIndex}
 					pageSize={filters.pageSize}
 					total={res?.total ?? 0}
@@ -169,6 +194,10 @@ export function CardTable<T>({
 		</Card>
 	);
 }
+
+/**
+ * Sub-component to handle Table Body rendering states (Loading, Empty, Data)
+ */
 function TableBodyContent<T>({
 	rows,
 	isLoading,

@@ -34,7 +34,7 @@ export const TASK_PRIORITY_ENUM_KEYS = Object.keys(TASK_PRIORITY_ENUM_MAP) as [
 export const TASK_PRIORITY_ENUMS = (
 	Object.keys(TASK_PRIORITY_ENUM_MAP) as TypeTaskPriority[]
 ).map((key) => ({
-	key,
+	value: key,
 	...TASK_PRIORITY_ENUM_MAP[key],
 }));
 
@@ -65,7 +65,7 @@ export const TASK_CATEGORY_ENUM_KEYS = Object.keys(TASK_CATEGORY_ENUM_MAP) as [
 export const TASK_CATEGORY_ENUMS = (
 	Object.keys(TASK_CATEGORY_ENUM_MAP) as TypeTaskCategory[]
 ).map((key) => ({
-	key,
+	value: key,
 	...TASK_CATEGORY_ENUM_MAP[key],
 }));
 
@@ -110,6 +110,6 @@ export const TASK_STATUS_ENUM_KEYS = Object.keys(TASK_STATUS_ENUM_MAP) as [
 export const TASK_STATUS_ENUMS = (
 	Object.keys(TASK_STATUS_ENUM_MAP) as TypeTaskCategory[]
 ).map((key) => ({
-	key,
+	value: key,
 	...TASK_STATUS_ENUM_MAP[key],
 }));
