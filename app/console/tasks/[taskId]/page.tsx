@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SelectLabel } from "@radix-ui/react-select";
+
 import {
 	IconCheck,
 	IconDots,
@@ -11,7 +11,7 @@ import {
 } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import type * as z from "zod";
 import { MarkdownWrapper } from "@/components/markdown-wrapper";
@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
+	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
@@ -42,15 +43,10 @@ import { createTaskSchema } from "@/lib/validations/task";
 import { useTask, useUpdateTask } from "../../_hooks/use-task";
 import { CellCategory } from "../_components/cell-category";
 import { CellPriority } from "../_components/cell-priority";
-/** * REUSED COMPONENTS
- * These handle the domain-specific logic (colors, icons, labels)
- */
 import { CellStatus } from "../_components/cell-status";
 import { DeleteTaskButton } from "../_components/delete-task-button";
 
 type TaskFormValues = z.infer<typeof createTaskSchema>;
-
-// ==================== 1. Core Abstraction ====================
 
 interface EditableFieldProps {
 	isEditing: boolean;
@@ -58,9 +54,6 @@ interface EditableFieldProps {
 	editRender: () => React.ReactNode;
 }
 
-/**
- * Switcher component to toggle between View and Edit modes
- */
 const EditableField = ({
 	isEditing,
 	render,
@@ -69,69 +62,8 @@ const EditableField = ({
 	return isEditing ? editRender() : render();
 };
 
-// ==================== 2. Specialized Fields ====================
+// ==================== 1. Optimized Title Field ====================
 
-/**
- * Unified Enum Field: Uses injected "renderCell" for viewing
- */
-interface TaskEnumFieldProps {
-	form: UseFormReturn<any>;
-	name: "status" | "priority" | "category";
-	isEditing: boolean;
-
-	options: { value: string; label: string; [key: string]: any }[];
-	renderCell: (value: any) => React.ReactNode;
-}
-function TaskEnumField({
-	form,
-	name,
-	isEditing,
-	options,
-	renderCell,
-}: TaskEnumFieldProps) {
-	return (
-		<FormField
-			control={form.control}
-			name={name}
-			render={({ field }) => (
-				<EditableField
-					editRender={() => (
-						<Select onValueChange={field.onChange} value={field.value ?? ""}>
-							<FormControl>
-								{/* 移除 SelectLabel，因为它不能在这里直接使用 */}
-								<SelectTrigger className="h-9 w-fit min-w-[140px] border border-slate-200 bg-white px-3 font-bold text-[11px] uppercase shadow-sm transition-all focus:ring-slate-900">
-									<SelectValue />
-								</SelectTrigger>
-							</FormControl>
-							<SelectContent>
-								<SelectGroup>
-									<SelectLabel className="px-2 py-1.5 text-[10px] text-slate-400 uppercase">
-										Choose {field.name}
-									</SelectLabel>
-									{options.map((opt) => (
-										<SelectItem
-											className="font-bold text-[11px] uppercase"
-											key={opt.value}
-											value={opt.value}
-										>
-											{opt.label}
-										</SelectItem>
-									))}
-								</SelectGroup>
-							</SelectContent>
-						</Select>
-					)}
-					isEditing={isEditing}
-					render={() => renderCell(field.value)}
-				/>
-			)}
-		/>
-	);
-}
-
-/**
- * Title Field: Large typography with native input for editing
- */
 function TaskTitleField({
 	form,
 	isEditing,
@@ -139,83 +71,87 @@ function TaskTitleField({
 	form: UseFormReturn<any>;
 	isEditing: boolean;
 }) {
+	const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+	useEffect(() => {
+		if (isEditing && textareaRef.current) {
+			textareaRef.current.style.height = "auto";
+			textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+			textareaRef.current.focus();
+		}
+	}, [isEditing]);
+
 	return (
 		<FormField
 			control={form.control}
 			name="title"
 			render={({ field }) => (
-				<EditableField
-					editRender={() => (
-						<input
+				<div className="w-full">
+					{isEditing ? (
+						<textarea
 							{...field}
-							className="flex-1 border-none bg-transparent px-0 py-1 font-extrabold text-4xl placeholder:text-slate-200 focus:outline-none"
+							className="w-full resize-none border-none bg-transparent p-0 font-extrabold text-2xl text-slate-900 leading-tight tracking-tight outline-none focus:ring-0 sm:text-4xl"
+							onInput={(e: any) => {
+								e.target.style.height = "auto";
+								e.target.style.height = `${e.target.scrollHeight}px`;
+							}}
+							ref={textareaRef}
+							rows={1}
 						/>
-					)}
-					isEditing={isEditing}
-					render={() => (
-						<h1 className="flex-1 break-all font-extrabold text-4xl text-slate-900 leading-tight tracking-tight">
+					) : (
+						<h1 className="w-full break-words font-extrabold text-2xl text-slate-900 leading-tight tracking-tight sm:text-4xl">
 							{field.value}
 						</h1>
 					)}
-				/>
+				</div>
 			)}
 		/>
 	);
 }
 
-/**
- * Content Field: Markdown preview (simple div) vs Textarea
- */
-function TaskContentField({
-	form,
-	isEditing,
-}: {
-	form: UseFormReturn<any>;
-	isEditing: boolean;
-}) {
+function TaskEnumField({ form, name, isEditing, options, renderCell }: any) {
 	return (
 		<FormField
 			control={form.control}
-			name="content"
+			name={name}
 			render={({ field }) => (
-				<EditableField
-					editRender={() => (
-						<FormItem>
-							<FormControl>
-								<Textarea
-									{...field}
-									className="min-h-[500px] resize-none border-none bg-transparent p-0 font-mono text-base leading-relaxed shadow-none focus-visible:ring-0"
-									placeholder="Task description (Markdown supported)..."
-									value={field.value ?? ""}
-								/>
-							</FormControl>
-						</FormItem>
-					)}
-					isEditing={isEditing}
-					render={() => (
-						<div className="prose prose-slate prose-lg min-h-[200px] max-w-none whitespace-pre-wrap py-2 text-slate-700">
-							{field.value ? (
-								<MarkdownWrapper>{field.value}</MarkdownWrapper>
-							) : (
-								<span className="text-slate-300 italic">
-									No content provided.
-								</span>
-							)}
-						</div>
-					)}
-				/>
+				<div className="shrink-0">
+					<EditableField
+						editRender={() => (
+							<Select onValueChange={field.onChange} value={field.value ?? ""}>
+								<FormControl>
+									<SelectTrigger className="h-8 min-w-[100px] border-slate-200 bg-white font-bold text-[10px] uppercase">
+										<SelectValue />
+									</SelectTrigger>
+								</FormControl>
+								<SelectContent>
+									{options.map((opt: any) => (
+										<SelectItem
+											className="font-bold text-[10px] uppercase"
+											key={opt.value}
+											value={opt.value}
+										>
+											{opt.label}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+						)}
+						isEditing={isEditing}
+						render={() => renderCell(field.value)}
+					/>
+				</div>
 			)}
 		/>
 	);
 }
 
-// ==================== 3. Main Page Component ====================
+// ==================== 2. Main Page Component ====================
 
 export default function TaskDetailPage() {
 	const params = useParams<{ taskId: string }>();
 	const [isEditing, setIsEditing] = useState(false);
 
-	// Data Hooks
 	const { task, isLoading, error } = useTask(params.taskId);
 	const { isMutating, trigger: handleUpdateTask } = useUpdateTask(
 		params.taskId,
@@ -226,50 +162,49 @@ export default function TaskDetailPage() {
 		values: task as TaskFormValues,
 	});
 
-	console.log("Form Errors:", form.formState.errors);
-
 	const onSave = async (data: TaskFormValues) => {
 		try {
 			await handleUpdateTask(data);
 			setIsEditing(false);
 		} catch (e) {
-			console.error("Save failed:", e);
+			console.error(e);
 		}
 	};
 
 	if (isLoading) return <TaskDetailSkeleton />;
 	if (error || !task)
 		return (
-			<div className="p-10 text-center font-bold text-muted-foreground">
+			<div className="p-10 text-center font-bold text-slate-500">
 				Task not found.
 			</div>
 		);
 
 	return (
-		<div className="mx-auto w-full px-4 py-10 lg:px-24">
+		<div className="mx-auto w-full max-w-4xl px-4 py-6 sm:py-10">
 			<Form {...form}>
 				<form className="space-y-6" onSubmit={form.handleSubmit(onSave)}>
-					{/* Header Actions */}
-					<div className="flex items-start justify-between gap-4">
-						<TaskTitleField form={form} isEditing={isEditing} />
+					<div className="flex items-start justify-between gap-3">
+						<div className="min-w-0 flex-1">
+							<TaskTitleField form={form} isEditing={isEditing} />
+						</div>
 
-						<div className="flex shrink-0 items-center gap-1 pt-1">
+						<div className="flex shrink-0 items-center gap-1 sm:pt-1">
 							{isEditing ? (
-								<div className="fade-in zoom-in-95 flex animate-in gap-2 duration-200">
+								<div className="fade-in zoom-in-95 flex animate-in items-center gap-1.5">
 									<Button
-										className="text-slate-400 hover:text-red-500"
+										className="h-8 px-2 text-slate-500"
 										onClick={() => {
 											setIsEditing(false);
 											form.reset();
 										}}
 										size="sm"
 										type="button"
-										variant="outline"
+										variant="ghost"
 									>
-										<IconX size={18} /> Canel
+										<IconX size={18} /> Cancel
 									</Button>
 									<Button
-										className="h-8 rounded-lg bg-slate-900 px-4 font-bold text-white text-xs shadow-lg transition-all active:scale-95"
+										className="h-8 bg-slate-900 px-3 font-bold text-white shadow-sm"
 										disabled={isMutating}
 										size="sm"
 										type="submit"
@@ -277,29 +212,42 @@ export default function TaskDetailPage() {
 										{isMutating ? (
 											<IconLoader2 className="animate-spin" size={14} />
 										) : (
-											<IconCheck className="mr-1" size={14} />
+											<IconCheck size={18} />
 										)}
-										Save
+										Update
 									</Button>
 								</div>
 							) : (
-								<div className="flex gap-2">
+								<div className="flex items-center gap-1">
 									<Button
-										className="cursor-pointer text-slate-600 transition-colors hover:text-slate-900"
+										className="hidden h-9 items-center border-slate-200 px-3 sm:flex"
 										onClick={() => setIsEditing(true)}
 										size="sm"
 										type="button"
 										variant="outline"
 									>
-										<IconEdit /> Edit
+										<IconEdit className="mr-1.5" size={16} />
+										Edit
 									</Button>
+
 									<DropdownMenu>
 										<DropdownMenuTrigger asChild>
-											<Button className="h-8 w-8 p-0" size="sm" variant="ghost">
-												<IconDots size={18} />
+											<Button
+												className="h-9 w-9 p-0 text-slate-500"
+												size="sm"
+												variant="ghost"
+											>
+												<IconDots size={20} />
 											</Button>
 										</DropdownMenuTrigger>
-										<DropdownMenuContent align="end">
+										<DropdownMenuContent align="end" className="w-36">
+											<DropdownMenuItem
+												className="font-medium sm:hidden"
+												onClick={() => setIsEditing(true)}
+											>
+												<IconEdit className="mr-2" size={16} />
+												Edit Task
+											</DropdownMenuItem>
 											<DeleteTaskButton
 												taskId={String(task.id)}
 												taskTitle={task.title}
@@ -312,64 +260,79 @@ export default function TaskDetailPage() {
 						</div>
 					</div>
 
-					{/* Meta Information - Reusing List View Logic */}
-					<div className="flex gap-3">
+					<div className="flex items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
 						<TaskEnumField
 							form={form}
 							isEditing={isEditing}
 							name="status"
 							options={TASK_STATUS_ENUMS}
-							renderCell={(val) => <CellStatus value={val} />}
+							renderCell={(v: any) => <CellStatus value={v} />}
 						/>
-
 						<TaskEnumField
 							form={form}
 							isEditing={isEditing}
 							name="priority"
 							options={TASK_PRIORITY_ENUMS}
-							renderCell={(val) => <CellPriority value={val} />}
+							renderCell={(v: any) => <CellPriority value={v} />}
 						/>
 						<TaskEnumField
 							form={form}
 							isEditing={isEditing}
 							name="category"
 							options={TASK_CATEGORY_ENUMS}
-							renderCell={(val) => <CellCategory value={val} />}
+							renderCell={(v: any) => <CellCategory value={v} />}
 						/>
 					</div>
 
-					<Separator className="opacity-50" />
+					<Separator className="opacity-40" />
 
-					{/* Task Content */}
-					<TaskContentField form={form} isEditing={isEditing} />
+					<div className="mt-2">
+						<FormField
+							control={form.control}
+							name="content"
+							render={({ field }) => (
+								<EditableField
+									editRender={() => (
+										<Textarea
+											{...field}
+											className="min-h-[350px] resize-none border-none bg-transparent p-0 text-base leading-relaxed focus-visible:ring-0 sm:min-h-[500px]"
+											placeholder="Details..."
+											value={field.value ?? ""}
+										/>
+									)}
+									isEditing={isEditing}
+									render={() => (
+										<div className="prose prose-slate prose-sm sm:prose-base max-w-none text-slate-700">
+											{field.value ? (
+												<MarkdownWrapper>{field.value}</MarkdownWrapper>
+											) : (
+												<p className="text-slate-300 italic">No description.</p>
+											)}
+										</div>
+									)}
+								/>
+							)}
+						/>
+					</div>
 				</form>
 			</Form>
 		</div>
 	);
 }
 
-// ==================== 4. Skeleton UI ====================
-
 function TaskDetailSkeleton() {
 	return (
-		<div className="mx-auto w-full space-y-10 px-4 py-10 lg:px-24">
-			<div className="space-y-4">
-				<div className="flex items-center justify-between">
-					<Skeleton className="h-12 w-2/3 rounded-lg" />
-					<div className="flex gap-2">
-						<Skeleton className="h-8 w-8 rounded-md" />
-						<Skeleton className="h-8 w-8 rounded-md" />
-					</div>
-				</div>
+		<div className="mx-auto w-full max-w-4xl space-y-8 px-4 py-8">
+			<div className="flex items-start justify-between gap-4">
+				<Skeleton className="h-10 w-2/3" />
+				<Skeleton className="h-9 w-9 rounded-md" />
+			</div>
+			<div className="flex gap-2">
+				<Skeleton className="h-7 w-20" />
+				<Skeleton className="h-7 w-20" />
 			</div>
 			<Separator />
-			<div className="space-y-4">
-				<div className="flex gap-4">
-					<Skeleton className="h-6 w-24 rounded-full" />
-					<Skeleton className="h-6 w-24 rounded-full" />
-				</div>
-				<Skeleton className="h-[400px] w-full rounded-xl" />
-			</div>
+			<Skeleton className="h-64 w-full rounded-xl" />
 		</div>
 	);
 }
