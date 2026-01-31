@@ -22,12 +22,18 @@ export const metadata: Metadata = {
 	description: "Freelance Frontend Developer",
 };
 
-const CustomLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
+const CustomLink = ({
+	href,
+	children,
+}: {
+	href: string;
+	children: React.ReactNode;
+}) => (
 	<Link
 		className="text-blue-500 underline transition-opacity hover:opacity-80"
 		href={href}
-		target={href.startsWith('mailto') ? undefined : "_blank"}
-		rel={href.startsWith('http') ? "noopener noreferrer" : undefined}
+		rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+		target={href.startsWith("mailto") ? undefined : "_blank"}
 	>
 		{children}
 	</Link>
@@ -40,7 +46,7 @@ export default async function Home() {
 	return (
 		<div className="mx-auto max-w-6xl px-4 sm:px-6">
 			<header className="flex items-center justify-between py-6">
-				<h1 className="text-xl font-bold md:text-2xl">{t("title")}</h1>
+				<h1 className="font-bold text-xl md:text-2xl">{t("title")}</h1>
 				<nav className="flex items-center gap-4">
 					<LocaleSwitch />
 					<ThemeSwitch />
@@ -52,11 +58,11 @@ export default async function Home() {
 					<div className="group flex-shrink-0 transition-transform duration-300 hover:rotate-3 hover:scale-105">
 						<Image
 							alt="Dax's avatar"
-							className="h-24 w-24 rounded-full border-4 border-l-blue-500 border-r-amber-600 p-1 md:h-32 md:w-32"
+							className="h-24 w-24 rounded-full border-4 border-r-amber-600 border-l-blue-500 p-1 md:h-32 md:w-32"
 							height={150}
+							priority
 							src="/profile/avatar.webp"
 							width={150}
-							priority
 						/>
 					</div>
 
@@ -64,16 +70,26 @@ export default async function Home() {
 						<p className="leading-relaxed">{t("intro")}</p>
 						<div className="leading-relaxed">
 							{t.rich("contact", {
-								blog: (c) => <CustomLink href="https://www.daolanx.me/">{c}</CustomLink>,
-								github: (c) => <CustomLink href="https://github.com/daolanx">{c}</CustomLink>,
-								twitter: (c) => <CustomLink href="https://x.com/daolanx">{c}</CustomLink>,
-								email: (c) => <CustomLink href="mailto:daolanx@hotmail.com">{c}</CustomLink>,
+								blog: (c) => (
+									<CustomLink href="https://www.daolanx.me/">{c}</CustomLink>
+								),
+								github: (c) => (
+									<CustomLink href="https://github.com/daolanx">{c}</CustomLink>
+								),
+								twitter: (c) => (
+									<CustomLink href="https://x.com/daolanx">{c}</CustomLink>
+								),
+								email: (c) => (
+									<CustomLink href="mailto:daolanx.dev@gmail.com">
+										{c}
+									</CustomLink>
+								),
 							})}
 						</div>
 					</div>
 				</section>
 
-				<section className="border-t border-slate-100 pt-8 dark:border-slate-800">
+				<section className="border-slate-100 border-t pt-8 dark:border-slate-800">
 					<h2 className="mb-6 inline-block bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text font-bold text-transparent text-xl">
 						{t("my-skills")}
 					</h2>
@@ -81,8 +97,8 @@ export default async function Home() {
 						{SKILLS.map((skill) => (
 							<li key={skill.name}>
 								<Badge
-									variant="outline"
 									className={`cursor-default transition-all duration-300 hover:-translate-y-1 hover:shadow-sm md:px-4 md:py-1.5 md:text-base ${skill.color}`}
+									variant="outline"
 								>
 									{skill.name}
 								</Badge>
@@ -91,7 +107,7 @@ export default async function Home() {
 					</ul>
 				</section>
 
-				<section className="border-t border-slate-100 pt-8 dark:border-slate-800">
+				<section className="border-slate-100 border-t pt-8 dark:border-slate-800">
 					<h2 className="mb-6 inline-block bg-gradient-to-r from-orange-600 to-purple-500 bg-clip-text font-bold text-transparent text-xl">
 						{t("my-projects")}
 					</h2>
