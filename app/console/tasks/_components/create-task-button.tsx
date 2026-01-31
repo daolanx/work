@@ -10,9 +10,12 @@ import {
 	IconPlus,
 	IconTag,
 } from "@tabler/icons-react";
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import {
+	type FormFieldConfig,
+	SchemaFormFields,
+} from "@/components/forms/schema-form-fields";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -22,23 +25,8 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import { Form } from "@/components/ui/form";
+
 import {
 	TASK_CATEGORY_ENUMS,
 	TASK_PRIORITY_ENUMS,
@@ -46,6 +34,46 @@ import {
 } from "@/constants/task-enums";
 import { type CreateTaskInput, createTaskSchema } from "@/lib/validations/task";
 import { useCreateTask } from "../../_hooks/use-task";
+
+const TASK_FORM_CONFIG: FormFieldConfig<CreateTaskInput>[] = [
+	{
+		name: "title",
+		label: "Title",
+		type: "input",
+		icon: IconLetterT,
+		placeholder: "e.g., Finalize Q1 Report",
+	},
+	{
+		name: "status",
+		label: "Status",
+		type: "select",
+		icon: IconActivity,
+		options: TASK_STATUS_ENUMS,
+		className: "col-span-1",
+	},
+	{
+		name: "priority",
+		label: "Priority",
+		type: "select",
+		icon: IconFlag,
+		options: TASK_PRIORITY_ENUMS,
+		className: "col-span-1",
+	},
+	{
+		name: "category",
+		label: "Category",
+		type: "select",
+		icon: IconTag,
+		options: TASK_CATEGORY_ENUMS,
+	},
+	{
+		name: "content",
+		label: "Content",
+		type: "textarea",
+		icon: IconAlignLeft,
+		placeholder: "Add details...",
+	},
+];
 
 export function CreateTaskButton() {
 	const [open, setOpen] = useState(false);
@@ -58,187 +86,47 @@ export function CreateTaskButton() {
 			priority: "MEDIUM",
 			category: "WORK",
 			content: "",
+			status: "To Do",
 		},
 	});
 
-	async function onSubmit(data: CreateTaskInput) {
+	const onSubmit = async (data: CreateTaskInput) => {
 		try {
 			await createTask(data);
 			setOpen(false);
 			form.reset();
 		} catch (e) {
-			console.error("Submission error:", e);
+			console.error(e);
 		}
-	}
+	};
 
 	return (
 		<Dialog onOpenChange={setOpen} open={open}>
 			<DialogTrigger asChild>
-				<Button
-					className="gap-2 shadow-sm transition-all hover:shadow-md"
-					size="sm"
-				>
+				<Button size="sm">
 					<IconPlus className="h-4 w-4" /> Create
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[500px]">
-				<DialogHeader className="pb-2">
-					<DialogTitle className="font-bold text-2xl text-slate-900 tracking-tight">
-						New Task
-					</DialogTitle>
+				<DialogHeader>
+					<DialogTitle className="font-bold text-2xl">New Task</DialogTitle>
 				</DialogHeader>
 
 				<Form {...form}>
 					<form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-						{/* Title */}
-						<FormField
-							control={form.control}
-							name="title"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel className="flex items-center gap-2 font-semibold text-slate-700">
-										<IconLetterT className="text-slate-400" size={18} /> Title
-									</FormLabel>
-									<FormControl>
-										<Input
-											className="h-10 border-slate-200 focus-visible:ring-slate-400"
-											placeholder="e.g., Finalize Q1 Report"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-
-						<div className="grid grid-cols-2 gap-4">
-							{/* Status */}
-							<FormField
-								control={form.control}
-								name="status"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel className="flex items-center gap-2 font-semibold text-slate-700">
-											<IconActivity className="text-slate-400" size={18} />{" "}
-											Status
-										</FormLabel>
-										<Select
-											defaultValue={field.value}
-											onValueChange={field.onChange}
-										>
-											<FormControl>
-												<SelectTrigger className="h-10 border-slate-200 bg-slate-50/50">
-													<SelectValue placeholder="Status" />
-												</SelectTrigger>
-											</FormControl>
-											<SelectContent>
-												{TASK_STATUS_ENUMS.map((s) => (
-													<SelectItem key={s.value} value={s.value}>
-														{s.label}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
-									</FormItem>
-								)}
-							/>
-
-							{/* Priority */}
-							<FormField
-								control={form.control}
-								name="priority"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel className="flex items-center gap-2 font-semibold text-slate-700">
-											<IconFlag className="text-slate-400" size={18} /> Priority
-										</FormLabel>
-										<Select
-											defaultValue={field.value ?? undefined}
-											onValueChange={field.onChange}
-										>
-											<FormControl>
-												<SelectTrigger className="h-10 border-slate-200 bg-slate-50/50">
-													<SelectValue placeholder="Priority" />
-												</SelectTrigger>
-											</FormControl>
-											<SelectContent>
-												{TASK_PRIORITY_ENUMS.map((p) => (
-													<SelectItem key={p.value} value={p.value}>
-														{p.label}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
-									</FormItem>
-								)}
-							/>
-						</div>
-
-						{/* Category */}
-						<FormField
-							control={form.control}
-							name="category"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel className="flex items-center gap-2 font-semibold text-slate-700">
-										<IconTag className="text-slate-400" size={18} /> Category
-									</FormLabel>
-									<Select
-										defaultValue={field.value ?? undefined}
-										onValueChange={field.onChange}
-									>
-										<FormControl>
-											<SelectTrigger className="h-10 border-slate-200 bg-slate-50/50">
-												<SelectValue placeholder="Select Category" />
-											</SelectTrigger>
-										</FormControl>
-										<SelectContent>
-											{TASK_CATEGORY_ENUMS.map((c) => (
-												<SelectItem key={c.value} value={c.value}>
-													{c.label}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-								</FormItem>
-							)}
-						/>
-
-						{/* Content / Description */}
-						<FormField
-							control={form.control}
-							name="content"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel className="flex items-center gap-2 font-semibold text-slate-700">
-										<IconAlignLeft className="text-slate-400" size={18} />{" "}
-										Content
-									</FormLabel>
-									<FormControl>
-										<Textarea
-											className="min-h-[100px] resize-none border-slate-200 focus-visible:ring-slate-400"
-											placeholder="Add details about this task..."
-											{...field}
-											value={field.value ?? ""}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+						<SchemaFormFields fields={TASK_FORM_CONFIG} form={form} />
 						<DialogFooter className="pt-4">
-							{/* Submit Button: Consistent with Trigger style */}
 							<Button
-								className="h-12 w-full bg-slate-900 font-extrabold text-white shadow-lg transition-all hover:bg-slate-800 active:scale-[0.98]"
+								className="h-12 w-full bg-slate-900 font-extrabold"
 								disabled={isCreating}
 								type="submit"
 							>
 								{isCreating ? (
-									<IconLoader className="mr-2 h-5 w-5 animate-spin" />
+									<IconLoader className="animate-spin" />
 								) : (
-									<IconPlus className="mr-2 h-5 w-5" />
-								)}
-								Confirm Creation
+									<IconPlus />
+								)}{" "}
+								Confirm
 							</Button>
 						</DialogFooter>
 					</form>

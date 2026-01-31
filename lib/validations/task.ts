@@ -6,23 +6,24 @@ import {
 
 /**
  * 0. Helpers
- * 帮助处理 URL 查询参数：
- * - 将空字符串、null、空数组转换为 undefined (触发 .optional())
- * - 将单个字符串转换为数组 (统一格式)
+ * Preprocesses URL query parameters:
+ * - Converts empty strings, null, or empty arrays to undefined (triggers .optional())
+ * - Normalizes single strings into an array for consistent formatting
  */
 const preprocessQueryParams = (schema: z.ZodEnum<any>) =>
 	z.preprocess((val) => {
-		// 1. 处理空值
+		// 1. Handle empty/null values
 		if (!val) return undefined;
 		if (Array.isArray(val) && val.length === 0) return undefined;
 
-		// 2. 统一转数组
+		// 2. Normalize to array
 		return Array.isArray(val) ? val : [val];
 	}, z.array(schema).optional());
 
 /**
- * 处理单字符串参数：
- * 将空字符串、null、undefined 统一转换为 undefined，从而触发 .optional()
+ * Preprocesses single string parameters:
+ * Converts empty strings, null, or undefined to undefined to trigger .optional()
+ * and trims whitespace from valid strings.
  */
 const preprocessString = z.preprocess((val) => {
 	if (val === null || val === "" || val === undefined) return undefined;
@@ -43,13 +44,13 @@ const taskStatusEnum = z.enum(["To Do", "In Process", "Done", "Canceled"]);
 const taskPriorityEnum = z.enum(TASK_PRIORITY_ENUM_KEYS);
 const taskCategoryEnum = z.enum(TASK_CATEGORY_ENUM_KEYS);
 
-// 分页与筛选校验 Schema
+// Schema for pagination and filter validation
 export const taskPaginationSchema = z.object({
 	pageIndex: z.coerce.number().min(0).default(0),
 	pageSize: z.coerce.number().min(1).max(100).default(10),
 	searchKey: preprocessString,
 	sort: preprocessString,
-	// 使用辅助函数处理多选字段
+	// Use helpers to handle multi-select fields
 	status: preprocessQueryParams(taskStatusEnum),
 	priority: preprocessQueryParams(taskPriorityEnum),
 	category: preprocessQueryParams(taskCategoryEnum),
