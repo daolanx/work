@@ -8,7 +8,6 @@ import {
 	IconUserCircle,
 } from "@tabler/icons-react";
 import Link from "next/link";
-import { useUser } from "../../_hooks/useUser";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
 	DropdownMenu,
@@ -25,6 +24,7 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
+import { useUser } from "../../_hooks/useUser";
 
 export function NavUser() {
 	const { isMobile } = useSidebar();
@@ -39,7 +39,7 @@ export function NavUser() {
 							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 							size="lg"
 						>
-							<Avatar className="h-8 w-8 rounded-lg grayscale">
+							<Avatar className="h-8 w-8 rounded-lg">
 								<AvatarImage alt={user?.name} src={user?.avatar} />
 								<AvatarFallback className="rounded-lg">CN</AvatarFallback>
 							</Avatar>

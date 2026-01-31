@@ -61,7 +61,7 @@ export default async function Home() {
 							className="h-24 w-24 rounded-full border-4 border-r-amber-600 border-l-blue-500 p-1 md:h-32 md:w-32"
 							height={150}
 							priority
-							src="/profile/avatar.webp"
+							src="https://assets.daolanx.me/images/avatar.webp"
 							width={150}
 						/>
 					</div>
