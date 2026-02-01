@@ -1,4 +1,13 @@
-import { and, asc, count, desc, ilike, inArray, type SQL } from "drizzle-orm";
+import {
+	and,
+	asc,
+	count,
+	desc,
+	getTableColumns,
+	ilike,
+	inArray,
+	type SQL,
+} from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/db/drizzle";
 import { tasks } from "@/db/schema";
@@ -7,21 +16,16 @@ import { createTaskSchema, taskPaginationSchema } from "@/lib/validations/task";
 
 export const GET = api(async (req: NextRequest) => {
 	const { searchParams } = req.nextUrl;
-
-	// 1. Extract and normalize parameters
-	const rawParams = {
-		pageIndex: searchParams.get("pageIndex"),
-		pageSize: searchParams.get("pageSize"),
-		searchKey: searchParams.get("searchKey"),
-		status: searchParams.getAll("status").filter(Boolean),
-		priority: searchParams.getAll("priority").filter(Boolean),
-		category: searchParams.getAll("category").filter(Boolean),
-		sort: searchParams.get("sort"),
+	const rawParams = Object.fromEntries(searchParams.entries());
+	const multiValueParams = {
+		status: searchParams.getAll("status"),
+		priority: searchParams.getAll("priority"),
+		category: searchParams.getAll("category"),
 	};
-
-	// 2. Validate with Zod
-	const queryResult = taskPaginationSchema.safeParse(rawParams);
-
+	const queryResult = taskPaginationSchema.safeParse({
+		...rawParams,
+		...multiValueParams,
+	});
 	if (!queryResult.success) {
 		return NextResponse.json(
 			{
@@ -32,53 +36,43 @@ export const GET = api(async (req: NextRequest) => {
 		);
 	}
 
-	const { pageIndex, pageSize, searchKey, status, priority, category, sort } =
-		queryResult.data;
-	const offset = Math.max(0, pageIndex) * pageSize;
+	const {
+		pageIndex,
+		pageSize,
+		searchKey,
+		status,
+		priority,
+		category,
+		orderBy,
+		order,
+	} = queryResult.data;
 
-	// 3. Construct Dynamic SQL Filters
-	const filters: SQL[] = [];
+	const filters = [
+		searchKey?.trim() ? ilike(tasks.title, `%${searchKey.trim()}%`) : null,
+		status?.length ? inArray(tasks.status, status) : null,
+		priority?.length ? inArray(tasks.priority, priority) : null,
+		category?.length ? inArray(tasks.category, category) : null,
+	].filter((f): f is SQL => !!f);
 
-	if (searchKey?.trim()) {
-		filters.push(ilike(tasks.title, `%${searchKey.trim()}%`));
-	}
+	const whereClause = and(...filters);
+	const columns = getTableColumns(tasks);
+	const sortColumn =
+		orderBy && orderBy in columns
+			? columns[orderBy as keyof typeof columns]
+			: tasks.createdAt;
 
-	if (status?.length) filters.push(inArray(tasks.status, status));
-	if (priority?.length) filters.push(inArray(tasks.priority, priority));
-	if (category?.length) filters.push(inArray(tasks.category, category));
+	const sortDirection = order === "asc" ? asc : desc;
 
-	const whereClause = filters.length > 0 ? and(...filters) : undefined;
-
-	// 4. Determine Sort Order
-	// Logic: Defaulting to tasks.id ensures the position remains stable after updates
-	const [rawField, rawOrder] = (sort || "").split(":");
-	const SORT_COLUMNS = {
-		id: tasks.id,
-		createdAt: tasks.createdAt,
-		updatedAt: tasks.updatedAt,
-	};
-
-	// Use tasks.id as the fallback column to maintain consistent positioning
-	const targetColumn =
-		SORT_COLUMNS[rawField as keyof typeof SORT_COLUMNS] || tasks.id;
-
-	// Default to descending (newest IDs at the top) if no order is specified
-	const orderFn = rawOrder === "asc" ? asc : desc;
-
-	// 5. Parallel execution for data and total count
-	const [data, totalResult] = await Promise.all([
+	const [data, [{ total }]] = await Promise.all([
 		db
 			.select()
 			.from(tasks)
 			.where(whereClause)
-			.orderBy(orderFn(targetColumn))
+			.orderBy(sortDirection(sortColumn))
 			.limit(pageSize)
-			.offset(offset),
-		db.select({ value: count() }).from(tasks).where(whereClause),
+			.offset(pageIndex * pageSize),
+		db.select({ total: count() }).from(tasks).where(whereClause),
 	]);
-
-	const total = totalResult[0]?.value ?? 0;
-
 	return NextResponse.json({
 		list: data,
 		total,

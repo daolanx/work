@@ -49,11 +49,11 @@ export const taskPaginationSchema = z.object({
 	pageIndex: z.coerce.number().min(0).default(0),
 	pageSize: z.coerce.number().min(1).max(100).default(10),
 	searchKey: preprocessString,
-	sort: preprocessString,
-	// Use helpers to handle multi-select fields
 	status: preprocessQueryParams(taskStatusEnum),
 	priority: preprocessQueryParams(taskPriorityEnum),
 	category: preprocessQueryParams(taskCategoryEnum),
+	orderBy: z.string().nullish(),
+	order: z.enum(["asc", "desc"]).nullish(),
 });
 
 export const taskSchema = z.object({

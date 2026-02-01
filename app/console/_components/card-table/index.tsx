@@ -5,6 +5,7 @@ import {
 	type ColumnFiltersState,
 	flexRender,
 	getCoreRowModel,
+	type SortingState,
 	useReactTable,
 	type VisibilityState,
 } from "@tanstack/react-table";
@@ -57,6 +58,8 @@ export function CardTable<T>({
 		pageSize: initialPageSize,
 		searchKey: "",
 		columnFilters: [] as ColumnFiltersState,
+		// sorting: [] as SortingState
+		sorting: [{ id: "createdAt", desc: true }] as SortingState,
 	});
 
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -75,9 +78,14 @@ export function CardTable<T>({
 			pagination: { pageIndex: filters.pageIndex, pageSize: filters.pageSize },
 			columnVisibility,
 			columnFilters: filters.columnFilters,
+			sorting: filters.sorting,
+		},
+		defaultColumn: {
+			enableSorting: false,
 		},
 		manualPagination: true,
 		manualFiltering: true,
+		manualSorting: true,
 		rowCount: res?.total ?? 0,
 		onPaginationChange: (updater) => {
 			setFilters((prev) => {
@@ -94,6 +102,13 @@ export function CardTable<T>({
 					typeof updater === "function" ? updater(prev.columnFilters) : updater;
 				// Reset to first page when filters change
 				return { ...prev, columnFilters: next, pageIndex: 0 };
+			});
+		},
+		onSortingChange: (updater) => {
+			setFilters((prev) => {
+				const next =
+					typeof updater === "function" ? updater(prev.sorting) : updater;
+				return { ...prev, sorting: next };
 			});
 		},
 		onColumnVisibilityChange: setColumnVisibility,

@@ -1,6 +1,6 @@
 "use client";
 
-import type { ColumnFiltersState } from "@tanstack/react-table";
+import type { ColumnFiltersState, SortingState } from "@tanstack/react-table";
 import { useMemo } from "react";
 import { toast } from "sonner";
 import useSWR, { useSWRConfig } from "swr";
@@ -23,6 +23,7 @@ const TASK_KEY = "/api/console/tasks";
  */
 interface UseTasksProps extends TaskPagination {
 	columnFilters?: ColumnFiltersState;
+	sorting?: SortingState;
 }
 
 // --- Queries (Read) ---
@@ -36,6 +37,7 @@ export function useTasks({
 	pageSize,
 	searchKey,
 	columnFilters,
+	sorting,
 }: UseTasksProps) {
 	const query = useMemo(() => {
 		const params = new URLSearchParams({
@@ -59,8 +61,17 @@ export function useTasks({
 			}
 		});
 
+		if (sorting && sorting.length > 0) {
+			const sort = sorting[0];
+			params.append("orderBy", sort.id);
+			params.append("order", sort.desc ? "desc" : "asc");
+		} else {
+			params.append("orderBy", "createdAt");
+			params.append("order", "desc");
+		}
+
 		return params.toString();
-	}, [pageIndex, pageSize, searchKey, columnFilters]);
+	}, [pageIndex, pageSize, searchKey, columnFilters, sorting]);
 
 	// SWR automatically re-fetches when the key (query string) changes
 	const { data, error, isLoading, mutate } = useSWR(`${TASK_KEY}?${query}`, {

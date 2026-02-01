@@ -1,12 +1,13 @@
 "use client";
 
-import { format, formatDistanceToNow, isToday, isYesterday } from "date-fns";
+import { format } from "date-fns";
 import Link from "next/link";
 import {
 	TASK_CATEGORY_ENUMS,
 	TASK_PRIORITY_ENUMS,
 	TASK_STATUS_ENUMS,
 } from "@/constants/task-enums";
+import { getRelativeTimeString } from "@/lib/date";
 import { CardTable } from "../../_components/card-table";
 import { useTasks } from "../../_hooks/use-task";
 import { CellCategory } from "./cell-category";
@@ -19,17 +20,6 @@ export default function TaskTable({
 }: {
 	variant?: "default" | "ghost";
 }) {
-	// Helper to format the date into a human-readable string
-	const getRelativeTimeString = (dateValue: string | Date) => {
-		const date = new Date(dateValue);
-
-		if (isToday(date)) return "Today";
-		if (isYesterday(date)) return "Yesterday";
-
-		// Returns strings like "3 days ago", "2 weeks ago", etc.
-		return formatDistanceToNow(date, { addSuffix: true });
-	};
-
 	const columns = [
 		{
 			accessorKey: "title",
@@ -78,6 +68,8 @@ export default function TaskTable({
 			accessorKey: "createdAt",
 			id: "createdAt",
 			header: "Created",
+			enableSorting: true,
+			sortDescFirst: true,
 			cell: ({ row }) => {
 				const date = row.original.createdAt;
 				if (!date) return <span className="text-slate-400">-</span>;
