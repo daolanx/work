@@ -9,7 +9,8 @@ import {
 	TASK_STATUS_ENUMS,
 } from "@/constants/task-enums";
 import { getRelativeTimeString } from "@/lib/date";
-import { CardTable, type CardTableHandle } from "../../_components/card-table";
+import { CardTable } from "../../_components/card-table";
+import type { CardTableHandle } from "../../_components/card-table/types";
 import { useTasks } from "../../_hooks/use-task";
 import { CellCategory } from "./cell-category";
 import { CellPriority } from "./cell-priority";
@@ -21,6 +22,7 @@ export default function TaskTable({
 }: {
 	variant?: "default" | "ghost";
 }) {
+	const tableRef = useRef<CardTableHandle>(null);
 	const columns = [
 		{
 			accessorKey: "title",
@@ -92,13 +94,10 @@ export default function TaskTable({
 			),
 		},
 	];
-
-	const tableRef = useRef<CardTableHandle>(null);
 	const handleCreateSuccess = (newTaskId: string) => {
+		tableRef.current?.reset();
 		if (newTaskId) {
-			tableRef.current?.reset(newTaskId);
-		} else {
-			tableRef.current?.reset();
+			tableRef.current?.flashTaskRow(newTaskId);
 		}
 	};
 

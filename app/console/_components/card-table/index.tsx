@@ -2,22 +2,14 @@
 
 import { IconLayoutColumns } from "@tabler/icons-react";
 import {
-	type ColumnFiltersState,
 	flexRender,
 	getCoreRowModel,
-	type SortingState,
 	useReactTable,
-	type VisibilityState,
 } from "@tanstack/react-table";
-import {
-	forwardRef,
-	useCallback,
-	useImperativeHandle,
-	useMemo,
-	useState,
-} from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import { SearchInput } from "@/components/search-input";
 import { Button } from "@/components/ui/button";
+// UI Components
 import {
 	Card,
 	CardAction,
@@ -40,20 +32,21 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+
+// Internal Logic & Components
+import { useTableFilter } from "./hooks/use-table-filter";
+import { useTableRowFlash } from "./hooks/use-table-row-flash";
 import { DataTableColumnHeader } from "./table-column-header";
 import { TableFacedFilters } from "./table-faced-fliters";
 import { TablePagination } from "./table-pagination";
 import { TableRowsSkeleton } from "./table-rows-skeleton";
-import type { DataTableProps, TableBodyContentProps } from "./types";
+import type { CardTableHandle, ExtendedDataTableProps } from "./types";
 
-export interface CardTableHandle {
-	reset: (newId?: string) => void;
-}
-
-interface ExtendedDataTableProps<T> extends DataTableProps<T> {
-	variant?: "default" | "ghost";
-}
-
+/**
+ * CardTable Component
+ * A highly decoupled table component that separates state management (filters),
+ * data fetching, and UI rendering.
+ */
 const CardTableInner = <T,>(
 	{
 		header,
@@ -65,88 +58,77 @@ const CardTableInner = <T,>(
 	}: ExtendedDataTableProps<T>,
 	ref: React.Ref<CardTableHandle>,
 ) => {
-	const [filters, setFilters] = useState({
-		pageIndex: 0,
-		pageSize: initialPageSize,
-		searchKey: "",
-		columnFilters: [] as ColumnFiltersState,
-		sorting: [{ id: "createdAt", desc: true }] as SortingState,
-	});
+	// Temporary state for highlighting a specific row (e.g., after creation/update)
+	const { flashTaskId, triggerTaskRowFlash, isRowFlashed } = useTableRowFlash();
 
-	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+	/**
+	 * 1. State Management
+	 * Uses a unique header key to retrieve or create a persistent filter store.
+	 */
+	const filter = useTableFilter(header as string, initialPageSize);
 
-	const [highlightId, setHighlightId] = useState<string | null>(null);
+	/**
+	 * 2. Data Fetching
+	 * Subscribes to filter state changes. The hook re-runs automatically when
+	 * pagination, search, or filters update.
+	 */
+	const { res, isLoading } = useDataHook(filter);
 
-	const isGhost = variant === "ghost";
-	const { res, isLoading } = useDataHook(filters);
-
-	useImperativeHandle(ref, () => ({
-		reset: (newId?: string) => {
-			setFilters({
-				pageIndex: 0,
-				pageSize: initialPageSize,
-				searchKey: "",
-				columnFilters: [],
-				sorting: [{ id: "createdAt", desc: true }],
-			});
-
-			if (newId) {
-				setHighlightId(newId);
-
-				setTimeout(() => {
-					setHighlightId(null);
-				}, 3000);
-			}
-		},
-	}));
-
-	const memoData = useMemo(() => res?.list ?? [], [res?.list]);
-	const memoColumn = useMemo(() => columns, [columns]);
-
+	/**
+	 * 3. Table Instance
+	 * Core logic for TanStack Table. Note that we use 'manual' modes because
+	 * sorting, filtering, and pagination are handled server-side via useDataHook.
+	 */
 	const table = useReactTable({
-		data: memoData,
-		columns: memoColumn,
+		data: res?.list ?? [],
+		columns,
 		state: {
-			pagination: { pageIndex: filters.pageIndex, pageSize: filters.pageSize },
-			columnVisibility,
-			columnFilters: filters.columnFilters,
-			sorting: filters.sorting,
+			pagination: { pageIndex: filter.pageIndex, pageSize: filter.pageSize },
+			columnFilters: filter.columnFilters,
+			sorting: filter.sorting,
 		},
-		defaultColumn: { enableSorting: false },
 		manualPagination: true,
 		manualFiltering: true,
 		manualSorting: true,
+		defaultColumn: {
+			enableSorting: false,
+		},
 		rowCount: res?.total ?? 0,
 		onPaginationChange: (updater) => {
-			setFilters((prev) => {
-				const next =
-					typeof updater === "function"
-						? updater({ pageIndex: prev.pageIndex, pageSize: prev.pageSize })
-						: updater;
-				return { ...prev, ...next };
-			});
+			const next =
+				typeof updater === "function"
+					? updater({ pageIndex: filter.pageIndex, pageSize: filter.pageSize })
+					: updater;
+			filter.setPageIndex(next.pageIndex);
+			filter.setPageSize(next.pageSize);
 		},
 		onColumnFiltersChange: (updater) => {
-			setFilters((prev) => {
-				const next =
-					typeof updater === "function" ? updater(prev.columnFilters) : updater;
-				return { ...prev, columnFilters: next, pageIndex: 0 };
-			});
+			const next =
+				typeof updater === "function" ? updater(filter.columnFilters) : updater;
+			filter.setColumnFilters(next);
 		},
 		onSortingChange: (updater) => {
-			setFilters((prev) => {
-				const next =
-					typeof updater === "function" ? updater(prev.sorting) : updater;
-				return { ...prev, sorting: next };
-			});
+			const next =
+				typeof updater === "function" ? updater(filter.sorting) : updater;
+			filter.setSorting(next);
 		},
-		onColumnVisibilityChange: setColumnVisibility,
 		getCoreRowModel: getCoreRowModel(),
 	});
 
-	const handleSearch = useCallback((val: string) => {
-		setFilters((prev) => ({ ...prev, searchKey: val, pageIndex: 0 }));
-	}, []);
+	/**
+	 * 4. Imperative API
+	 * Exposes methods to parent components via ref.
+	 */
+	useImperativeHandle(ref, () => ({
+		reset: () => {
+			filter.reset();
+		},
+		flashTaskRow(taskId) {
+			triggerTaskRowFlash(taskId);
+		},
+	}));
+
+	const isGhost = variant === "ghost";
 
 	return (
 		<Card
@@ -157,37 +139,19 @@ const CardTableInner = <T,>(
 		>
 			<CardHeader
 				className={cn(
-					"flex flex-row items-center justify-between space-y-0",
+					"flex flex-row items-center justify-between",
 					isGhost && "px-0 pt-0",
 				)}
 			>
 				<CardTitle>{header}</CardTitle>
-				<CardAction>
-					<div className="flex items-center gap-2">
-						<SearchInput onSearch={handleSearch} />
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<Button size="sm" variant="outline">
-									<IconLayoutColumns className="mr-2 h-4 w-4" /> Column
-								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent align="end">
-								{table
-									.getAllColumns()
-									.filter((c) => c.getCanHide())
-									.map((column) => (
-										<DropdownMenuCheckboxItem
-											checked={column.getIsVisible()}
-											key={column.id}
-											onCheckedChange={(v) => column.toggleVisibility(!!v)}
-										>
-											{column.id}
-										</DropdownMenuCheckboxItem>
-									))}
-							</DropdownMenuContent>
-						</DropdownMenu>
-						{toolbar}
-					</div>
+				<CardAction className="flex items-center gap-2">
+					{/* Flat access to filter state and actions */}
+					<SearchInput
+						defaultValue={filter.searchKey}
+						onSearch={filter.setSearchKey}
+					/>
+					<ColumnToggle table={table} />
+					{toolbar}
 				</CardAction>
 			</CardHeader>
 
@@ -213,21 +177,22 @@ const CardTableInner = <T,>(
 							))}
 						</TableHeader>
 						<TableBody>
-							<TableBodyContent
+							<TableBodyRender
 								columnCount={columns.length}
-								highlightId={highlightId}
+								flashTaskId={flashTaskId}
 								isLoading={isLoading}
-								pageSize={filters.pageSize}
+								isRowFlashed={isRowFlashed}
+								pageSize={filter.pageSize}
 								rows={table.getRowModel().rows}
 							/>
 						</TableBody>
 					</Table>
 				</div>
 				<TablePagination
-					onPageChange={(idx) => table.setPageIndex(idx)}
-					onPageSizeChange={(size) => table.setPageSize(size)}
-					pageIndex={filters.pageIndex}
-					pageSize={filters.pageSize}
+					onPageChange={filter.setPageIndex}
+					onPageSizeChange={filter.setPageSize}
+					pageIndex={filter.pageIndex}
+					pageSize={filter.pageSize}
 					total={res?.total ?? 0}
 				/>
 			</CardContent>
@@ -235,23 +200,45 @@ const CardTableInner = <T,>(
 	);
 };
 
-export const CardTable = forwardRef(CardTableInner) as <T>(
-	props: ExtendedDataTableProps<T> & { ref?: React.Ref<CardTableHandle> },
-) => React.ReactElement;
-
-interface TableBodyContentPropsWithHighlight<T>
-	extends TableBodyContentProps<T> {
-	highlightId?: string | null;
+/**
+ * Helper component to toggle column visibility.
+ */
+function ColumnToggle({ table }: { table: any }) {
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<Button size="sm" variant="outline">
+					<IconLayoutColumns className="mr-2 h-4 w-4" /> Column
+				</Button>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent align="end">
+				{table
+					.getAllColumns()
+					.filter((c: any) => c.getCanHide())
+					.map((column: any) => (
+						<DropdownMenuCheckboxItem
+							checked={column.getIsVisible()}
+							key={column.id}
+							onCheckedChange={(v) => column.toggleVisibility(!!v)}
+						>
+							{column.id}
+						</DropdownMenuCheckboxItem>
+					))}
+			</DropdownMenuContent>
+		</DropdownMenu>
+	);
 }
 
-function TableBodyContent<T>({
+/**
+ * Encapsulated TableBody logic to handle loading, empty states, and row rendering.
+ */
+function TableBodyRender({
 	rows,
 	isLoading,
 	columnCount,
 	pageSize,
-	emptyText = "No Data.",
-	highlightId,
-}: TableBodyContentPropsWithHighlight<T>) {
+	isRowFlashed,
+}: any) {
 	if (isLoading) {
 		return <TableRowsSkeleton columnCount={columnCount} pageSize={pageSize} />;
 	}
@@ -259,36 +246,37 @@ function TableBodyContent<T>({
 	if (!rows.length) {
 		return (
 			<TableRow>
-				<TableCell className="h-24 text-center" colSpan={columnCount}>
-					{emptyText}
+				<TableCell
+					className="h-24 text-center text-muted-foreground"
+					colSpan={columnCount}
+				>
+					No Data.
 				</TableCell>
 			</TableRow>
 		);
 	}
 
-	return (
-		<>
-			{rows.map((row) => {
-				const isNew = highlightId && (row.original as any).id === highlightId;
+	return rows.map((row: any) => {
+		const isFlashTaskRow = !!isRowFlashed?.((row.original as any).id);
 
-				return (
-					<TableRow
-						className={cn(
-							"transition-colors duration-500",
-
-							isNew && "animate-fade-out-highlight bg-green-100/50",
-						)}
-						data-state={row.getIsSelected() && "selected"}
-						key={row.id}
-					>
-						{row.getVisibleCells().map((cell) => (
-							<TableCell key={cell.id}>
-								{flexRender(cell.column.columnDef.cell, cell.getContext())}
-							</TableCell>
-						))}
-					</TableRow>
-				);
-			})}
-		</>
-	);
+		return (
+			<TableRow
+				className={cn(
+					"transition-colors duration-500",
+					isFlashTaskRow && "animate-fade-out-highlight bg-green-100/50",
+				)}
+				key={row.id}
+			>
+				{row.getVisibleCells().map((cell: any) => (
+					<TableCell key={cell.id}>
+						{flexRender(cell.column.columnDef.cell, cell.getContext())}
+					</TableCell>
+				))}
+			</TableRow>
+		);
+	});
 }
+
+export const CardTable = forwardRef(CardTableInner) as <T>(
+	props: ExtendedDataTableProps<T> & { ref?: React.Ref<CardTableHandle> },
+) => React.ReactElement;

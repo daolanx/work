@@ -1,9 +1,34 @@
-import type { ColumnDef, Row } from "@tanstack/react-table";
+import type {
+	ColumnDef,
+	ColumnFiltersState,
+	Row,
+	SortingState,
+} from "@tanstack/react-table";
 
 export interface PaginationParams {
 	pageIndex: number;
 	pageSize: number;
 	searchKey?: string;
+	columnFilters?: ColumnFiltersState;
+	sorting?: SortingState;
+}
+
+export interface ExtendedDataTableProps<T> extends DataTableProps<T> {
+	variant?: "default" | "ghost";
+	isRowFlashed?: (taskId: string) => boolean;
+}
+
+export interface CardTableHandle {
+	/**
+	 * Resets table to initial state.
+	 */
+	reset: () => void;
+
+	/**
+	 * Briefly flashes a row to draw the user's attention.
+	 * Ideal for new or updated tasks.
+	 */
+	flashTaskRow: (taskId: string) => void;
 }
 
 export interface PaginatedResponse<T> {
@@ -18,7 +43,7 @@ export type TableDataHook<T> = (params: PaginationParams) => {
 };
 
 export interface DataTableProps<T> {
-	header: React.ReactNode | string | null;
+	header: string;
 	columns: ColumnDef<T>[];
 	useDataHook: TableDataHook<T>;
 	initialPageSize?: number;
