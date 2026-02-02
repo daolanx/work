@@ -4,6 +4,12 @@
 
 Websites containing personal profiles and portfolios.
 
+[![Unit Tests](https://github.com/daolanx/work/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/daolanx/work/actions/workflows/unit-tests.yml)
+[![E2E Tests](https://github.com/daolanx/work/actions/workflows/e2e-tests.yml/badge.svg)](https://github.com/daolanx/work/actions/workflows/e2e-tests.yml)
+![Vercel Deploy](https://deploy-badge.vercel.app/vercel/work-chi-three)
+
+---
+
 
 ## 🛠️ Tech Stack
 
