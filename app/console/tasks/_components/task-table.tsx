@@ -2,13 +2,14 @@
 
 import { format } from "date-fns";
 import Link from "next/link";
+import { useRef } from "react";
 import {
 	TASK_CATEGORY_ENUMS,
 	TASK_PRIORITY_ENUMS,
 	TASK_STATUS_ENUMS,
 } from "@/constants/task-enums";
 import { getRelativeTimeString } from "@/lib/date";
-import { CardTable } from "../../_components/card-table";
+import { CardTable, type CardTableHandle } from "../../_components/card-table";
 import { useTasks } from "../../_hooks/use-task";
 import { CellCategory } from "./cell-category";
 import { CellPriority } from "./cell-priority";
@@ -34,9 +35,7 @@ export default function TaskTable({
 				</Link>
 			),
 		},
-		// --- New Created At Column ---
 
-		// ----------------------------
 		{
 			accessorKey: "priority",
 			id: "priority",
@@ -74,9 +73,7 @@ export default function TaskTable({
 				const date = row.original.createdAt;
 				if (!date) return <span className="text-slate-400">-</span>;
 				return (
-					<div
-						title={format(new Date(date), "PPPpp")} // Tooltip: Jan 30th, 2026, 4:35 PM
-					>
+					<div title={format(new Date(date), "PPPpp")}>
 						{getRelativeTimeString(date)}
 					</div>
 				);
@@ -96,11 +93,21 @@ export default function TaskTable({
 		},
 	];
 
+	const tableRef = useRef<CardTableHandle>(null);
+	const handleCreateSuccess = (newTaskId: string) => {
+		if (newTaskId) {
+			tableRef.current?.reset(newTaskId);
+		} else {
+			tableRef.current?.reset();
+		}
+	};
+
 	return (
 		<CardTable
 			columns={columns}
 			header="Tasks"
-			toolbar={<CreateTaskButton />}
+			ref={tableRef}
+			toolbar={<CreateTaskButton onSuccess={handleCreateSuccess} />}
 			useDataHook={useTasks}
 			variant={variant}
 		/>

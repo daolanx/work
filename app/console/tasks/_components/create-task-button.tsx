@@ -75,7 +75,7 @@ const TASK_FORM_CONFIG: FormFieldConfig<CreateTaskInput>[] = [
 	},
 ];
 
-export function CreateTaskButton() {
+export function CreateTaskButton({ onSuccess }) {
 	const [open, setOpen] = useState(false);
 	const { trigger: createTask, isMutating: isCreating } = useCreateTask();
 
@@ -92,8 +92,9 @@ export function CreateTaskButton() {
 
 	const onSubmit = async (data: CreateTaskInput) => {
 		try {
-			await createTask(data);
+			const newTask = await createTask(data);
 			setOpen(false);
+			onSuccess?.(newTask.id);
 			form.reset();
 		} catch (e) {
 			console.error(e);

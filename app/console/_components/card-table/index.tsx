@@ -9,7 +9,13 @@ import {
 	useReactTable,
 	type VisibilityState,
 } from "@tanstack/react-table";
-import { useCallback, useMemo, useState } from "react";
+import {
+	forwardRef,
+	useCallback,
+	useImperativeHandle,
+	useMemo,
+	useState,
+} from "react";
 import { SearchInput } from "@/components/search-input";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,33 +46,59 @@ import { TablePagination } from "./table-pagination";
 import { TableRowsSkeleton } from "./table-rows-skeleton";
 import type { DataTableProps, TableBodyContentProps } from "./types";
 
+export interface CardTableHandle {
+	reset: (newId?: string) => void;
+}
+
 interface ExtendedDataTableProps<T> extends DataTableProps<T> {
 	variant?: "default" | "ghost";
 }
 
-export function CardTable<T>({
-	header,
-	columns,
-	useDataHook,
-	toolbar,
-	initialPageSize = 10,
-	variant = "default",
-}: ExtendedDataTableProps<T>) {
-	// Centralized state for server-side operations
+const CardTableInner = <T,>(
+	{
+		header,
+		columns,
+		useDataHook,
+		toolbar,
+		initialPageSize = 10,
+		variant = "default",
+	}: ExtendedDataTableProps<T>,
+	ref: React.Ref<CardTableHandle>,
+) => {
 	const [filters, setFilters] = useState({
 		pageIndex: 0,
 		pageSize: initialPageSize,
 		searchKey: "",
 		columnFilters: [] as ColumnFiltersState,
-		// sorting: [] as SortingState
 		sorting: [{ id: "createdAt", desc: true }] as SortingState,
 	});
 
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-	const isGhost = variant === "ghost";
 
-	// Fetch data based on current filter/pagination state
+	const [highlightId, setHighlightId] = useState<string | null>(null);
+
+	const isGhost = variant === "ghost";
 	const { res, isLoading } = useDataHook(filters);
+
+	useImperativeHandle(ref, () => ({
+		reset: (newId?: string) => {
+			setFilters({
+				pageIndex: 0,
+				pageSize: initialPageSize,
+				searchKey: "",
+				columnFilters: [],
+				sorting: [{ id: "createdAt", desc: true }],
+			});
+
+			if (newId) {
+				setHighlightId(newId);
+
+				setTimeout(() => {
+					setHighlightId(null);
+				}, 3000);
+			}
+		},
+	}));
 
 	const memoData = useMemo(() => res?.list ?? [], [res?.list]);
 	const memoColumn = useMemo(() => columns, [columns]);
@@ -80,9 +112,7 @@ export function CardTable<T>({
 			columnFilters: filters.columnFilters,
 			sorting: filters.sorting,
 		},
-		defaultColumn: {
-			enableSorting: false,
-		},
+		defaultColumn: { enableSorting: false },
 		manualPagination: true,
 		manualFiltering: true,
 		manualSorting: true,
@@ -100,7 +130,6 @@ export function CardTable<T>({
 			setFilters((prev) => {
 				const next =
 					typeof updater === "function" ? updater(prev.columnFilters) : updater;
-				// Reset to first page when filters change
 				return { ...prev, columnFilters: next, pageIndex: 0 };
 			});
 		},
@@ -136,8 +165,6 @@ export function CardTable<T>({
 				<CardAction>
 					<div className="flex items-center gap-2">
 						<SearchInput onSearch={handleSearch} />
-
-						{/* Column Visibility Toggle */}
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
 								<Button size="sm" variant="outline">
@@ -165,9 +192,7 @@ export function CardTable<T>({
 			</CardHeader>
 
 			<CardContent className={isGhost ? "px-0 pb-0" : ""}>
-				{/* Active Filter Badges */}
 				<TableFacedFilters table={table} />
-
 				<div className="rounded-md border">
 					<Table>
 						<TableHeader className="bg-muted/50">
@@ -190,6 +215,7 @@ export function CardTable<T>({
 						<TableBody>
 							<TableBodyContent
 								columnCount={columns.length}
+								highlightId={highlightId}
 								isLoading={isLoading}
 								pageSize={filters.pageSize}
 								rows={table.getRowModel().rows}
@@ -197,7 +223,6 @@ export function CardTable<T>({
 						</TableBody>
 					</Table>
 				</div>
-
 				<TablePagination
 					onPageChange={(idx) => table.setPageIndex(idx)}
 					onPageSizeChange={(size) => table.setPageSize(size)}
@@ -208,18 +233,25 @@ export function CardTable<T>({
 			</CardContent>
 		</Card>
 	);
+};
+
+export const CardTable = forwardRef(CardTableInner) as <T>(
+	props: ExtendedDataTableProps<T> & { ref?: React.Ref<CardTableHandle> },
+) => React.ReactElement;
+
+interface TableBodyContentPropsWithHighlight<T>
+	extends TableBodyContentProps<T> {
+	highlightId?: string | null;
 }
 
-/**
- * Sub-component to handle Table Body rendering states (Loading, Empty, Data)
- */
 function TableBodyContent<T>({
 	rows,
 	isLoading,
 	columnCount,
 	pageSize,
 	emptyText = "No Data.",
-}: TableBodyContentProps<T>) {
+	highlightId,
+}: TableBodyContentPropsWithHighlight<T>) {
 	if (isLoading) {
 		return <TableRowsSkeleton columnCount={columnCount} pageSize={pageSize} />;
 	}
@@ -236,15 +268,27 @@ function TableBodyContent<T>({
 
 	return (
 		<>
-			{rows.map((row) => (
-				<TableRow data-state={row.getIsSelected() && "selected"} key={row.id}>
-					{row.getVisibleCells().map((cell) => (
-						<TableCell key={cell.id}>
-							{flexRender(cell.column.columnDef.cell, cell.getContext())}
-						</TableCell>
-					))}
-				</TableRow>
-			))}
+			{rows.map((row) => {
+				const isNew = highlightId && (row.original as any).id === highlightId;
+
+				return (
+					<TableRow
+						className={cn(
+							"transition-colors duration-500",
+
+							isNew && "animate-fade-out-highlight bg-green-100/50",
+						)}
+						data-state={row.getIsSelected() && "selected"}
+						key={row.id}
+					>
+						{row.getVisibleCells().map((cell) => (
+							<TableCell key={cell.id}>
+								{flexRender(cell.column.columnDef.cell, cell.getContext())}
+							</TableCell>
+						))}
+					</TableRow>
+				);
+			})}
 		</>
 	);
 }
