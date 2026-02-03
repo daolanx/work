@@ -45,7 +45,6 @@ jobs:
           args: --follow-symlinks --delete
         env:
           SOURCE_DIR: '.vercel/output/static/'
-          DEST_DIR: ''
           AWS_S3_BUCKET: 'assets'
           AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
