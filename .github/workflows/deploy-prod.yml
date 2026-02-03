@@ -5,16 +5,19 @@ on:
     branches:
       - main
 
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
 jobs:
-  # 🟢 Job 1: Build the project and generate static assets
-  build:
-    name: 🏗️ Build Project
+  deploy:
+    name: Build, Sync and Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Setup pnpm environment based on your successful E2E config
+      # 1. Environment Setup
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -29,60 +32,31 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Build Next.js with DB environment variables for static generation
-      - name: Build Next.js
-        run: pnpm run build
-        env:
-          NODE_ENV: production
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      # 2. Vercel Build Phase (Build Once)
+      - name: Pull and Build Vercel Artifacts
+        run: |
+          pnpx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          pnpx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
-      # Persist the generated static assets for the next job
-      - name: Upload Static Assets as Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: static-assets
-          path: .next/static
-          retention-days: 1
-
-  # 🟠 Job 2: Sync static assets to Cloudflare R2
-  upload-assets:
-    name: 🚀 Upload to R2
-    needs: build # Ensures assets are uploaded only after a successful build
-    runs-on: ubuntu-latest
-    steps:
-      # No need to checkout code or setup node, just download the build artifacts
-      - name: Download Static Assets
-        uses: actions/download-artifact@v4
-        with:
-          name: static-assets
-          path: .next/static
-
-      - name: Upload to R2
+      # 3. CDN Offloading Phase (Sync to R2)
+      - name: Upload Static Assets to R2
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --follow-symlinks --delete
         env:
-          SOURCE_DIR: './.next/static'
-          DEST_DIR: '_next/static'
+          SOURCE_DIR: '.vercel/output/static/'
+          DEST_DIR: ''
           AWS_S3_BUCKET: 'assets'
           AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           AWS_REGION: 'auto'
           AWS_S3_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
 
-  # 🔵 Job 3: Trigger deployment on Vercel
-  deploy-vercel:
-    name: ▲ Deploy to Vercel
-    needs: upload-assets # Ensures Vercel deploys only after assets are available on R2 CDN
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+      # 4. Final Deployment (Deploy Prebuilt)
       - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v20
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
+        run: pnpx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      # 5. Success Notification (Optional)
+      - name: Post-deployment Notification
+        if: success()
+        run: echo "Successfully deployed to production and synced to R2."
