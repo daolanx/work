@@ -1,40 +1,58 @@
+import { headers } from "next/headers";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { GET } from "@/app/api/console/user/route";
-import { db } from "@/db/drizzle";
+import { GET, PATCH } from "@/app/api/console/user/route";
+import { db } from "@/db";
+import { auth } from "@/lib/auth/server";
+import { ApiError } from "@/lib/exceptions";
 
-// 1. Mock the database module
-vi.mock("@/db/drizzle", () => ({
+// 1. Partially mock drizzle-orm to keep 'relations' and other utilities
+vi.mock("drizzle-orm", async (importOriginal) => {
+	const actual = await importOriginal<typeof import("drizzle-orm")>();
+	return {
+		...actual,
+		eq: vi.fn(),
+	};
+});
+
+// 2. Mock the database instance
+vi.mock("@/db", () => ({
 	db: {
-		select: vi.fn(),
+		update: vi.fn(),
+	},
+	// Ensure we mock the user table object used in the handler
+	user: { id: "id", name: "name", email: "email" },
+}));
+
+vi.mock("@/lib/auth/server", () => ({
+	auth: {
+		api: {
+			getSession: vi.fn(),
+		},
 	},
 }));
 
-describe("GET /api/console/user", () => {
+vi.mock("next/headers", () => ({
+	headers: vi.fn(),
+}));
+
+describe("User API Route Handlers", () => {
+	const mockUser = { id: "user-123", name: "Gemini", email: "gemini@ai.com" };
+	const mockSession = { user: mockUser };
+
 	beforeEach(() => {
 		vi.clearAllMocks();
+		(headers as any).mockResolvedValue(new Headers());
 	});
 
-	it("should return 200 and the user data when a user exists in the database", async () => {
-		// Prepare mock data
-		const mockUser = { id: 1, name: "Gemini", email: "gemini@ai.com" };
+	describe("GET /api/console/user", () => {
+		it("should return 200 and user data when authenticated", async () => {
+			(auth.api.getSession as any).mockResolvedValue(mockSession);
 
-		// 2. Mock Drizzle chain: db.select().from().limit()
-		(db.select as any).mockReturnValue({
-			from: vi.fn().mockReturnValue({
-				limit: vi.fn().mockResolvedValue([mockUser]),
-			}),
+			const response = await GET();
+			const data = await response.json();
+
+			expect(response.status).toBe(200);
+			expect(data).toEqual(mockUser);
 		});
-
-		// 3. Execute the GET handler
-		const response = await GET();
-
-		// 4. Assertions
-		expect(response.status).toBe(200);
-
-		const data = await response.json();
-		expect(data).toEqual(mockUser);
-
-		// 5. Verify database interaction
-		expect(db.select).toHaveBeenCalledTimes(1);
 	});
 });

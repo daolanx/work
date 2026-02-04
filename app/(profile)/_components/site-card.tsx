@@ -59,6 +59,7 @@ export default function SiteCard(props: Site) {
 								height={240}
 								priority
 								src={previewUrl}
+								unoptimized
 								width={400}
 							/>
 						</div>
@@ -66,14 +67,14 @@ export default function SiteCard(props: Site) {
 
 					<div className="flex flex-1 flex-col justify-between">
 						<div>
-							<p className=" text-sm leading-relaxed md:text-base">
+							<p className="text-sm leading-relaxed md:text-base">
 								{description}
 							</p>
 
 							<div className="mt-3 flex flex-wrap gap-2">
 								{keywords.map((keyword) => (
 									<Badge
-										className="rounded-md px-2 py-0 text-sm  "
+										className="rounded-md px-2 py-0 text-sm"
 										key={keyword}
 										variant="secondary"
 									>

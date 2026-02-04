@@ -1,7 +1,7 @@
 import { asc } from "drizzle-orm";
 import { NextResponse } from "next/server";
-import { db } from "@/db/drizzle";
-import { visitStats } from "@/db/schema";
+import { db } from "@/db";
+import { visitStats } from "@/db/biz.schema";
 import { api } from "@/lib/api-handler";
 
 export const GET = api(async () => {

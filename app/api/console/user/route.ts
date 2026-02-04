@@ -1,56 +1,63 @@
 import { eq } from "drizzle-orm";
+import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { z } from "zod";
-import { db } from "@/db/drizzle";
-import { users } from "@/db/schema";
+import { db } from "@/db";
+import { user } from "@/db/auth.schema";
 import { api } from "@/lib/api-handler";
+import { UpdateUserSchema } from "@/lib/auth/schemas";
+import { auth } from "@/lib/auth/server";
 import { ApiError } from "@/lib/exceptions";
 
-const CreateUserSchema = z.object({
-	id: z.number(),
-	name: z.string().min(2, "Name must be at least 2 characters"),
-	email: z.string().email("Invalid email format"),
-});
-
 export const GET = api(async () => {
-	const [user] = await db.select().from(users).limit(1);
+	// 1. Fetch the current session using request headers
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
 
-	if (!user) {
-		throw new ApiError("User Query Error", 300);
+	// 2. Check if user is authenticated
+	if (!session) {
+		throw new ApiError("Unauthorized", 401);
 	}
-	return NextResponse.json(user);
+
+	// 3. Return the user data from the session
+	return NextResponse.json(session.user);
 });
 
 export const PATCH = api(async (request: Request) => {
-	const body = await request.json();
+	// 1. Authenticate the user
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
 
-	const result = CreateUserSchema.safeParse(body);
+	if (!session) {
+		throw new ApiError("Unauthorized", 401);
+	}
+
+	const body = await request.json();
+	const result = UpdateUserSchema.safeParse(body);
 
 	if (!result.success) {
-		// Access 'issues' instead of 'errors'
 		const errorDetails = result.error.issues
 			.map((issue) => `${issue.path.join(".")}: ${issue.message}`)
 			.join(", ");
-
 		throw new ApiError(`Validation Failed: ${errorDetails}`, 400);
 	}
 
-	// 3. Destructure validated data
-	const { name, email, id } = result.data;
+	const { name, email } = result.data;
 
-	// 4. Perform database insertion
+	// 2. Update the user in the database using the ID from the session
+	// Better-Auth uses string IDs (UUIDs) by default for social login
 	const [updatedUser] = await db
-		.update(users)
+		.update(user)
 		.set({
-			name, // New name from input
-			email, // New email from input
-			// updatedAt: new Date(), // Recommended if you have this column
+			name: name ?? undefined,
+			email: email ?? undefined,
 		})
-		.where(eq(users.id, id))
+		.where(eq(user.id, session.user.id))
 		.returning();
 
 	if (!updatedUser) {
-		throw new ApiError("User not found", 404);
+		throw new ApiError("User not found in business database", 404);
 	}
 
 	return NextResponse.json(updatedUser);

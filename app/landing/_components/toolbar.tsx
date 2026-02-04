@@ -1,10 +1,3 @@
-import {
-	SignedIn,
-	SignedOut,
-	SignInButton,
-	SignUpButton,
-	UserButton,
-} from "@clerk/nextjs";
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import {
@@ -35,19 +28,8 @@ export default function ToolBar() {
 function LargeToolbar() {
 	return (
 		<div className="hidden items-center space-x-4 text-sm md:flex">
-			<SignedOut>
-				<SignInButton>
-					<Button className="cursor-pointer" variant={"ghost"}>
-						Sign In
-					</Button>
-				</SignInButton>
-				<SignUpButton>
-					<Button className="cursor-pointer">Sign Up</Button>
-				</SignUpButton>
-			</SignedOut>
-			<SignedIn>
-				<UserButton />
-			</SignedIn>
+			<Button>Sign Up</Button>
+			<Button variant={"outline"}>Sign In</Button>
 		</div>
 	);
 }
@@ -113,14 +95,8 @@ function MiniToolbar() {
 					</div>
 
 					<div className="grid w-full grid-cols-1 gap-y-4 p-4">
-						<SignedOut>
-							<SignInButton mode="modal">
-								<Button variant="outline">Sign In</Button>
-							</SignInButton>
-							<SignUpButton mode="modal">
-								<Button>Sign Up</Button>
-							</SignUpButton>
-						</SignedOut>
+						<Button>Sign Up</Button>
+						<Button variant={"outline"}>Sign In</Button>
 					</div>
 				</SheetContent>
 			</Sheet>

@@ -9,8 +9,8 @@ import {
 	type SQL,
 } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
-import { db } from "@/db/drizzle";
-import { tasks } from "@/db/schema";
+import { db } from "@/db";
+import { tasks } from "@/db/biz.schema";
 import { api } from "@/lib/api-handler";
 import { createTaskSchema, taskPaginationSchema } from "@/lib/validations/task";
 

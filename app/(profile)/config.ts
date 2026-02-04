@@ -46,16 +46,15 @@ const sites: SiteMeta[] = [
 		previewUrl: "/images/console-page.webp",
 		webUrl: "/console",
 		sourceUrl: "https://github.com/daolanx/work/tree/main/app/console",
-		keywords: ["Shadcn/ui", "Drizzle", "Neon", "SWR"],
+		keywords: ["Shadcn", "Drizzle", "Neon", "SWR", "Better-Auth"],
 		en: {
 			title: "Console Page",
 			description:
-				"Console Page, including a left-side menu and a right-side panel; permission management, data requests, and parallel loading.",
+				"Management console with login and task management features.",
 		},
 		zh: {
 			title: "控制台页面",
-			description:
-				"控制台页面, 包含左侧菜单和右侧面板, 权限管理，数据请求，并行加载。",
+			description: "具备登录功能，任务管理功能的控制台。",
 		},
 	},
 	{

@@ -1,26 +1,31 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { getSessionCookie } from "better-auth/cookies";
+import { type NextRequest, NextResponse } from "next/server";
+import { AUTH_CONFIG, isPublicPath } from "@/lib/auth/paths";
 
-const isPublicRoute = createRouteMatcher([
-	"/sign-in(.*)",
-	"/sign-up(.*)",
-	"/",
-	"/landing",
-	"/ai-chat(.*)",
-	"/console(.*)",
-	"/api(.*)",
-]);
+export async function proxy(request: NextRequest) {
+	const { pathname } = request.nextUrl;
+	const session = getSessionCookie(request);
+	const isLoggedIn = !!session;
 
-export default clerkMiddleware(async (auth, req) => {
-	if (!isPublicRoute(req)) {
-		await auth.protect();
+	if (isPublicPath(pathname)) {
+		if (isLoggedIn && pathname.startsWith(AUTH_CONFIG.authPathPrefix)) {
+			return NextResponse.redirect(
+				new URL(AUTH_CONFIG.defaultRedirectPath, request.url),
+			);
+		}
+		return NextResponse.next();
 	}
-});
 
+	if (!isLoggedIn) {
+		const loginUrl = new URL(AUTH_CONFIG.loginPath, request.url);
+		loginUrl.searchParams.set("callbackUrl", pathname);
+		return NextResponse.redirect(loginUrl);
+	}
+
+	return NextResponse.next();
+}
+
+// Match all routes except for static files and Next.js internal routes
 export const config = {
-	matcher: [
-		// Skip Next.js internals and all static files, unless found in search params
-		"/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-		// Always run for API routes
-		"/(api|trpc)(.*)",
-	],
+	matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };

@@ -1,5 +1,3 @@
-"use client";
-
 import { Toaster } from "sonner";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./_components/app-sidebar";
@@ -25,6 +23,7 @@ export default function ConsoleLayout({
 				<AppSidebar variant="inset" />
 				<SidebarInset>
 					<SiteHeader />
+
 					{/* Main content wrapper */}
 					<div className="flex flex-1 flex-col">
 						<div className="@container/main flex flex-1 flex-col gap-2">
