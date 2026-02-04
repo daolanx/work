@@ -4,6 +4,8 @@
 
 Websites containing personal profiles and portfolios.
 
+Live Demo: [https://work.daolanx.me/](https://work.daolanx.me/)
+
 [![Unit Tests](https://github.com/daolanx/work/actions/workflows/unit-tests.yml/badge.svg?branch=main)](https://github.com/daolanx/work/actions/workflows/unit-tests.yml)
 [![E2E Tests](https://github.com/daolanx/work/actions/workflows/e2e-tests.yml/badge.svg?branch=main)](https://github.com/daolanx/work/actions/workflows/e2e-tests.yml)
 ![Vercel Deploy](https://deploy-badge.vercel.app/vercel/work-chi-three)

@@ -1,24 +1,28 @@
 import { Bot } from "lucide-react";
+import { IconGithub } from "@/components/auth/icon-github";
 
 export default function LandingLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  return (
-    <div className="max-w-4xl mx-auto flex flex-col h-screen">
-      <header className="w-full border-b-gray-300 p-4 mb-2 border-b-1 flex items-center sticky top-0 bg-white dark:bg-background">
-        <Bot className="mr-2 text-current" />
-        <h1 className="text-2xl font-bold  bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
-          AI Chat
-        </h1>
-      </header>
-      {children}
-      <footer>
-        <p className="text-sm p-4 text-gray-600 ">
-          &copy; {new Date().getFullYear()} Dax INC. All rights reserved.
-        </p>
-      </footer>
-    </div>
-  );
+	return (
+		<div className="mx-auto flex h-screen max-w-4xl flex-col">
+			<header className="sticky top-0 mb-2 flex flex w-full items-center justify-between border-b-1 border-b-gray-300 bg-white p-4 dark:bg-background">
+				<div className="flex items-center">
+					<Bot className="mr-2 text-current" />
+					<h1 className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text font-bold text-2xl text-transparent">
+						AI Chat
+					</h1>
+				</div>
+				<IconGithub />
+			</header>
+			{children}
+			<footer>
+				<p className="p-4 text-gray-600 text-sm">
+					&copy; {new Date().getFullYear()} Dax INC. All rights reserved.
+				</p>
+			</footer>
+		</div>
+	);
 }

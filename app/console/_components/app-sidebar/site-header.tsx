@@ -4,6 +4,7 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
+import { IconGithub } from "@/components/auth/icon-github";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -140,6 +141,7 @@ export function SiteHeader() {
 
 				<div className="ml-auto flex items-center gap-3">
 					<NotifyBell />
+					<IconGithub />
 				</div>
 			</div>
 		</header>

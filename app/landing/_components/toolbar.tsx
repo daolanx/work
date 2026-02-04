@@ -1,5 +1,6 @@
 import { Menu } from "lucide-react";
 import { useState } from "react";
+import { IconGithub } from "@/components/auth/icon-github";
 import {
 	Accordion,
 	AccordionContent,
@@ -30,6 +31,7 @@ function LargeToolbar() {
 		<div className="hidden items-center space-x-4 text-sm md:flex">
 			<Button>Sign Up</Button>
 			<Button variant={"outline"}>Sign In</Button>
+			<IconGithub />
 		</div>
 	);
 }
