@@ -3,6 +3,7 @@ import { createAuthClient } from "better-auth/react";
 import { AUTH_CONFIG } from "@/lib/auth/paths";
 
 export const authClient = createAuthClient({
+	// baseURL: "http://localhost:3000",
 	plugins: [adminClient()],
 });
 

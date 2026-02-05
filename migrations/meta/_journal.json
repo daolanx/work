@@ -43,6 +43,13 @@
 			"when": 1770172783528,
 			"tag": "0005_acoustic_dust",
 			"breakpoints": true
+		},
+		{
+			"idx": 6,
+			"version": "7",
+			"when": 1770264701112,
+			"tag": "0006_soft_thunderbolt_ross",
+			"breakpoints": true
 		}
 	]
 }

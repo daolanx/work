@@ -12,14 +12,6 @@ import {
 	TASK_PRIORITY_ENUM_KEYS,
 } from "@/constants/task-enums";
 
-export const users = pgTable("users", {
-	id: serial("id").primaryKey(),
-	name: text("name").notNull(),
-	email: text("email").notNull().unique(),
-	avatar: text("avatar"),
-	createdAt: timestamp("created_at").defaultNow().notNull(),
-});
-
 export const tasks = pgTable("tasks", {
 	id: serial("id").primaryKey(),
 	title: text("title").notNull(),

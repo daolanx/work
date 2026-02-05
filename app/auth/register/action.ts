@@ -40,7 +40,8 @@ export async function registerUser(
 
 		return {
 			success: {
-				reason: "Registration successful! You can now sign in.",
+				reason:
+					"Account created! Please check your email and click the verification link to activate your account.",
 			},
 			error: null,
 		};
