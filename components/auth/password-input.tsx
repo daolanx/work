@@ -1,48 +1,43 @@
 "use client";
 
 import { CheckIcon, EyeIcon, EyeOffIcon, XIcon } from "lucide-react";
-import { useId, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
+import { PASSWORD_RULES } from "@/lib/auth/schemas";
 
+// Enhanced Props to support shadcn/react-hook-form "field"
 export type PasswordInputProps = {
-	value: string;
-	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	value?: string;
+	onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+	name?: string;
 	id?: string;
 	placeholder?: string;
 	hideStrength?: boolean;
 	disabled?: boolean;
 };
 
-export default function PasswordInput({
-	value,
+export function PasswordInput({
+	value = "",
 	onChange,
-	id: idProp,
+	onBlur,
+	name,
+	id,
 	placeholder = "Password",
 	hideStrength = false,
 	disabled = false,
 }: PasswordInputProps) {
-	const id = useId();
-	const inputId = idProp || id;
 	const [isVisible, setIsVisible] = useState<boolean>(false);
 
 	const toggleVisibility = () => setIsVisible((prevState) => !prevState);
 
-	const checkStrength = (pass: string) => {
-		const requirements = [
-			{ regex: /.{8,}/, text: "At least 8 characters" },
-			{ regex: /[0-9]/, text: "At least 1 number" },
-			{ regex: /[a-z]/, text: "At least 1 lowercase letter" },
-			{ regex: /[A-Z]/, text: "At least 1 uppercase letter" },
-			{ regex: /[^A-Za-z0-9]/, text: "At least 1 symbol" },
-		];
-
-		return requirements.map((req) => ({
-			met: req.regex.test(pass),
+	const strength = useMemo(() => {
+		return PASSWORD_RULES.map((req) => ({
+			met: req.regex.test(value),
 			text: req.text,
 		}));
-	};
+	}, [value]);
 
-	const strength = checkStrength(value);
 	const strengthScore = useMemo(
 		() => strength.filter((req) => req.met).length,
 		[strength],
@@ -63,26 +58,28 @@ export default function PasswordInput({
 		return "Strong password";
 	};
 
-	const allRequirementsMet = strengthScore === 5;
 	const shouldShowRequirements =
-		!hideStrength && value.length > 0 && !allRequirementsMet;
+		!hideStrength && value.length > 0 && strengthScore < 5;
 
 	return (
-		<div>
+		<div className="space-y-3">
 			<div className="relative">
 				<Input
 					className="pe-9"
 					disabled={disabled}
-					id={inputId}
+					id={id}
+					name={name}
+					onBlur={onBlur}
 					onChange={onChange}
 					placeholder={placeholder}
 					type={isVisible ? "text" : "password"}
 					value={value}
 				/>
 				<button
-					className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md text-muted-foreground/80 hover:text-foreground disabled:opacity-50"
+					className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md text-muted-foreground/80 transition-colors hover:text-foreground disabled:opacity-50"
 					disabled={disabled}
 					onClick={toggleVisibility}
+					tabIndex={-1}
 					type="button"
 				>
 					{isVisible ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
@@ -90,7 +87,7 @@ export default function PasswordInput({
 			</div>
 
 			{shouldShowRequirements && (
-				<div className="fade-in slide-in-from-top-1 mt-3 animate-in duration-200">
+				<div className="fade-in slide-in-from-top-1 animate-in duration-200">
 					<div className="mb-4 h-1 w-full overflow-hidden rounded-full bg-border">
 						<div
 							className={`h-full ${getStrengthColor(strengthScore)} transition-all duration-500`}

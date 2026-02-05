@@ -11,7 +11,7 @@ export default function RegisterPage() {
 	const [isPending, setIsPending] = useState(false);
 
 	return (
-		<div className="flex min-h-screen w-full items-center justify-center bg-background px-4">
+		<div className="flex min-h-screen w-full items-center justify-center px-4">
 			<motion.div
 				animate={{ opacity: 1, y: 0 }}
 				className={`w-full transition-all duration-300 sm:max-w-[400px] md:max-w-[420px] lg:max-w-[440px] ${isPending ? "pointer-events-none opacity-70 blur-[0.3px]" : ""}`}
@@ -37,7 +37,7 @@ export default function RegisterPage() {
 						<div className="flex items-center">
 							<div className="h-px flex-1 bg-muted-foreground/15" />
 							<span className="mx-4 font-bold text-[10px] text-muted-foreground uppercase tracking-widest">
-								Quick Auth
+								OAUTH
 							</span>
 							<div className="h-px flex-1 bg-muted-foreground/15" />
 						</div>
@@ -58,9 +58,9 @@ export default function RegisterPage() {
 				</Card>
 
 				<p className="mt-10 text-center text-muted-foreground text-sm">
-					Already have access?{" "}
+					Already have a account?
 					<Link
-						className="font-bold text-foreground transition-colors hover:text-primary"
+						className="ml-2 font-bold text-foreground transition-colors hover:text-primary"
 						href="/auth/login"
 					>
 						Sign In

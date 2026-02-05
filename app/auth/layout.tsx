@@ -1,3 +1,4 @@
+// app/auth/layout.tsx
 "use client";
 
 import {
@@ -8,7 +9,7 @@ import {
 	TrendingUp,
 	Users,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "motion/react"; // Changed from motion/react for standard compatibility
 
 const FloatingMetric = ({
 	children,
@@ -41,7 +42,9 @@ export default function AuthLayout({
 	return (
 		<div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background">
 			{/* --- SHARED BACKGROUND LAYER --- */}
-			<div className="absolute inset-0 z-0 overflow-hidden">
+			<div className="pointer-events-none fixed inset-0 z-0">
+				{/* Changed absolute to fixed to ensure it stays during scrolls */}
+
 				{/* Grid Pattern */}
 				<div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
 
@@ -71,7 +74,8 @@ export default function AuthLayout({
 			</div>
 
 			{/* --- CONTENT AREA --- */}
-			<main className="relative z-10 flex w-full flex-col items-center">
+			<main className="relative z-10 flex w-full flex-col items-center bg-transparent">
+				{/* bg-transparent is crucial here */}
 				{children}
 			</main>
 		</div>

@@ -2,12 +2,7 @@ import { toast } from "sonner";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 import { fetcher } from "@/lib/fetcher";
-
-interface User {
-	id: string | number;
-	name: string;
-	email: string;
-}
+import { type UpdateUserInput } from "@/lib/auth/schemas";
 
 const USER_KEY = "/api/console/user";
 
@@ -16,7 +11,7 @@ export function useUser() {
 
 	const { trigger: updateUser, isMutating } = useSWRMutation(
 		USER_KEY,
-		(url, { arg }: { arg: User }) =>
+		(url, { arg }: { arg: UpdateUserInput }) =>
 			fetcher(url, {
 				method: "PATCH",
 				body: JSON.stringify(arg),

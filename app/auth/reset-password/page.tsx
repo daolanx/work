@@ -1,204 +1,57 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { Loader2, ShieldCheck } from "lucide-react";
 import { motion } from "motion/react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
-import PasswordInput from "@/components/auth/password-input";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import React, { Suspense, useState } from "react";
+import { ResetPasswordForm } from "@/components/auth/reset-password-form";
 import { Card, CardContent } from "@/components/ui/card";
-import { FormError, FormSuccess } from "@/components/ui/form-messages";
-import { Label } from "@/components/ui/label";
-import { authClient } from "@/lib/auth/client";
 
-const schema = z
-	.object({
-		password: z
-			.string()
-			.min(8, { message: "Password must be at least 8 characters" })
-			.regex(/[0-9]/, { message: "Password must contain at least one number" })
-			.regex(/[a-z]/, {
-				message: "Password must contain at least one lowercase letter",
-			})
-			.regex(/[A-Z]/, {
-				message: "Password must contain at least one uppercase letter",
-			}),
-		confirmPassword: z.string().min(1, "Please confirm your password"),
-	})
-	.refine((data) => data.password === data.confirmPassword, {
-		message: "Passwords do not match",
-		path: ["confirmPassword"],
-	});
-
-type FormData = z.infer<typeof schema>;
-
-function ResetPasswordForm({
-	onLoading,
-}: {
-	onLoading: (loading: boolean) => void;
-}) {
-	const router = useRouter();
-	const searchParams = useSearchParams();
-	const token = searchParams.get("token");
-
-	const [formState, setFormState] = useState<{
-		success?: string;
-		error?: string;
-	}>({});
-
-	const {
-		handleSubmit,
-		control,
-		formState: { errors, isSubmitting },
-	} = useForm<FormData>({
-		resolver: zodResolver(schema),
-		defaultValues: { password: "", confirmPassword: "" },
-	});
-
-	useEffect(() => {
-		onLoading(isSubmitting);
-	}, [isSubmitting, onLoading]);
-
-	const onSubmit = async (data: FormData) => {
-		setFormState({});
-		if (!token) {
-			setFormState({ error: "Invalid or expired reset token." });
-			return;
-		}
-
-		await authClient.resetPassword(
-			{
-				newPassword: data.password,
-				token,
-			},
-			{
-				onSuccess: () => {
-					setFormState({ success: "Password updated successfully." });
-					setTimeout(() => router.push("/auth/login"), 2000);
-				},
-				onError: (ctx) => {
-					setFormState({ error: ctx.error.message });
-				},
-			},
-		);
-	};
-
-	return (
-		<form
-			className="flex w-full flex-col gap-6"
-			onSubmit={handleSubmit(onSubmit)}
-		>
-			<FormSuccess message={formState.success || ""} />
-			<FormError message={formState.error || ""} />
-
-			{!formState.success ? (
-				<>
-					<div className="flex flex-col gap-2.5">
-						<Label htmlFor="password">New Password</Label>
-						<Controller
-							control={control}
-							name="password"
-							render={({ field }) => (
-								<PasswordInput
-									disabled={isSubmitting}
-									id="password"
-									onChange={field.onChange}
-									value={field.value}
-								/>
-							)}
-						/>
-						{errors.password && (
-							<span className="text-red-500 text-xs">
-								{errors.password.message}
-							</span>
-						)}
-					</div>
-
-					<div className="flex flex-col gap-2.5">
-						<Label htmlFor="confirmPassword">Confirm Password</Label>
-						<Controller
-							control={control}
-							name="confirmPassword"
-							render={({ field }) => (
-								<PasswordInput
-									disabled={isSubmitting}
-									hideStrength={true}
-									id="confirmPassword"
-									onChange={field.onChange}
-									placeholder="Repeat new password"
-									value={field.value}
-								/>
-							)}
-						/>
-						{errors.confirmPassword && (
-							<span className="text-red-500 text-xs">
-								{errors.confirmPassword.message}
-							</span>
-						)}
-					</div>
-
-					<Button
-						className="mt-2 h-12 w-full font-semibold text-base"
-						disabled={isSubmitting}
-						type="submit"
-					>
-						{isSubmitting ? (
-							<>
-								<Loader2 className="mr-2 h-5 w-5 animate-spin" />
-								Updating...
-							</>
-						) : (
-							"Save New Password"
-						)}
-					</Button>
-				</>
-			) : (
-				<div className="flex flex-col items-center gap-5 py-6">
-					<CheckCircle2 className="text-primary" size={48} strokeWidth={1.5} />
-					<p className="animate-pulse text-center text-muted-foreground text-sm">
-						Redirecting to login...
-					</p>
-				</div>
-			)}
-		</form>
-	);
-}
-
+/**
+ * Main Page Wrapper
+ */
 export default function ResetPasswordPage() {
 	const [isPending, setIsPending] = useState(false);
 
 	return (
-		<div className="flex min-h-screen w-full items-center justify-center bg-background p-4 md:p-8">
+		<div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden p-4">
+			{/* Background decoration */}
+			<div className="absolute top-0 left-0 -z-10 h-full w-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent" />
+
 			<motion.div
 				animate={{ opacity: 1, y: 0 }}
-				className={`w-full transition-all duration-300 sm:max-w-md lg:max-w-lg ${isPending ? "pointer-events-none opacity-70" : ""}`}
-				initial={{ opacity: 0, y: 10 }}
+				className="w-full max-w-md"
+				initial={{ opacity: 0, y: 20 }}
+				transition={{ duration: 0.5, ease: "easeOut" }}
 			>
-				<div className="mb-10 flex flex-col items-center gap-3 text-center">
-					<h1 className="font-black text-4xl uppercase italic tracking-tighter">
+				<div className="mb-8 flex flex-col items-center gap-3 text-center">
+					<div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg shadow-primary/20">
+						<ShieldCheck size={28} />
+					</div>
+					<h1 className="font-black text-3xl uppercase italic tracking-tighter">
 						Reset Password
 					</h1>
-					<p className="text-muted-foreground">
-						Choose a strong password to protect your account.
+					<p className="text-muted-foreground text-sm">
+						Secure your account with a new strong password.
 					</p>
 				</div>
 
-				<Card className="relative overflow-hidden border-muted/40 bg-card/95 shadow-2xl backdrop-blur-xl">
+				<Card className="relative overflow-hidden border-muted/40 bg-card/80 shadow-2xl backdrop-blur-sm">
+					{/* Top progress bar */}
 					{isPending && (
-						<div className="absolute top-0 right-0 left-0 h-[3px] animate-pulse bg-primary" />
+						<div className="absolute top-0 right-0 left-0 h-[2px] overflow-hidden">
+							<div className="h-full w-full origin-left animate-progress bg-primary" />
+						</div>
 					)}
 
-					<CardContent className="px-6 pt-12 pb-10 md:px-12">
+					<CardContent className="px-6 py-10 md:px-10">
 						<Suspense
 							fallback={
-								<div className="flex justify-center py-12">
-									<Loader2
-										className="animate-spin text-muted-foreground/20"
-										size={32}
-									/>
+								<div className="flex flex-col items-center justify-center gap-4 py-12">
+									<Loader2 className="animate-spin text-primary" size={40} />
+									<p className="animate-pulse text-muted-foreground text-xs">
+										Initializing...
+									</p>
 								</div>
 							}
 						>
@@ -206,6 +59,16 @@ export default function ResetPasswordPage() {
 						</Suspense>
 					</CardContent>
 				</Card>
+
+				<p className="mt-8 text-center text-muted-foreground text-xs">
+					Need help?{" "}
+					<Link
+						className="underline underline-offset-4 hover:text-primary"
+						href="mailto:daolanx.dev@gmail.com"
+					>
+						Contact Security Team
+					</Link>
+				</p>
 			</motion.div>
 		</div>
 	);

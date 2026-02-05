@@ -1,166 +1,173 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MailCheck } from "lucide-react";
+import { Loader2, MailCheck } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
+
 import { registerUser } from "@/app/auth/register/action";
 import { Button } from "@/components/ui/button";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { type RegisterSchema, registerSchema } from "@/lib/action-schemas";
 import { FormError } from "../ui/form-messages";
-import PasswordInput from "./password-input";
+import { PasswordInput } from "./password-input";
 
-/**
- * Props definition to fix the TypeScript 'IntrinsicAttributes' error
- */
 interface RegisterFormProps {
 	onLoading?: (loading: boolean) => void;
 }
 
 const RegisterForm = ({ onLoading }: RegisterFormProps) => {
-	const [formState, setFormState] = React.useState<{
+	const [serverState, setServerState] = React.useState<{
 		success?: string;
 		error?: string;
 	}>({});
 
-	const {
-		register,
-		handleSubmit,
-		formState: { errors, isSubmitting },
-		control,
-		getValues,
-	} = useForm<RegisterSchema>({
+	const form = useForm<RegisterSchema>({
 		resolver: zodResolver(registerSchema),
 		defaultValues: { name: "", email: "", password: "" },
 	});
 
-	/**
-	 * Sync internal form submission state with parent component's pending state
-	 */
+	const { isSubmitting } = form.formState;
+
+	// Notify parent component of loading state
 	useEffect(() => {
 		onLoading?.(isSubmitting);
 	}, [isSubmitting, onLoading]);
 
 	const onSubmit = async (data: RegisterSchema) => {
-		setFormState({}); // Clear previous states
-		const result = await registerUser(data);
-
-		if (result.success) {
-			// Server-side registration success, user should check email now
-			setFormState({ success: result.success.reason });
-		} else if (result.error) {
-			// Display error returned from Server Action
-			setFormState({ error: result.error.reason });
+		setServerState({});
+		try {
+			const result = await registerUser(data);
+			if (result.success) {
+				setServerState({ success: result.success.reason });
+			} else if (result.error) {
+				setServerState({ error: result.error.reason });
+			}
+		} catch (err) {
+			setServerState({ error: "Something went wrong. Please try again." });
 		}
 	};
 
-	/**
-	 * Success View: Rendered after registration succeeds to guide user to their inbox
-	 */
-	if (formState.success) {
+	// Success view: Guides user to their inbox
+	if (serverState.success) {
 		return (
-			<div className="flex w-full flex-col items-center justify-center space-y-4 rounded-xl border bg-card p-6 text-center">
-				<div className="rounded-full bg-primary/10 p-3 text-primary">
-					<MailCheck className="h-10 w-10" />
+			<div className="fade-in zoom-in-95 flex w-full animate-in flex-col items-center justify-center space-y-6 rounded-xl border bg-card p-8 text-center duration-300">
+				<div className="rounded-full bg-primary/10 p-4 text-primary">
+					<MailCheck className="h-12 w-12" />
 				</div>
 				<div className="space-y-2">
-					<h2 className="font-semibold text-2xl tracking-tight">
+					<h2 className="font-bold text-2xl tracking-tight">
 						Check your email
 					</h2>
-					<p className="text-balance text-muted-foreground text-sm">
+					<p className="text-muted-foreground">
 						We sent a verification link to{" "}
-						<span className="font-medium text-foreground">
-							{getValues("email")}
+						<span className="font-semibold text-foreground">
+							{form.getValues("email")}
 						</span>
-						. Please click the link in the email to activate your account.
 					</p>
 				</div>
-				<div className="flex w-full flex-col gap-2 pt-2">
-					<Button asChild className="w-full">
-						<Link href="/auth/login">Return to Sign In</Link>
-					</Button>
-				</div>
+				<Button asChild className="w-full">
+					<Link href="/auth/login">Back to Sign In</Link>
+				</Button>
 			</div>
 		);
 	}
 
-	/**
-	 * Form View: The default registration interface
-	 */
 	return (
 		<div className="w-full">
-			<FormError message={formState.error || ""} />
+			<FormError message={serverState.error || ""} />
 
-			<form
-				className="mt-4 flex w-full flex-col gap-5"
-				onSubmit={handleSubmit(onSubmit)}
-			>
-				<div className="flex flex-col gap-2">
-					<Label htmlFor="name">Name</Label>
-					<Input
-						autoComplete="name"
-						id="name"
-						placeholder="Your name"
-						type="text"
-						{...register("name")}
-						disabled={isSubmitting}
-					/>
-					{errors.name && (
-						<span className="text-destructive text-xs">
-							{errors.name.message}
-						</span>
-					)}
-				</div>
-
-				<div className="flex flex-col gap-2">
-					<Label htmlFor="email">Email</Label>
-					<Input
-						autoComplete="email"
-						id="email"
-						placeholder="you@example.com"
-						type="email"
-						{...register("email")}
-						disabled={isSubmitting}
-					/>
-					{errors.email && (
-						<span className="text-destructive text-xs">
-							{errors.email.message}
-						</span>
-					)}
-				</div>
-
-				<div className="flex flex-col gap-2">
-					<Label htmlFor="password">Password</Label>
-					<Controller
-						control={control}
-						name="password"
+			<Form {...form}>
+				<form
+					className="mt-4 flex flex-col gap-5"
+					onSubmit={form.handleSubmit(onSubmit)}
+				>
+					{/* Name Field */}
+					<FormField
+						control={form.control}
+						name="name"
 						render={({ field }) => (
-							<PasswordInput
-								disabled={isSubmitting}
-								id="password"
-								onChange={field.onChange}
-								value={field.value}
-							/>
+							<FormItem>
+								<FormLabel>Name</FormLabel>
+								<FormControl>
+									<Input
+										autoComplete="name"
+										disabled={isSubmitting}
+										placeholder="John Doe"
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
 						)}
 					/>
-					{errors.password && (
-						<span className="text-destructive text-xs">
-							{errors.password.message}
-						</span>
-					)}
-				</div>
 
-				<Button
-					className="mt-2 w-full cursor-pointer transition-all"
-					disabled={isSubmitting}
-					type="submit"
-				>
-					{isSubmitting ? "Creating account..." : "Create Account"}
-				</Button>
-			</form>
+					{/* Email Field */}
+					<FormField
+						control={form.control}
+						name="email"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Email</FormLabel>
+								<FormControl>
+									<Input
+										autoComplete="email"
+										disabled={isSubmitting}
+										placeholder="you@example.com"
+										type="email"
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					{/* Password Field */}
+					<FormField
+						control={form.control}
+						name="password"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Password</FormLabel>
+								<FormControl>
+									<PasswordInput
+										{...field}
+										disabled={isSubmitting}
+										hideStrength={false}
+										placeholder="Create a password" // Registration usually shows strength
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					<Button
+						className="mt-2 h-11 w-full cursor-pointer font-semibold transition-all"
+						disabled={isSubmitting}
+						type="submit"
+					>
+						{isSubmitting ? (
+							<>
+								<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+								Creating account...
+							</>
+						) : (
+							"Get Started"
+						)}
+					</Button>
+				</form>
+			</Form>
 		</div>
 	);
 };

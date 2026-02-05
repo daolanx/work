@@ -40,7 +40,7 @@ export default function ForgetPasswordPage() {
 	};
 
 	return (
-		<div className="flex min-h-screen w-full items-center justify-center bg-background px-4">
+		<div className="flex min-h-screen w-full items-center justify-center px-4">
 			<motion.div
 				animate={{ opacity: 1, y: 0 }}
 				className={`w-full transition-all duration-300 sm:max-w-[400px] md:max-w-[420px] lg:max-w-[440px] ${isPending ? "pointer-events-none opacity-70 blur-[0.3px]" : ""}`}
@@ -48,7 +48,7 @@ export default function ForgetPasswordPage() {
 			>
 				<div className="mb-10 flex flex-col items-center gap-3 text-center">
 					<h1 className="font-black text-3xl uppercase italic tracking-tighter sm:text-4xl">
-						Reset Access
+						Forget Password
 					</h1>
 					<p className="text-muted-foreground text-sm sm:text-base">
 						Enter your email to receive a recovery link.

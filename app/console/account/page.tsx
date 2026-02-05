@@ -19,20 +19,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-
-const profileSchema = z.object({
-	name: z.string().min(2, "Name too short"),
-	email: z.string().email("Invalid email"),
-});
-
-type ProfileValues = z.infer<typeof profileSchema>;
+import { type UpdateUserInput, UpdateUserSchema } from '@/lib/auth/schemas'
 
 export default function AccountPage() {
 	const { user, isLoading, isMutating, updateUser } = useUser();
 	const [isEditing, setIsEditing] = useState(false);
 
-	const form = useForm<ProfileValues>({
-		resolver: zodResolver(profileSchema),
+	const form = useForm<UpdateUserInput>({
+		resolver: zodResolver(UpdateUserSchema),
 		defaultValues: {
 			name: user?.name ?? "",
 			email: user?.email ?? "",
@@ -48,7 +42,7 @@ export default function AccountPage() {
 			});
 	}, [user, form]);
 
-	const onSubmit = async (data: ProfileValues) => {
+	const onSubmit = async (data: UpdateUserInput) => {
 		await updateUser({ ...data, id: user.id });
 		setIsEditing(false);
 	};
