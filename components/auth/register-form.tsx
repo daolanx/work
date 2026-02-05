@@ -60,7 +60,7 @@ const RegisterForm = ({ onLoading }: RegisterFormProps) => {
 	// Success view: Guides user to their inbox
 	if (serverState.success) {
 		return (
-			<div className="fade-in zoom-in-95 flex w-full animate-in flex-col items-center justify-center space-y-6 rounded-xl border bg-card p-8 text-center duration-300">
+			<div className="fade-in zoom-in-95 flex w-full animate-in flex-col items-center justify-center space-y-6 bg-card p-8 text-center duration-300">
 				<div className="rounded-full bg-primary/10 p-4 text-primary">
 					<MailCheck className="h-12 w-12" />
 				</div>

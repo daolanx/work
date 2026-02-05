@@ -2,9 +2,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { db, schema } from "@/db";
-import { sendEmail } from "@/lib/email";
-
-const isProd = process.env.NODE_ENV === "production";
+import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/email";
 
 export const auth = betterAuth({
 	database: drizzleAdapter(db, {
@@ -16,21 +14,7 @@ export const auth = betterAuth({
 		requireEmailVerification: true,
 		resetPasswordTokenExpiresIn: 60 * 60, // 1h
 		sendResetPassword: async ({ user, url, token }, request) => {
-			// In development, we only log to console to save Resend quota
-			if (!isProd) {
-				console.log("--- [DEV] Password Reset Link ---");
-				console.log(`To: ${user.email}`);
-				console.log(`URL: ${url}`);
-				console.log("---------------------------------");
-				return;
-			}
-
-			// In production, send the actual email via Resend
-			await sendEmail({
-				to: user.email,
-				subject: "Reset your password",
-				text: `Indie Console: Click the link to reset your password: ${url}`,
-			});
+			sendPasswordResetEmail(user, url);
 		},
 		onPasswordReset: async ({ user }, request) => {
 			console.log(`Password for user ${user.email} has been reset.`);
@@ -40,20 +24,7 @@ export const auth = betterAuth({
 		sendOnSignUp: true,
 		autoSignInAfterVerification: true,
 		sendVerificationEmail: async ({ user, url, token }) => {
-			// Environment check for verification emails
-			if (!isProd) {
-				console.log("--- [DEV] Email Verification Link ---");
-				console.log(`To: ${user.email}`);
-				console.log(`URL: ${url}`);
-				console.log("--------------------------------------");
-				return;
-			}
-
-			await sendEmail({
-				to: user.email,
-				subject: "Verify your email address",
-				text: `Indie Console: Click the link to verify your email: ${url}`,
-			});
+			sendVerificationEmail(user, url);
 		},
 	},
 	socialProviders: {
