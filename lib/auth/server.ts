@@ -9,6 +9,11 @@ export const auth = betterAuth({
 		provider: "pg",
 		schema,
 	}),
+	session: {
+		strategy: "jwt",
+		expiresIn: 60 * 60 * 24 * 7,
+		updateAge: 60 * 60 * 24,
+	},
 	emailAndPassword: {
 		enabled: true,
 		requireEmailVerification: true,
