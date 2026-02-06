@@ -1,12 +1,13 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm"; // Added 'and'
 import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { tasks } from "@/db/biz.schema";
-import { api } from "@/lib/api-handler";
+import { authApi } from "@/lib/api-handler"; // Switched to authApi only
 import { taskResourceIdSchema, updateTaskSchema } from "@/lib/validations/task";
 
-export const GET = api(async (req: NextRequest, { params }) => {
+export const GET = authApi(async (req: NextRequest, { params, user }) => {
 	const result = taskResourceIdSchema.safeParse(await params);
+
 	if (!result.success) {
 		return NextResponse.json(
 			{
@@ -21,22 +22,24 @@ export const GET = api(async (req: NextRequest, { params }) => {
 	}
 
 	const { taskId } = result.data;
+
+	// Scoped by taskId AND userId
 	const [task] = await db
 		.select()
 		.from(tasks)
-		.where(eq(tasks.id, taskId))
+		.where(and(eq(tasks.id, taskId), eq(tasks.userId, user.id)))
 		.limit(1);
 
 	if (!task) {
 		return NextResponse.json(
-			{ message: `Task with id ${taskId} not found` },
+			{ message: `Task not found or access denied` },
 			{ status: 404 },
 		);
 	}
 	return NextResponse.json(task);
 });
 
-export const PATCH = api(async (req: NextRequest, { params }) => {
+export const PATCH = authApi(async (req: NextRequest, { params, user }) => {
 	const paramResult = taskResourceIdSchema.safeParse(await params);
 	if (!paramResult.success) {
 		return NextResponse.json(
@@ -44,25 +47,28 @@ export const PATCH = api(async (req: NextRequest, { params }) => {
 			{ status: 400 },
 		);
 	}
+
 	const { taskId } = paramResult.data;
 	const body = await req.json();
 	const bodyResult = updateTaskSchema.safeParse(body);
+
 	if (!bodyResult.success) {
 		return NextResponse.json(
 			{ message: "Validation Error", errors: bodyResult.error.flatten() },
 			{ status: 400 },
 		);
 	}
+
+	// Update only if both IDs match
 	const [updatedTask] = await db
 		.update(tasks)
 		.set(bodyResult.data)
-		.where(eq(tasks.id, taskId))
+		.where(and(eq(tasks.id, taskId), eq(tasks.userId, user.id)))
 		.returning();
 
-	// 4. Handle Not Found
 	if (!updatedTask) {
 		return NextResponse.json(
-			{ message: `Task with id ${taskId} not found` },
+			{ message: `Task not found or access denied` },
 			{ status: 404 },
 		);
 	}
@@ -70,29 +76,27 @@ export const PATCH = api(async (req: NextRequest, { params }) => {
 	return NextResponse.json(updatedTask);
 });
 
-export const DELETE = api(async (req: NextRequest, { params }) => {
+export const DELETE = authApi(async (req: NextRequest, { params, user }) => {
 	const result = taskResourceIdSchema.safeParse(await params);
 
 	if (!result.success) {
 		return NextResponse.json(
-			{
-				message: "Invalid Task ID",
-				errors: result.error.flatten(),
-			},
+			{ message: "Invalid Task ID", errors: result.error.flatten() },
 			{ status: 400 },
 		);
 	}
 
 	const { taskId } = result.data;
 
+	// Delete only if both IDs match
 	const [deletedTask] = await db
 		.delete(tasks)
-		.where(eq(tasks.id, taskId))
+		.where(and(eq(tasks.id, taskId), eq(tasks.userId, user.id)))
 		.returning();
 
 	if (!deletedTask) {
 		return NextResponse.json(
-			{ message: `Task with id ${taskId} not found` },
+			{ message: `Task not found or access denied` },
 			{ status: 404 },
 		);
 	}

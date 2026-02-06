@@ -3,6 +3,7 @@ import {
 	asc,
 	count,
 	desc,
+	eq,
 	getTableColumns,
 	ilike,
 	inArray,
@@ -11,10 +12,10 @@ import {
 import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { tasks } from "@/db/biz.schema";
-import { api } from "@/lib/api-handler";
+import { authApi } from "@/lib/api-handler";
 import { createTaskSchema, taskPaginationSchema } from "@/lib/validations/task";
 
-export const GET = api(async (req: NextRequest) => {
+export const GET = authApi(async (req: NextRequest, { params, user }) => {
 	const { searchParams } = req.nextUrl;
 	const rawParams = Object.fromEntries(searchParams.entries());
 	const multiValueParams = {
@@ -48,6 +49,7 @@ export const GET = api(async (req: NextRequest) => {
 	} = queryResult.data;
 
 	const filters = [
+		eq(tasks.userId, user.id),
 		searchKey?.trim() ? ilike(tasks.title, `%${searchKey.trim()}%`) : null,
 		status?.length ? inArray(tasks.status, status) : null,
 		priority?.length ? inArray(tasks.priority, priority) : null,
@@ -82,10 +84,8 @@ export const GET = api(async (req: NextRequest) => {
 	});
 });
 
-export const POST = api(async (req: NextRequest) => {
+export const POST = authApi(async (req: NextRequest, { user }) => {
 	const body = await req.json();
-
-	// Validate Request Body for creation
 	const bodyResult = createTaskSchema.safeParse(body);
 
 	if (!bodyResult.success) {
@@ -95,8 +95,14 @@ export const POST = api(async (req: NextRequest) => {
 		);
 	}
 
-	// Database Insertion with Zod-verified data
-	const [newTask] = await db.insert(tasks).values(bodyResult.data).returning();
+	// 3. Inject userId during insertion
+	const [newTask] = await db
+		.insert(tasks)
+		.values({
+			...bodyResult.data,
+			userId: user.id, // Associate the task with the current user
+		})
+		.returning();
 
 	return NextResponse.json(newTask, { status: 201 });
 });

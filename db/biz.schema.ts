@@ -11,6 +11,7 @@ import {
 	TASK_CATEGORY_ENUM_KEYS,
 	TASK_PRIORITY_ENUM_KEYS,
 } from "@/constants/task-enums";
+import { user } from "./auth.schema";
 
 export const tasks = pgTable("tasks", {
 	id: serial("id").primaryKey(),
@@ -21,6 +22,9 @@ export const tasks = pgTable("tasks", {
 	status: text("status", { enum: ["Done", "In Process", "To Do", "Canceled"] })
 		.notNull()
 		.default("To Do"),
+	userId: text("user_id")
+		.notNull()
+		.references(() => user.id, { onDelete: "cascade" }),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 	updatedAt: timestamp("updated_at")
 		.defaultNow()
