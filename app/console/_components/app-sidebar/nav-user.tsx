@@ -5,11 +5,14 @@ import {
 	IconDotsVertical,
 	IconLogout,
 	IconNotification,
-	IconUserCircle,
+	IconSettings,
+	IconUser,
 } from "@tabler/icons-react";
-import { Loader2 } from "lucide-react"; // Import loader for visual feedback
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
 	DropdownMenu,
@@ -30,9 +33,54 @@ import { authClient } from "@/lib/auth/client";
 import { AUTH_CONFIG } from "@/lib/auth/paths";
 import { useUser } from "../../_hooks/useUser";
 
+/**
+ * Configuration for individual menu items
+ */
+interface NavMenuItemConfig {
+	label: string;
+	icon: React.ElementType;
+	href?: string;
+	onClick?: () => void;
+	disabled?: boolean;
+	comingSoon?: boolean;
+}
+
 export function NavUser() {
 	const { isMobile } = useSidebar();
 	const { user } = useUser();
+
+	/**
+	 * Menu items grouped by category.
+	 */
+	const menuGroups: NavMenuItemConfig[][] = [
+		[
+			{
+				label: "Profile",
+				icon: IconUser,
+				href: "/console/profile",
+			},
+			{
+				label: "Billing",
+				icon: IconCreditCard,
+				disabled: true,
+				comingSoon: true,
+			},
+			{
+				label: "Notifications",
+				icon: IconNotification,
+				disabled: true,
+				comingSoon: true,
+			},
+		],
+		[
+			{
+				label: "Settings",
+				icon: IconSettings,
+				disabled: true,
+				comingSoon: true,
+			},
+		],
+	];
 
 	return (
 		<SidebarMenu>
@@ -43,10 +91,7 @@ export function NavUser() {
 							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 							size="lg"
 						>
-							<Avatar className="h-8 w-8 rounded-lg">
-								<AvatarImage alt={user?.name} src={user?.avatar} />
-								<AvatarFallback className="rounded-lg">CN</AvatarFallback>
-							</Avatar>
+							<UserAvatar user={user} />
 							<div className="grid flex-1 text-left text-sm leading-tight">
 								<span className="truncate font-medium">{user?.name}</span>
 								<span className="truncate text-muted-foreground text-xs">
@@ -56,6 +101,7 @@ export function NavUser() {
 							<IconDotsVertical className="ml-auto size-4" />
 						</SidebarMenuButton>
 					</DropdownMenuTrigger>
+
 					<DropdownMenuContent
 						align="end"
 						className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
@@ -64,10 +110,7 @@ export function NavUser() {
 					>
 						<DropdownMenuLabel className="p-0 font-normal">
 							<div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-								<Avatar className="h-8 w-8 rounded-lg">
-									<AvatarImage alt={user?.name} src={user?.avatar} />
-									<AvatarFallback className="rounded-lg">CN</AvatarFallback>
-								</Avatar>
+								<UserAvatar className="h-8 w-8 rounded-lg" user={user} />
 								<div className="grid flex-1 text-left text-sm leading-tight">
 									<span className="truncate font-medium">{user?.name}</span>
 									<span className="truncate text-muted-foreground text-xs">
@@ -76,32 +119,22 @@ export function NavUser() {
 								</div>
 							</div>
 						</DropdownMenuLabel>
-						<DropdownMenuSeparator />
-						<DropdownMenuGroup>
-							<DropdownMenuItem className="cursor-not-allowed opacity-50">
-								<IconUserCircle className="mr-2 size-4" />
-								Account{" "}
-								<span className="ml-auto rounded bg-muted px-1 font-medium text-[10px] opacity-70">
-									SOON
-								</span>
-							</DropdownMenuItem>
-							<DropdownMenuItem className="cursor-not-allowed opacity-50">
-								<IconCreditCard className="mr-2 size-4" />
-								Billing{" "}
-								<span className="ml-auto rounded bg-muted px-1 font-medium text-[10px] opacity-70">
-									SOON
-								</span>
-							</DropdownMenuItem>
-							<DropdownMenuItem className="cursor-not-allowed opacity-50">
-								<IconNotification className="mr-2 size-4" />
-								Notifications{" "}
-								<span className="ml-auto rounded bg-muted px-1 font-medium text-[10px] opacity-70">
-									SOON
-								</span>
-							</DropdownMenuItem>
-						</DropdownMenuGroup>
-						<DropdownMenuSeparator />
 
+						{menuGroups.map((group, index) => {
+							const groupKey = `group-${group[0]?.label || index}`;
+							return (
+								<div key={groupKey}>
+									<DropdownMenuSeparator />
+									<DropdownMenuGroup>
+										{group.map((item) => (
+											<NavMenuItem item={item} key={item.label} />
+										))}
+									</DropdownMenuGroup>
+								</div>
+							);
+						})}
+
+						<DropdownMenuSeparator />
 						<NavLogoutItem />
 					</DropdownMenuContent>
 				</DropdownMenu>
@@ -110,6 +143,68 @@ export function NavUser() {
 	);
 }
 
+/**
+ * Reusable menu item component that handles both Links and Action buttons
+ */
+function NavMenuItem({ item }: { item: NavMenuItemConfig }) {
+	const Icon = item.icon;
+
+	// Wrap the label and icon in a div with fixed gap
+	const content = (
+		<div className="flex w-full items-center gap-2">
+			<Icon className="size-4 shrink-0" />
+			<span className="truncate">{item.label}</span>
+			{item.comingSoon && (
+				<span className="ml-auto rounded bg-muted px-1 font-medium text-[10px] opacity-70">
+					SOON
+				</span>
+			)}
+		</div>
+	);
+
+	return (
+		<DropdownMenuItem
+			asChild={!!item.href}
+			className={
+				item.disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+			}
+			disabled={item.disabled}
+			onClick={item.onClick}
+		>
+			{item.href ? (
+				<Link className="flex w-full items-center" href={item.href}>
+					{content}
+				</Link>
+			) : (
+				content
+			)}
+		</DropdownMenuItem>
+	);
+}
+
+/**
+ * Shared Avatar component to maintain visual consistency
+ */
+function UserAvatar({
+	user,
+	className = "h-8 w-8",
+}: {
+	user: any;
+	className?: string;
+}) {
+	return (
+		<Avatar className={className}>
+			<AvatarImage alt={user?.name} src={user?.image} />
+			<AvatarFallback className="rounded-lg">
+				{user?.name ? user.name.slice(0, 2).toUpperCase() : "NA"}
+			</AvatarFallback>
+		</Avatar>
+	);
+}
+
+/**
+ * Specialized Logout item with loading state management
+ */
 function NavLogoutItem() {
 	const router = useRouter();
 	const [isPending, setIsPending] = useState(false);
@@ -120,7 +215,7 @@ function NavLogoutItem() {
 			await authClient.signOut({
 				fetchOptions: {
 					onSuccess: () => {
-						// Redirect user and refresh server components to clear cache
+						// Redirect to landing page and clear client cache
 						router.push(AUTH_CONFIG.defaultRedirectPath);
 						router.refresh();
 					},
@@ -138,7 +233,7 @@ function NavLogoutItem() {
 			className="cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive"
 			disabled={isPending}
 			onSelect={(e) => {
-				// Prevents the dropdown from closing immediately so the user sees the loading state
+				// Prevent default behavior to keep dropdown open during loading
 				e.preventDefault();
 				handleSignOut();
 			}}

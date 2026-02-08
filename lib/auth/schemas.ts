@@ -52,8 +52,8 @@ export const resetPasswordSchema = z
 
 export const UpdateUserSchema = z.object({
 	name: z.string().min(2, "Name must be at least 2 characters").optional(),
-	email: z.string().email("Invalid email format").optional(),
-	id: z.string()
+	image: z.string().optional(),
+	id: z.string(),
 });
 
 // Types
@@ -61,7 +61,6 @@ export type LoginInput = z.infer<typeof loginSchema>;
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 export type UpdateUserInput = z.infer<typeof UpdateUserSchema>;
-
 
 export type ActionResult<T = unknown> = {
 	success: { reason: string } | null;

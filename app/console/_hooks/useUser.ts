@@ -1,38 +1,41 @@
 import { toast } from "sonner";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
+import type { UpdateUserInput } from "@/lib/auth/schemas";
 import { fetcher } from "@/lib/fetcher";
-import { type UpdateUserInput } from "@/lib/auth/schemas";
 
 const USER_KEY = "/api/console/user";
+const DEMO_EMAIL = process.env.NEXT_PUBLIC_DEMO_USER_EMAIL;
 
 export function useUser() {
-	const { data, error, isLoading } = useSWR(USER_KEY);
+	const { data: user, isLoading } = useSWR(USER_KEY);
+	const isDemo = user?.email === DEMO_EMAIL;
 
-	const { trigger: updateUser, isMutating } = useSWRMutation(
+	const { trigger, isMutating } = useSWRMutation(
 		USER_KEY,
 		(url, { arg }: { arg: UpdateUserInput }) =>
-			fetcher(url, {
-				method: "PATCH",
-				body: JSON.stringify(arg),
-			}),
+			fetcher(url, { method: "PATCH", body: JSON.stringify(arg) }),
 		{
 			populateCache: true,
 			revalidate: false,
-			onSuccess: (_data) => {
-				toast.success("Profile updated!");
-			},
-			onError: (err) => {
-				toast.error(err.message || "Update failed");
-			},
+			onSuccess: () => toast.success("Profile updated!"),
+			onError: (err) => toast.error(err.message || "Update failed"),
 		},
 	);
 
+	const guardedUpdateUser = async (arg: UpdateUserInput) => {
+		if (isDemo) {
+			toast.info("Demo account: Changes are not allowed.");
+			return false;
+		}
+		return await trigger(arg);
+	};
+
 	return {
-		user: data,
+		user,
 		isLoading,
 		isMutating,
-		error,
-		updateUser,
+		isDemo,
+		updateUser: guardedUpdateUser,
 	};
 }

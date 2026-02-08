@@ -4,13 +4,11 @@ import {
 	IconChartBar,
 	IconChevronRight,
 	IconHelp,
-	IconInnerShadowTop,
 	IconLayoutDashboard,
 	IconList,
 	IconPackage,
 	IconRocket,
 	IconSettings,
-	IconTerminal2,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -86,10 +84,12 @@ const data: {
 		{ title: "Settings", url: "/settings", icon: IconSettings, disabled: true },
 		{ title: "Help", url: "/help", icon: IconHelp, disabled: true },
 		{
-			title: "My Profile", url: "/", icon: () => {
-				return <>
-
-					<IconRocket className="hover:animate-bounce hover:text-orange-600" /></>
+			title: "My Profile",
+			url: "/",
+			icon: () => {
+				return (
+					<IconRocket className="hover:animate-bounce hover:text-orange-600" />
+				);
 			},
 		},
 	],
@@ -133,8 +133,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 						>
 							{item.disabled ? (
 								<div className="flex w-full items-center gap-2">{content}</div>
+							) : item.url ? (
+								<Link href={item.url}>{content}</Link>
 							) : (
-								<Link href={item.url!}>{content}</Link>
+								<div className="cursor-default">{content}</div>
 							)}
 						</SidebarMenuButton>
 					</SidebarMenuItem>
@@ -187,7 +189,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 								<div className="grid flex-1 text-left text-sm leading-tight">
 									<span className="truncate font-semibold">Console</span>
 									<span className="truncate text-muted-foreground text-xs">
-										Welcome, {user?.name?.split(" ")[0]}
+										Welcome, {user?.name}
 									</span>
 								</div>
 							</Link>
