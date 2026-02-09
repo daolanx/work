@@ -9,10 +9,13 @@ import {
 	IconPackage,
 	IconRocket,
 	IconSettings,
+	IconShieldLock,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type * as React from "react";
+import { useMemo } from "react";
+
 import {
 	Collapsible,
 	CollapsibleContent,
@@ -36,70 +39,118 @@ import { cn } from "@/lib/utils";
 import { useUser } from "../../_hooks/useUser";
 import { NavUser } from "./nav-user";
 
+// --- Types ---
+
+type NavSubItem = {
+	label: string; // Unified from title
+	url: string;
+	disabled?: boolean;
+	roles?: string[];
+};
+
 type NavItem = {
-	title: string;
+	label: string; // Unified from title
 	url?: string;
 	icon?: React.ElementType;
 	disabled?: boolean;
-	isActive?: boolean;
-	items?: {
-		title: string;
-		url: string;
-		disabled?: boolean;
-	}[];
+	roles?: string[];
+	items?: NavSubItem[];
 };
 
-const data: {
-	navMain: NavItem[];
-	navManagement: NavItem[];
-	navSecondary: NavItem[];
-} = {
-	navMain: [
-		{ title: "Console", url: "/console", icon: IconLayoutDashboard },
-		{
-			title: "Projects",
-			url: "/projects",
-			icon: IconPackage,
-			disabled: true,
-			items: [
-				{ title: "Ship Log", url: "/projects/changelog" },
-				{ title: "Issues", url: "/projects/issues" },
-				{ title: "Status", url: "/projects/status" },
-			],
-		},
-		{ title: "Tasks", url: "/console/tasks", icon: IconList },
-	],
-	navManagement: [
-		{
-			title: "Growth",
-			icon: IconChartBar,
-			disabled: true,
-			items: [
-				{ title: "Audience", url: "/growth/users" },
-				{ title: "Revenue", url: "/growth/revenue" },
-			],
-		},
-	],
-	navSecondary: [
-		{ title: "Settings", url: "/settings", icon: IconSettings, disabled: true },
-		{ title: "Help", url: "/help", icon: IconHelp, disabled: true },
-		{
-			title: "My Profile",
-			url: "/",
-			icon: () => {
-				return (
-					<IconRocket className="hover:animate-bounce hover:text-orange-600" />
-				);
-			},
-		},
-	],
+type NavGroup = {
+	label?: string; // Optional group header
+	items: NavItem[];
+	className?: string;
 };
+
+// --- Configuration ---
+
+const NAVIGATION_CONFIG: NavGroup[] = [
+	{
+		label: "Platform",
+		items: [
+			{ label: "Console", url: "/console", icon: IconLayoutDashboard },
+			{
+				label: "Projects",
+				url: "/projects",
+				icon: IconPackage,
+				disabled: true,
+				items: [
+					{ label: "Ship Log", url: "/projects/changelog" },
+					{ label: "Issues", url: "/projects/issues" },
+					{ label: "Status", url: "/projects/status" },
+				],
+			},
+			{ label: "Tasks", url: "/console/tasks", icon: IconList },
+			{
+				label: "Growth",
+				icon: IconChartBar,
+				disabled: true,
+				items: [
+					{ label: "Audience", url: "/growth/users" },
+					{ label: "Revenue", url: "/growth/revenue" },
+				],
+			},
+		],
+	},
+	{
+		label: "Admin ",
+		items: [
+			{
+				label: "User Management",
+				url: "/console/admin",
+				icon: IconShieldLock,
+				roles: ["admin"],
+			},
+		],
+	},
+	{
+		className: "mt-auto",
+		items: [
+			{
+				label: "Settings",
+				url: "/settings",
+				icon: IconSettings,
+				disabled: true,
+			},
+			{ label: "Help", url: "/help", icon: IconHelp, disabled: true },
+			{
+				label: "My Profile",
+				url: "/",
+				icon: () => (
+					<IconRocket className="hover:animate-bounce hover:text-orange-600" />
+				),
+			},
+		],
+	},
+];
+
+// --- Component ---
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { user } = useUser();
 	const pathname = usePathname();
 
-	const renderMenuItems = (items: typeof data.navMain) => {
+	// Unified filtering logic
+	const filteredNavGroups = useMemo(() => {
+		return NAVIGATION_CONFIG.map((group) => ({
+			...group,
+			items: group.items
+				.filter(
+					(item) =>
+						!item.roles || (user?.role && item.roles.includes(user.role)),
+				)
+				.map((item) => ({
+					...item,
+					items: item.items?.filter(
+						(sub) =>
+							!sub.roles || (user?.role && sub.roles.includes(user.role)),
+					),
+				})),
+		})).filter((group) => group.items.length > 0);
+	}, [user?.role]);
+
+	const renderMenuItems = (items: NavItem[]) => {
 		return items.map((item) => {
 			const hasItems = item.items && item.items.length > 0;
 			const isActive =
@@ -109,7 +160,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			const content = (
 				<>
 					{item.icon && <item.icon className="size-4 shrink-0" />}
-					<span className="truncate">{item.title}</span>
+					<span className="truncate">{item.label}</span>
 					{item.disabled && (
 						<span className="ml-auto rounded bg-muted px-1 font-medium text-[10px] opacity-70">
 							SOON
@@ -123,13 +174,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
 			if (!hasItems || item.disabled) {
 				return (
-					<SidebarMenuItem key={item.title}>
+					<SidebarMenuItem key={item.label}>
 						<SidebarMenuButton
 							asChild={!item.disabled}
 							className={cn(item.disabled && "cursor-not-allowed opacity-50")}
 							disabled={item.disabled}
 							isActive={isActive}
-							tooltip={item.title}
+							tooltip={item.label}
 						>
 							{item.disabled ? (
 								<div className="flex w-full items-center gap-2">{content}</div>
@@ -148,23 +199,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					asChild
 					className="group/collapsible"
 					defaultOpen={isActive}
-					key={item.title}
+					key={item.label}
 				>
 					<SidebarMenuItem>
 						<CollapsibleTrigger asChild>
-							<SidebarMenuButton isActive={isActive} tooltip={item.title}>
+							<SidebarMenuButton isActive={isActive} tooltip={item.label}>
 								{content}
 							</SidebarMenuButton>
 						</CollapsibleTrigger>
 						<CollapsibleContent>
 							<SidebarMenuSub>
 								{item.items?.map((subItem) => (
-									<SidebarMenuSubItem key={subItem.title}>
+									<SidebarMenuSubItem key={subItem.label}>
 										<SidebarMenuSubButton
 											asChild
 											isActive={pathname === subItem.url}
 										>
-											<Link href={subItem.url}>{subItem.title}</Link>
+											<Link href={subItem.url}>{subItem.label}</Link>
 										</SidebarMenuSubButton>
 									</SidebarMenuSubItem>
 								))}
@@ -199,19 +250,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			</SidebarHeader>
 
 			<SidebarContent className="gap-0">
-				<SidebarGroup>
-					<SidebarGroupLabel>Platform</SidebarGroupLabel>
-					<SidebarMenu>{renderMenuItems(data.navMain)}</SidebarMenu>
-				</SidebarGroup>
-
-				<SidebarGroup>
-					<SidebarGroupLabel>Management</SidebarGroupLabel>
-					<SidebarMenu>{renderMenuItems(data.navManagement)}</SidebarMenu>
-				</SidebarGroup>
-
-				<SidebarGroup className="mt-auto">
-					<SidebarMenu>{renderMenuItems(data.navSecondary)}</SidebarMenu>
-				</SidebarGroup>
+				{filteredNavGroups.map((group, idx) => (
+					<SidebarGroup className={group.className} key={group.label || idx}>
+						{group.label && (
+							<SidebarGroupLabel>{group.label}</SidebarGroupLabel>
+						)}
+						<SidebarMenu>{renderMenuItems(group.items)}</SidebarMenu>
+					</SidebarGroup>
+				))}
 			</SidebarContent>
 
 			<SidebarFooter className="border-sidebar-border/50 border-t">

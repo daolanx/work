@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
+import { admin } from "better-auth/plugins";
 import { db, schema } from "@/db";
 import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/email";
 
@@ -18,17 +19,17 @@ export const auth = betterAuth({
 		enabled: true,
 		requireEmailVerification: true,
 		resetPasswordTokenExpiresIn: 60 * 60, // 1h
-		sendResetPassword: async ({ user, url, token }, request) => {
+		sendResetPassword: async ({ user, url }, _request) => {
 			sendPasswordResetEmail(user, url);
 		},
-		onPasswordReset: async ({ user }, request) => {
+		onPasswordReset: async ({ user }, _request) => {
 			console.log(`Password for user ${user.email} has been reset.`);
 		},
 	},
 	emailVerification: {
 		sendOnSignUp: true,
 		autoSignInAfterVerification: true,
-		sendVerificationEmail: async ({ user, url, token }) => {
+		sendVerificationEmail: async ({ user, url }) => {
 			sendVerificationEmail(user, url);
 		},
 	},
@@ -43,7 +44,13 @@ export const auth = betterAuth({
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
 		},
 	},
-	plugins: [nextCookies()],
+	plugins: [
+		nextCookies(),
+		admin({
+			initAdmin: true,
+			defaultRole: "user",
+		}),
+	],
 });
 
 export type Auth = typeof auth;
