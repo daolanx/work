@@ -1,6 +1,7 @@
 "use client";
 
 import {
+	IconCategory,
 	IconCreditCard,
 	IconDotsVertical,
 	IconLogout,
@@ -60,18 +61,26 @@ export function NavUser() {
 				href: "/console/profile",
 			},
 			{
-				label: "Billing",
-				icon: IconCreditCard,
-				disabled: true,
-				comingSoon: true,
-			},
-			{
 				label: "Notifications",
 				icon: IconNotification,
 				disabled: true,
 				comingSoon: true,
 			},
 		],
+		[
+			{
+				label: "Plans",
+				icon: IconCategory,
+				href: "/console/plans",
+			},
+			{
+				label: "Billing",
+				icon: IconCreditCard,
+				disabled: true,
+				comingSoon: true,
+			},
+		],
+
 		[
 			{
 				label: "Settings",
