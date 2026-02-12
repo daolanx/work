@@ -13,7 +13,7 @@ export const AUTH_CONFIG = {
 const PUBLIC_PATHS = {
 	exact: new Set(["/", "/ai-chat", "/landing"]),
 	// Paths starting with these prefixes are accessible without authentication
-	prefixes: [AUTH_CONFIG.authPathPrefix, "/docs/", "/api/auth/"],
+	prefixes: [AUTH_CONFIG.authPathPrefix, "/docs/", "/legal", "/api/auth/"],
 } as const;
 
 /**

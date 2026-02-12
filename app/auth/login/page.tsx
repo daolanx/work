@@ -74,6 +74,36 @@ export default function LoginPage() {
 						Create Account
 					</Link>
 				</p>
+
+				<footer className="mt-12 flex flex-col items-center gap-4">
+					<div className="flex items-center gap-6 font-mono text-[10px] text-muted-foreground/60 uppercase tracking-[0.2em]">
+						<Link
+							className="transition-colors hover:text-primary hover:italic"
+							href="/legal/terms"
+							target="_blank"
+						>
+							Terms
+						</Link>
+						<Link
+							className="transition-colors hover:text-primary hover:italic"
+							href="/legal/privacy"
+							target="_blank"
+						>
+							Privacy
+						</Link>
+						<Link
+							className="transition-colors hover:text-primary hover:italic"
+							href="/legal/refund"
+							target="_blank"
+						>
+							Refund
+						</Link>
+					</div>
+					<div className="h-px w-8 bg-muted-foreground/20" />
+					<p className="font-mono text-[9px] text-muted-foreground/40 uppercase tracking-widest">
+						© 2026 Daolanx Studio
+					</p>
+				</footer>
 			</motion.div>
 		</div>
 	);
