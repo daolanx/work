@@ -144,12 +144,12 @@ const PricingCards = () => {
 									{plan.name}
 								</CardTitle>
 								<CardDescription>{plan.info}</CardDescription>
-								<h5 className="font-semibold text-3xl">
+								<div className="font-semibold text-3xl">
 									${plan.price.monthly}
 									<span className="font-normal text-base text-muted-foreground">
 										{plan.name !== "Free" ? "/month" : ""}
 									</span>
-								</h5>
+								</div>
 							</CardHeader>
 							<CardContent className="space-y-4 pt-6">
 								{plan.features.map((feature, _index) => (
@@ -161,7 +161,7 @@ const PricingCards = () => {
 													<p
 														className={cn(
 															feature.tooltip &&
-																"!border-dashed cursor-pointer border-border border-b",
+															"!border-dashed cursor-pointer border-border border-b",
 														)}
 													>
 														{feature.text}
@@ -254,7 +254,7 @@ const PricingCards = () => {
 													<p
 														className={cn(
 															feature.tooltip &&
-																"!border-dashed cursor-pointer border-border border-b",
+															"!border-dashed cursor-pointer border-border border-b",
 														)}
 													>
 														{feature.text}

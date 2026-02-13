@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
 		loader: "custom",
 		loaderFile: "./lib/image-loader.ts",
 	},
+	experimental: {
+		optimizeCss: true,
+		optimizePackageImports: ["lucide-react", "recharts"],
+	},
 };
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");

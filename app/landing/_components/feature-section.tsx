@@ -96,14 +96,14 @@ const CARDS = [
 				<IconCloud
 					images={[
 						"dart",
-						"java",
+
 						"react",
 						"flutter",
 						"nodedotjs",
 						"express",
 						"nextdotjs",
 						"prisma",
-						"amazonaws",
+
 						"postgresql",
 						"firebase",
 						"nginx",
@@ -113,9 +113,9 @@ const CARDS = [
 						"jira",
 						"github",
 						"gitlab",
-						"visualstudiocode",
+
 						"androidstudio",
-						"sonarqube",
+
 						"figma",
 					].map((slug) => `https://cdn.simpleicons.org/${slug}/${slug}`)}
 				/>

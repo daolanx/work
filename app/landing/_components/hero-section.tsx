@@ -7,7 +7,7 @@ import { RainbowButton } from "@/components/ui/rainbow-button";
 export default function HeroSection() {
 	return (
 		<section>
-			<FadeInWrapper className="text-center">
+			<div className="text-center">
 				<h1 className="!leading-[1.15] text-balance py-6 font-medium text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
 					Intuitive Landing Page Builder for{" "}
 					<span className="bg-gradient-to-r from-violet-500 to-fuchsia-500 bg-clip-text text-transparent">
@@ -26,7 +26,7 @@ export default function HeroSection() {
 						<ArrowRightIcon className="h-4 w-4 transition-all duration-200 group-hover:translate-x-1" />
 					</Link>
 				</RainbowButton>
-			</FadeInWrapper>
+			</div>
 
 			<FadeInWrapper
 				className="relative w-full bg-transparent px-2 pt-20 pb-20 md:py-32"
