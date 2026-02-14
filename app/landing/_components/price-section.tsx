@@ -161,7 +161,7 @@ const PricingCards = () => {
 													<p
 														className={cn(
 															feature.tooltip &&
-															"!border-dashed cursor-pointer border-border border-b",
+																"!border-dashed cursor-pointer border-border border-b",
 														)}
 													>
 														{feature.text}
@@ -182,7 +182,7 @@ const PricingCards = () => {
 									className={buttonVariants({
 										className:
 											plan.name === "Pro" &&
-											"bg-purple-500 text-white hover:bg-purple-500/80",
+											"bg-purple-700 text-white hover:bg-purple-700/80",
 									})}
 									href={plan.btn.href}
 									style={{ width: "100%" }}
@@ -254,7 +254,7 @@ const PricingCards = () => {
 													<p
 														className={cn(
 															feature.tooltip &&
-															"!border-dashed cursor-pointer border-border border-b",
+																"!border-dashed cursor-pointer border-border border-b",
 														)}
 													>
 														{feature.text}

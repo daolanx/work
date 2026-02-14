@@ -1,7 +1,6 @@
 import { ArrowRightIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import FadeInWrapper from ".//fadeIn-wrapper";
 import { RainbowButton } from "@/components/ui/rainbow-button";
 
 export default function HeroSection() {
@@ -28,23 +27,23 @@ export default function HeroSection() {
 				</RainbowButton>
 			</div>
 
-			<FadeInWrapper
+			<div
 				className="relative w-full bg-transparent px-2 pt-20 pb-20 md:py-32"
-				delay={0.2}
 			>
-				{/* <div className="absolute md:top-[10%] left-1/2 gradient w-3/4 -translate-x-1/2 h-1/4 md:h-1/3 inset-0 blur-[5rem] animate-image-glow"></div> */}
+				{/* Hero image: no animation wrapper for faster LCP */}
 				<div className="-m-2 rounded-xl bg-opacity-50 p-2 ring-1 ring-foreground/20 ring-inset backdrop-blur-3xl lg:-m-4 lg:rounded-2xl">
 					<Image
 						alt="Dashboard"
 						className="rounded-md bg-foreground/10 ring-1 ring-border lg:rounded-xl"
 						height={1200}
+						priority
 						src="/landing/dashboard.webp"
 						width={1200}
 					/>
 					<div className="absolute inset-x-0 -bottom-4 z-40 h-1/2 w-full bg-gradient-to-t from-background"></div>
 					<div className="absolute inset-x-0 bottom-0 z-50 h-1/4 w-full bg-gradient-to-t from-background md:-bottom-8"></div>
 				</div>
-			</FadeInWrapper>
+			</div>
 		</section>
 	);
 }

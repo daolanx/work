@@ -34,7 +34,7 @@ export default function CompanySection() {
 			<FadeInWrapper delay={0.4}>
 				<div className="py-14">
 					<div className="mx-auto px-4 md:px-8">
-						<h2 className="text-center font-heading font-medium text-neutral-400 text-sm uppercase">
+						<h2 className="text-center font-heading font-medium text-neutral-600 text-sm uppercase">
 							Trusted by the best in the industry
 						</h2>
 						<div className="mt-8">

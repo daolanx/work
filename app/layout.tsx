@@ -1,5 +1,4 @@
 import Script from "next/script";
-import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
 
@@ -14,6 +13,15 @@ export default async function LocaleLayout({
 
 	return (
 		<html lang={locale} suppressHydrationWarning>
+			<head>
+				<link
+					rel="preconnect"
+					href="https://assets.daolanx.me"
+					crossOrigin="anonymous"
+				/>
+				<link rel="dns-prefetch" href="https://assets.daolanx.me" />
+				<link rel="dns-prefetch" href="https://cloud.umami.is" />
+			</head>
 			<body>
 				<ThemeProvider
 					attribute="class"
@@ -21,12 +29,12 @@ export default async function LocaleLayout({
 					disableTransitionOnChange
 					enableSystem
 				>
-					<NextIntlClientProvider>{children}</NextIntlClientProvider>
+					{children}
 				</ThemeProvider>
 				<Script
 					data-website-id="f6e47b9c-c1f0-4c75-9bcd-843e2630e8b3"
 					src="https://cloud.umami.is/script.js"
-					strategy="afterInteractive"
+					strategy="lazyOnload"
 				/>
 			</body>
 		</html>

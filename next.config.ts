@@ -9,9 +9,15 @@ const nextConfig: NextConfig = {
 		loader: "custom",
 		loaderFile: "./lib/image-loader.ts",
 	},
+	transpilePackages: ["recharts", "react-smooth", "shiki"],
 	experimental: {
 		optimizeCss: true,
-		optimizePackageImports: ["lucide-react", "recharts"],
+		optimizePackageImports: [
+			"lucide-react",
+			"recharts",
+			"@tabler/icons-react",
+			"@radix-ui/react-icons",
+		],
 	},
 };
 

@@ -10,7 +10,6 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import FadeInWrapper from ".//fadeIn-wrapper";
 import { buttonVariants } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import {
 	Card,
 	CardContent,
@@ -18,11 +17,60 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Command } from "@/components/ui/command";
 import { IconCloud } from "@/components/ui/icon-cloud";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+
+// Lightweight static calendar for decorative display (avoids react-day-picker ~25KB)
+const StaticCalendar = ({ className }: { className?: string }) => {
+	const weekdays = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+	const days = [
+		1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+		22, 23, 24, 25, 26, 27, 28, 29, 30,
+	];
+	const selectedDay = 11;
+	const firstDayOffset = 0; // May 2022 starts on Sunday
+
+	return (
+		<div
+			className={cn(
+				"bg-background flex w-fit flex-col gap-4 rounded-md border border-border p-3",
+				className,
+			)}
+		>
+			<div className="text-muted-foreground flex justify-between text-sm">
+				<span className="font-medium text-foreground">May 2022</span>
+			</div>
+			<div className="grid grid-cols-7 gap-1 text-center">
+				{weekdays.map((d) => (
+					<span
+						key={d}
+						className="text-muted-foreground text-xs font-medium"
+					>
+						{d}
+					</span>
+				))}
+				{Array.from({ length: firstDayOffset }, (_, i) => (
+					<span key={`empty-${i}`} />
+				))}
+				{days.map((d) => (
+					<span
+						key={d}
+						className={cn(
+							"flex aspect-square items-center justify-center rounded-md text-xs",
+							d === selectedDay
+								? "bg-primary text-primary-foreground"
+								: "text-foreground hover:bg-muted",
+						)}
+					>
+						{d}
+					</span>
+				))}
+			</div>
+		</div>
+	);
+};
 
 const CARDS = [
 	{
@@ -59,29 +107,32 @@ const CARDS = [
 		cta: "Learn more",
 		className: "col-span-3 lg:col-span-2",
 		background: (
-			<Command className="absolute top-10 right-10 w-[70%] origin-to translate-x-0 border border-border p-2 transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_40%,#000_100%)] group-hover:-translate-x-10">
-				<Input placeholder="Type to search..." />
-				<div className="mt-1 cursor-pointer">
-					<div className="rounded-md px-4 py-2 hover:bg-muted">
+			<div className="absolute top-10 right-10 w-[70%] origin-to translate-x-0 flex flex-col rounded-md border border-border bg-popover p-2 transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_40%,#000_100%)] group-hover:-translate-x-10">
+				<Input
+					className="border-0 bg-transparent focus-visible:ring-0"
+					placeholder="Type to search..."
+				/>
+				<div className="mt-1 space-y-0.5">
+					<div className="rounded-md px-4 py-2 text-sm hover:bg-muted">
 						linkify.io/hdf00c
 					</div>
-					<div className="rounded-md px-4 py-2 hover:bg-muted">
+					<div className="rounded-md px-4 py-2 text-sm hover:bg-muted">
 						linkify.io/sdv0n0
 					</div>
-					<div className="rounded-md px-4 py-2 hover:bg-muted">
+					<div className="rounded-md px-4 py-2 text-sm hover:bg-muted">
 						linkify.io/03gndo
 					</div>
-					<div className="rounded-md px-4 py-2 hover:bg-muted">
+					<div className="rounded-md px-4 py-2 text-sm hover:bg-muted">
 						linkify.io/09vmmw
 					</div>
-					<div className="rounded-md px-4 py-2 hover:bg-muted">
+					<div className="rounded-md px-4 py-2 text-sm hover:bg-muted">
 						linkify.io/s09vws
 					</div>
-					<div className="rounded-md px-4 py-2 hover:bg-muted">
+					<div className="rounded-md px-4 py-2 text-sm hover:bg-muted">
 						linkify.io/sd8fv5
 					</div>
 				</div>
-			</Command>
+			</div>
 		),
 	},
 	{
@@ -130,10 +181,8 @@ const CARDS = [
 		href: "#",
 		cta: "Learn more",
 		background: (
-			<Calendar
-				className="absolute top-10 right-0 origin-top rounded-md border border-border transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_40%,#000_100%)] group-hover:scale-105"
-				mode="single"
-				selected={new Date(2022, 4, 11, 0, 0, 0)}
+			<StaticCalendar
+				className="absolute top-10 right-0 origin-top transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_40%,#000_100%)] group-hover:scale-105"
 			/>
 		),
 	},

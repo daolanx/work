@@ -18,7 +18,7 @@ export default function FadeInWrapper({
 	return (
 		<motion.div
 			className={className}
-			initial={{ opacity: 0, y: reverse ? -20 : 20 }}
+			initial={{ opacity: 0 }}
 			transition={{
 				duration: 0.2,
 				delay: delay,
@@ -28,7 +28,7 @@ export default function FadeInWrapper({
 				damping: 20,
 			}}
 			viewport={{ once: false }}
-			whileInView={{ opacity: 1, y: 0 }}
+			whileInView={{ opacity: 1 }}
 		>
 			{children}
 		</motion.div>

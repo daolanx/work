@@ -43,26 +43,23 @@ function MiniToolbar() {
 		<div className="flex items-center justify-end md:hidden">
 			<Sheet onOpenChange={setIsOpen} open={isOpen}>
 				<SheetTrigger asChild>
-					<Button className="md:hidden" size="icon" variant="ghost">
+					<Button className="md:hidden" size="icon" variant="ghost" aria-label="Open menu">
 						<Menu className="h-6 w-6" />
 					</Button>
 				</SheetTrigger>
 				<SheetContent className="w-screen pt-10" side="top">
 					<SheetHeader className="sr-only">
-						{" "}
-						{/* 使用 sr-only 代替 hidden 提高无障碍兼容性 */}
 						<SheetTitle>Navigation Menu</SheetTitle>
 					</SheetHeader>
 
 					<div className="flex flex-col gap-4">
 						<Accordion className="w-full" collapsible type="single">
 							{navs.map((nav) => {
-								// 1. 使用 nav.label 作为 key，避免使用 index
 								if (nav.subNavs.length === 0) {
 									return (
 										<a
 											className="block w-full border-gray-200 border-b p-4 font-medium text-sm transition-colors hover:bg-gray-100"
-											href={`/${nav.label.toLowerCase()}`} // 即使是占位，也建议写成逻辑路径
+											href={`/${nav.label.toLowerCase()}`}
 											key={nav.label}
 										>
 											{nav.label}
@@ -79,7 +76,7 @@ function MiniToolbar() {
 											<div className="mr-4 ml-1 flex flex-col gap-3 border-l py-2 pl-2">
 												{nav.subNavs.map((sub) => (
 													<a
-														className="flex flex-col gap-1 rounded-lg p-2 transition-all hover:bg-gray-100" // 2. 子菜单同样使用 sub.label 作为 key
+														className="flex flex-col gap-1 rounded-lg p-2 transition-all hover:bg-gray-100"
 														href={`/products/${sub.label.toLowerCase().replace(/\s+/g, "-")}`}
 														key={sub.label}
 													>
