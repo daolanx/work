@@ -12,15 +12,25 @@ export default function myImageLoader({ src, width, quality }: LoaderProps) {
 	// 1. Configure transformation parameters
 	// 'format=auto' attempts to serve AVIF/WebP based on Accept headers
 	// 'fit=cover' ensures the aspect ratio is maintained during resizing
+	let targetWidth = width;
+	if (width <= 640) {
+		targetWidth = 640;
+	} else if (width <= 828) {
+		targetWidth = 828;
+	} else if (width <= 1120) {
+		targetWidth = 1120;
+	} else {
+		targetWidth = 1920;
+	}
 	const params = [
-		`width=${width}`,
+		`width=${targetWidth}`,
 		`quality=${quality || 75}`,
 		`format=auto`,
 		`fit=cover`,
 	].join(",");
 
 	// 2. Determine if the source is an external URL (e.g., randomuser.me)
-	const isExternal = src.startsWith("http://") || src.startsWith("https://");
+	const isExternal = src.startsWith("http");
 
 	// 3. Environment Handling
 	// Note: /cdn-cgi/image/ only works on the deployed Cloudflare domain.
