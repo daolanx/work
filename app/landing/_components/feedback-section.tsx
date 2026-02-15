@@ -1,4 +1,5 @@
 import { StarIcon } from "lucide-react";
+import Image from "next/image";
 import {
 	Card,
 	CardContent,
@@ -102,10 +103,22 @@ export default function FeedBackCard() {
 					<FadeInWrapper delay={0.1 * index} key={review.name}>
 						<Card className="flex h-min w-full flex-col border-none">
 							<CardHeader className="space-y-0">
-								<CardTitle className="font-medium text-lg text-muted-foreground">
-									{review.name}
-								</CardTitle>
-								<CardDescription>{review.username}</CardDescription>
+								<div className="flex items-center gap-3">
+									<Image
+										alt={review.name}
+										className="rounded-full"
+										height={40}
+										sizes="40px"
+										src={review.avatar}
+										width={40}
+									/>
+									<div>
+										<CardTitle className="font-medium text-lg text-muted-foreground">
+											{review.name}
+										</CardTitle>
+										<CardDescription>{review.username}</CardDescription>
+									</div>
+								</div>
 							</CardHeader>
 							<CardContent className="space-y-4 pb-4">
 								<p className="text-muted-foreground">{review.review}</p>

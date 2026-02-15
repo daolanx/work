@@ -27,9 +27,7 @@ export default function HeroSection() {
 				</RainbowButton>
 			</div>
 
-			<div
-				className="relative w-full bg-transparent px-2 pt-20 pb-20 md:py-32"
-			>
+			<div className="relative w-full bg-transparent px-2 pt-20 pb-20 md:py-32">
 				{/* Hero image: no animation wrapper for faster LCP */}
 				<div className="-m-2 rounded-xl bg-opacity-50 p-2 ring-1 ring-foreground/20 ring-inset backdrop-blur-3xl lg:-m-4 lg:rounded-2xl">
 					<Image
@@ -37,6 +35,8 @@ export default function HeroSection() {
 						className="rounded-md bg-foreground/10 ring-1 ring-border lg:rounded-xl"
 						height={1200}
 						priority
+						fetchPriority="high"
+						sizes="(max-width: 1200px) 100vw, 1120px"
 						src="/landing/dashboard.webp"
 						width={1200}
 					/>

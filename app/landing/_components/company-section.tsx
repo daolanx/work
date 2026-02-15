@@ -48,6 +48,7 @@ export default function CompanySection() {
 											alt={company.name}
 											className="h-auto w-auto max-w-[110px] object-contain"
 											height={60}
+											sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 16vw"
 											src={`/landing/${company.logo}`}
 											width={120}
 										/>

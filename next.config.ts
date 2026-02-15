@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
 	images: {
 		loader: "custom",
 		loaderFile: "./lib/image-loader.ts",
+		deviceSizes: [640, 828, 1120, 1920],
+		imageSizes: [64, 256],
 	},
 	transpilePackages: ["recharts", "react-smooth", "shiki"],
 	experimental: {
