@@ -4,52 +4,24 @@ interface LoaderProps {
 	quality?: number;
 }
 
-/**
- * Cloudflare Image Resizing Loader for Next.js
- * Documentation: https://developers.cloudflare.com/images/transform-images/
- */
-export default function myImageLoader({ src, width, quality }: LoaderProps) {
-	// 1. Configure transformation parameters
-	// 'format=auto' attempts to serve AVIF/WebP based on Accept headers
-	// 'fit=cover' ensures the aspect ratio is maintained during resizing
-	let targetWidth = width;
-	if (width <= 640) {
-		targetWidth = 640;
-	} else if (width <= 828) {
-		targetWidth = 828;
-	} else if (width <= 1120) {
-		targetWidth = 1120;
-	} else {
-		targetWidth = 1920;
-	}
-	const params = [
-		`width=${targetWidth}`,
-		`quality=${quality || 75}`,
-		`format=auto`,
-		`fit=cover`,
-	].join(",");
+const ALL_SIZES = [64, 256, 640, 828, 1120, 1920];
 
-	// 2. Determine if the source is an external URL (e.g., randomuser.me)
+export default function myImageLoader({ src, width, quality }: LoaderProps) {
+	const isProd = process.env.NODE_ENV === "production";
 	const isExternal = src.startsWith("http");
 
-	// 3. Environment Handling
-	// Note: /cdn-cgi/image/ only works on the deployed Cloudflare domain.
-	// We bypass this in development to avoid 404s on localhost.
-	if (process.env.NODE_ENV !== "production" || isExternal) {
+	// Local development or External images: Use original URL
+	if (!isProd || isExternal) {
 		return src;
 	}
 
-	// 4. Construct the Cloudflare Image Resizing Edge URL
-	// Base endpoint provided by your Cloudflare setup
-	const cloudflareEndpoint = "https://assets.daolanx.me/cdn-cgi/image";
+	// Find the closest larger bucket size
+	const targetWidth =
+		ALL_SIZES.find((s) => s >= width) || ALL_SIZES[ALL_SIZES.length - 1];
 
-	/**
-	 * Normalize the source path:
-	 * - If External: Use the full URL as is.
-	 * - If Internal: Ensure it starts with a leading slash for the R2/Origin bucket.
-	 */
-	const normalizedSrc = src.startsWith("/") ? src : `/${src}`;
+	// Clean path: remove leading slash for consistency
+	const normalizedSrc = src.startsWith("/") ? src.slice(1) : src;
 
-	// Final Format: https://<domain>/cdn-cgi/image/<options>/<source>
-	return `${cloudflareEndpoint}/${params}${normalizedSrc}`;
+	// Final Production URL: Relative path to trigger Cloudflare Worker
+	return `/remote-assets/${normalizedSrc}?w=${targetWidth}&q=${quality || 75}`;
 }

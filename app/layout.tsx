@@ -14,12 +14,6 @@ export default async function LocaleLayout({
 	return (
 		<html lang={locale} suppressHydrationWarning>
 			<head>
-				<link
-					rel="preconnect"
-					href="https://assets.daolanx.me"
-					crossOrigin="anonymous"
-				/>
-				<link rel="dns-prefetch" href="https://assets.daolanx.me" />
 				<link rel="dns-prefetch" href="https://cloud.umami.is" />
 			</head>
 			<body>

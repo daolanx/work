@@ -1,0 +1,11 @@
+name = "remote-assets-proxy"
+main = "src/index.js" 
+compatibility_date = "2024-12-01"
+
+[vars]
+R2_DOMAIN = "https://assets.daolanx.me"
+REMOTE_PREFIX = "/remote-assets/"
+
+[[routes]]
+pattern = "work.daolanx.me/remote-assets/*"
+zone_name = "daolanx.me"
