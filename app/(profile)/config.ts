@@ -31,15 +31,15 @@ const sites: SiteMeta[] = [
 		previewUrl: "/images/landing-page.webp",
 		webUrl: "/landing",
 		sourceUrl: "https://github.com/daolanx/work/tree/main/app/landing",
-		keywords: ["Next.js", "Twindcss", "MagicUI", "Motion"],
+		keywords: ["Next.js", "TwindCSS", "MagicUI", "Motion", "Cloudflare"],
 
 		en: {
 			title: "Landing Page",
-			description: "Responsive Brand Landing Page with Minimalist Animations.",
+			description: "Responsive with high-performance capabilities.",
 		},
 		zh: {
 			title: "品牌落地页",
-			description: "品牌落地页，能响应式展现信息，具备少量的动态效果。",
+			description: "具备响应性和优秀的性能",
 		},
 	},
 	{
@@ -50,11 +50,11 @@ const sites: SiteMeta[] = [
 		en: {
 			title: "Console Page",
 			description:
-				"Management console with login and task management features.",
+				"Includes authentication, RBAC, and task management modules.",
 		},
 		zh: {
 			title: "控制台页面",
-			description: "具备登录功能，任务管理功能的控制台。",
+			description: "具备登录，角色管理，任务管理功能。",
 		},
 	},
 	{
