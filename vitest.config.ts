@@ -13,13 +13,19 @@ export default defineConfig({
 		include: [
 			"tests/api/**/*.{test,spec}.ts",
 			"tests/components/**/*.{test,spec}.tsx",
+			"tests/unit/**/*.{test,spec}.ts",
 		],
 		exclude: ["**/node_modules/**", "**/tests/e2e/**"],
 		coverage: {
 			provider: "v8",
 			enabled: true,
 			reporter: ["text", "json", "html"],
-			include: ["app/api/**/*", "components/**/*"],
+			include: [
+				"app/api/**/*",
+				"app/console/_hooks/**/*.ts",
+				"components/**/*",
+				"lib/**/*.ts",
+			],
 			exclude: [
 				"**/*.test.ts",
 				"**/*.test.tsx",
