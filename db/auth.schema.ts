@@ -10,12 +10,14 @@ export const user = pgTable("user", {
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 	updatedAt: timestamp("updated_at")
 		.defaultNow()
-		.$onUpdate(() => /* @__PURE__ */ new Date())
+		.$onUpdate(() => new Date())
 		.notNull(),
-	role: text("role"), // 'admin', 'user' edc.
-	banned: boolean("banned"),
+	role: text("role"),
+	banned: boolean("banned").default(false),
 	banReason: text("banReason"),
 	banExpires: timestamp("banExpires"),
+	creemCustomerId: text("creem_customer_id"),
+	hadTrial: boolean("had_trial").default(false),
 });
 
 export const session = pgTable(
@@ -26,13 +28,14 @@ export const session = pgTable(
 		token: text("token").notNull().unique(),
 		createdAt: timestamp("created_at").defaultNow().notNull(),
 		updatedAt: timestamp("updated_at")
-			.$onUpdate(() => /* @__PURE__ */ new Date())
+			.$onUpdate(() => new Date())
 			.notNull(),
 		ipAddress: text("ip_address"),
 		userAgent: text("user_agent"),
 		userId: text("user_id")
 			.notNull()
 			.references(() => user.id, { onDelete: "cascade" }),
+		impersonatedBy: text("impersonated_by"),
 	},
 	(table) => [index("session_userId_idx").on(table.userId)],
 );
@@ -55,7 +58,7 @@ export const account = pgTable(
 		password: text("password"),
 		createdAt: timestamp("created_at").defaultNow().notNull(),
 		updatedAt: timestamp("updated_at")
-			.$onUpdate(() => /* @__PURE__ */ new Date())
+			.$onUpdate(() => new Date())
 			.notNull(),
 	},
 	(table) => [index("account_userId_idx").on(table.userId)],
@@ -71,11 +74,24 @@ export const verification = pgTable(
 		createdAt: timestamp("created_at").defaultNow().notNull(),
 		updatedAt: timestamp("updated_at")
 			.defaultNow()
-			.$onUpdate(() => /* @__PURE__ */ new Date())
+			.$onUpdate(() => new Date())
 			.notNull(),
 	},
 	(table) => [index("verification_identifier_idx").on(table.identifier)],
 );
+
+export const creem_subscription = pgTable("creem_subscription", {
+	id: text("id").primaryKey(),
+	productId: text("product_id").notNull(),
+	referenceId: text("reference_id").notNull(),
+	creemCustomerId: text("creem_customer_id"),
+	creemSubscriptionId: text("creem_subscription_id"),
+	creemOrderId: text("creem_order_id"),
+	status: text("status").default("pending"),
+	periodStart: timestamp("period_start"),
+	periodEnd: timestamp("period_end"),
+	cancelAtPeriodEnd: boolean("cancel_at_period_end").default(false),
+});
 
 export const userRelations = relations(user, ({ many }) => ({
 	sessions: many(session),

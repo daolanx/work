@@ -1,3 +1,4 @@
+import { creem } from "@creem_io/better-auth";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
@@ -6,6 +7,10 @@ import { db, schema } from "@/db";
 import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/email";
 
 export const auth = betterAuth({
+	trustedOrigins: [
+		process.env.BETTER_AUTH_URL!,
+		process.env.CREEM_DEBUG_URL!,
+	].filter(Boolean),
 	database: drizzleAdapter(db, {
 		provider: "pg",
 		schema,
@@ -49,6 +54,28 @@ export const auth = betterAuth({
 		admin({
 			initAdmin: true,
 			defaultRole: "user",
+		}),
+		creem({
+			apiKey: process.env.CREEM_API_KEY!,
+			webhookSecret: process.env.CREEM_WEBHOOK_SECRET,
+			testMode: true,
+			// defaultSuccessUrl: '/success',
+			persistSubscriptions: true,
+
+			onCheckoutCompleted: async ({ customer, product }) => {
+				console.log("[onCheckoutCompleted]", customer, product);
+				// console.log(`${customer.email} purchased ${product.name}`);
+			},
+			onGrantAccess: async ({ customer, metadata }) => {
+				const userId = metadata?.referenceId as string;
+				console.log("[onGrantAccess]", userId, customer);
+				// await grantAccess(userId, customer.email);
+			},
+			onRevokeAccess: async ({ metadata }) => {
+				const userId = metadata?.referenceId as string;
+
+				// await revokeAccess(userId, customer.email);
+			},
 		}),
 	],
 });

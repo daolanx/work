@@ -46,15 +46,15 @@ const sites: SiteMeta[] = [
 		previewUrl: "/images/console-page.webp",
 		webUrl: "/console",
 		sourceUrl: "https://github.com/daolanx/work/tree/main/app/console",
-		keywords: ["Shadcn", "Drizzle", "Neon", "SWR", "Better-Auth"],
+		keywords: ["Shadcn", "Drizzle", "Neon", "SWR", "Better-Auth", "Creem"],
 		en: {
 			title: "Console Page",
 			description:
-				"Includes authentication, RBAC, and task management modules.",
+				"Includes authentication, RBAC, Payment,and task management modules.",
 		},
 		zh: {
 			title: "控制台页面",
-			description: "具备登录，角色管理，任务管理功能。",
+			description: "具备登录，支付，角色管理，任务管理功能。",
 		},
 	},
 	{
