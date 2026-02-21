@@ -1,10 +1,11 @@
+import { creemClient } from "@creem_io/better-auth/client";
 import { adminClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 import { AUTH_CONFIG } from "@/lib/auth/paths";
 
 export const authClient = createAuthClient({
 	// baseURL: "http://localhost:3000",
-	plugins: [adminClient()],
+	plugins: [adminClient(), creemClient()],
 });
 
 const signInSocial = async (provider: "github" | "google") => {

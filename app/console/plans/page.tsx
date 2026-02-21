@@ -1,15 +1,6 @@
-"use client";
-
-import {
-	BarChart3,
-	Check,
-	Crown,
-	ExternalLink,
-	Rocket,
-	Shield,
-	Zap,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { BarChart3, Check, Crown, Rocket, Shield, Zap } from "lucide-react";
+import { CheckoutButton } from "@/components/creem/checkout-button";
+import { ManageBillingButton } from "@/components/creem/manage-billing-button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 
@@ -58,7 +49,7 @@ const TIER_DATA = [
 		type: "entry",
 		name: "Hobby",
 		price: "0",
-		variantId: null,
+		variantId: "prod_32Z37XlRXMWJhOEP0Dl0eB",
 		description: "Perfect for rapid idea validation.",
 		features: [
 			"3 Sandbox Projects",
@@ -72,7 +63,7 @@ const TIER_DATA = [
 		type: "main",
 		name: "Pro",
 		price: "12",
-		variantId: "creem_pro_123",
+		variantId: "prod_5nkYrUTcacVsoVAiYmNU3x",
 		description: "Scale your winning ideas into products.",
 		features: [
 			"Unlimited Projects",
@@ -100,6 +91,7 @@ const TIER_DATA = [
 
 export default function BillingPage() {
 	const userPlan = "entry";
+
 	const usage = { projects: 2, limit: 3 };
 
 	return (
@@ -153,6 +145,9 @@ export default function BillingPage() {
 								unlimited access.
 							</p>
 						</div>
+						<div className="space-y-3">
+							<ManageBillingButton />
+						</div>
 					</CardContent>
 				</Card>
 			</section>
@@ -171,7 +166,6 @@ export default function BillingPage() {
 					{TIER_DATA.map((tier) => {
 						const strategy =
 							TIER_STRATEGIES[tier.type as keyof typeof TIER_STRATEGIES];
-						const isCurrent = userPlan === tier.type;
 
 						return (
 							<Card
@@ -219,12 +213,7 @@ export default function BillingPage() {
 										))}
 									</div>
 
-									<Button
-										className={`w-full py-6 font-black text-[11px] uppercase italic tracking-widest transition-all duration-300 ${strategy.styles.button} ${isCurrent ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
-										disabled={isCurrent}
-									>
-										{isCurrent ? "Active" : tier.cta}
-									</Button>
+									<CheckoutButton name={tier.cta} productId={tier.variantId} />
 								</CardContent>
 							</Card>
 						);
@@ -232,7 +221,6 @@ export default function BillingPage() {
 				</div>
 			</section>
 
-			{/* 底部保障 */}
 			<footer className="flex justify-center gap-12 pt-4 opacity-30">
 				<div className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-widest">
 					<Shield size={12} /> SSL Encrypted
