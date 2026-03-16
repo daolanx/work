@@ -1,7 +1,10 @@
+import Navbar from '@/components/Navbar';
+
 export default function Home() {
   return (
     <main>
-      {/* TODO: Add Figma design content */}
+      <Navbar />
+      {/* TODO: Add more sections */}
     </main>
   );
 }
