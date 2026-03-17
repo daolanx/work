@@ -10,12 +10,32 @@ function Sheet({ ...props }: SheetPrimitive.Root.Props) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />;
 }
 
-function SheetTrigger({ ...props }: SheetPrimitive.Trigger.Props) {
-  return <SheetPrimitive.Trigger data-slot="sheet-trigger" {...props} />;
+function SheetTrigger({
+  className,
+  asChild,
+  ...props
+}: SheetPrimitive.Trigger.Props & { asChild?: boolean }) {
+  return (
+    <SheetPrimitive.Trigger
+      data-slot="sheet-trigger"
+      className={className}
+      {...props}
+    />
+  );
 }
 
-function SheetClose({ ...props }: SheetPrimitive.Close.Props) {
-  return <SheetPrimitive.Close data-slot="sheet-close" {...props} />;
+function SheetClose({
+  className,
+  asChild,
+  ...props
+}: SheetPrimitive.Close.Props & { asChild?: boolean }) {
+  return (
+    <SheetPrimitive.Close
+      data-slot="sheet-close"
+      className={className}
+      {...props}
+    />
+  );
 }
 
 function SheetPortal({ ...props }: SheetPrimitive.Portal.Props) {
