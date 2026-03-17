@@ -6,15 +6,15 @@ export default function AboutSection() {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <section className="w-full  mx-auto border-t border-b border-primary">
-      <div className="flex flex-col md:flex-row">
+    <section className="w-full  mx-auto border-t border-primary">
+      <div className="flex flex-col md:flex-row ">
         {/* Left Side - "About us" Title */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: '-50px' }}
           transition={{ duration: shouldReduceMotion ? 0.3 : 0.6 }}
-          className="flex-1 md:sticky md:top-[73px] md:h-fit md:flex-shrink-0 border-b md:border-b-0 md:border-r border-primary"
+          className="flex-1 md:sticky md:top-[73px] md:h-fit md:flex-shrink-0  "
         >
           <div className="px-8 py-12 md:px-20 md:py-20">
             <h2 className="text-4xl md:text-5xl font-semibold leading-tight text-primary">
@@ -24,12 +24,8 @@ export default function AboutSection() {
         </motion.div>
 
         {/* Right Side - Content */}
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: shouldReduceMotion ? 0.3 : 0.6 }}
-          className="flex-1  flex-shrink-0 border-b md:border-b-0 border-primary"
+        <div
+          className="flex-1  flex-shrink-0 border-t border-primary md:border-l md:border-t-0"
         >
           <div className="px-8 py-12 md:px-20 md:py-20 flex flex-col gap-16">
             {/* Text Content */}
@@ -81,7 +77,7 @@ export default function AboutSection() {
               Learn more
             </motion.button>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

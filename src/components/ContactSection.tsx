@@ -23,49 +23,42 @@ export default function ContactSection() {
         {/* Left Column */}
         <div className="md:w-1/2 flex flex-col">
           {/* Top Block - Title + Form */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+          <div
             className="border-t border-primary px-8 md:px-20 py-10 md:py-20"
           >
             <h2 className="text-4xl md:text-5xl font-semibold leading-tight text-primary">
-              To Contact Us
+              Let's Talk
             </h2>
             <div className="mt-6">
               <p className="text-lg font-medium leading-relaxed text-primary">
-                We will call you back
+                Enter your number and we'll call you back ASAP to help you with any questions or to place an order
               </p>
-              <div className="mt-4 flex flex-col md:flex-row gap-4">
-                <motion.input
-                  whileFocus={{ scale: 1.01 }}
-                  type="tel"
-                  placeholder="+380 XX XXX XX XX"
-                  className="flex-1 h-14 px-4 border border-muted-light bg-white text-sm font-medium text-muted placeholder:text-muted focus:outline-none"
-                />
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="flex-1 h-14 bg-primary text-white text-base font-medium uppercase tracking-widest flex items-center justify-center hover:opacity-90 transition-opacity"
-                >
-                  Book a Call
-                </motion.button>
+              <div className=" w-full mt-4 flex flex-col md:flex-row gap-4">
+                 <motion.input
+                whileFocus={{ scale: 1.02 }}
+                type="email"
+                placeholder="Your Email"
+                className="flex-1 px-4 border border-muted-light text-sm  placeholder: focus:outline-none"
+              />
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex-1  bg-primary  text-white text-base font-medium uppercase tracking-widest flex items-center justify-center hover:opacity-90 transition-opacity"
+              >
+                 REACH US
+              </motion.button>
+                
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Bottom Block - Phone + Address */}
-          <div className="flex flex-col md:flex-row border-b border-primary">
+          <div className="flex flex-col md:flex-row border-t border-primary    divide-x divide-primary">
             {/* Phone Column */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className=" bg-white border-b md:border-b-0 md:border-r border-primary"
+            <div
+              className=" bg-white flex-1"
             >
-              <div className="border-t border-b border-primary px-4 md:px-2.5 py-4">
+              <div className="border-b border-primary px-4 md:px-2.5 py-4 text-center">
                 <h3 className="text-4xl font-medium leading-tight text-primary">
                   Phone
                 </h3>
@@ -89,17 +82,13 @@ export default function ContactSection() {
                   </motion.a>
                 ))}
               </div>
-            </motion.div>
+            </div>
 
             {/* Address Column */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className=" bg-white"
+            <div
+              className=" bg-white flex-1 text-center"
             >
-              <div className="border-t border-b border-primary px-4 md:px-2.5 py-4">
+              <div className=" border-b border-primary px-4 md:px-2.5 py-4">
                 <h3 className="text-4xl font-medium leading-tight text-primary">
                   Address
                 </h3>
@@ -123,17 +112,13 @@ export default function ContactSection() {
                   15/4 Khreshchatyk Street, Kyiv
                 </motion.a>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
 
         {/* Right Column - Background Image + Social */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="md:w-1/2 relative h-[360px] md:h-auto min-h-[400px] border-b md:border-b-0 md:border-l border-primary"
+        <div
+          className="md:w-1/2 relative h-[360px] md:h-auto min-h-[400px]  md:border-l border-primary"
         >
           <div className="absolute inset-0">
             <Image
@@ -152,7 +137,7 @@ export default function ContactSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="bg-white border-t border-l border-primary px-10 py-4 flex-1 "
+              className="bg-white border-t  border-primary px-10 py-4 flex-1 "
             >
               <h3 className="text-4xl font-medium leading-tight text-primary">
                 Follow us
@@ -186,7 +171,7 @@ export default function ContactSection() {
               </div>
             </motion.div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

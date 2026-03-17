@@ -55,7 +55,7 @@ export default function Footer() {
                 whileFocus={{ scale: 1.02 }}
                 type="email"
                 placeholder="Your Email"
-                className="h-14 px-4 border border-muted-light text-sm text-muted placeholder:text-muted focus:outline-none"
+                className="h-14 px-4 border border-muted-light text-sm  placeholder: focus:outline-none"
               />
               <motion.button
                 whileHover={{ scale: 1.02 }}
@@ -77,19 +77,19 @@ export default function Footer() {
           className="p-8 md:p-10 border-t md:border-t-0 md:border-l border-primary"
         >
           <div className="flex flex-col gap-6">
-            <h3 className="text-xl font-medium text-muted">
+            <h3 className="text-xl font-medium ">
               Contact Us
             </h3>
 
             <div className="flex flex-col gap-2">
-              <p className="text-sm text-muted">Address</p>
+              <p className="text-sm ">Address</p>
               <p className="text-base font-medium text-primary tracking-wide">
                 15/4 Khreshchatyk Street, Kyiv
               </p>
             </div>
 
             <div className="flex flex-col gap-2">
-              <p className="text-sm text-muted">Phone</p>
+              <p className="text-sm ">Phone</p>
               <motion.a
                 href="tel:+380980099777"
                 whileHover={{ x: 4 }}
@@ -100,7 +100,7 @@ export default function Footer() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <p className="text-sm text-muted">General Enquiry:</p>
+              <p className="text-sm ">General Enquiry:</p>
               <motion.a
                 href="mailto:Kiev.Florist.Studio@gmail.com"
                 whileHover={{ x: 4 }}
@@ -111,7 +111,7 @@ export default function Footer() {
             </div>
 
             <div className="flex flex-col gap-4 pt-2">
-              <h4 className="text-xl font-medium text-muted">Follow Us</h4>
+              <h4 className="text-xl font-medium ">Follow Us</h4>
               <div className="flex gap-8">
                 {socialLinks.map((social) => (
                   <motion.a
@@ -144,7 +144,7 @@ export default function Footer() {
           className="p-8 md:p-10 border-t md:border-t-0 md:border-l border-primary"
         >
           <div className="flex flex-col gap-6">
-            <h3 className="text-xl font-medium text-muted">Shop</h3>
+            <h3 className="text-xl font-medium ">Shop</h3>
             <div className="flex flex-col gap-3">
               {shopLinks.map((link) => (
                 <motion.a
@@ -158,7 +158,7 @@ export default function Footer() {
               ))}
             </div>
 
-            <h3 className="text-xl font-medium text-muted pt-4">Service</h3>
+            <h3 className="text-xl font-medium  pt-4">Service</h3>
             <div className="flex flex-col gap-3">
               {serviceLinks.map((link) => (
                 <motion.a
@@ -183,7 +183,7 @@ export default function Footer() {
           className="p-8 md:p-10 border-t md:border-t-0 md:border-l border-primary"
         >
           <div className="flex flex-col gap-6">
-            <h3 className="text-xl font-medium text-muted">About Us</h3>
+            <h3 className="text-xl font-medium ">About Us</h3>
             <div className="flex flex-col gap-3">
               {aboutLinks.map((link) => (
                 <motion.a

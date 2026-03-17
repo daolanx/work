@@ -9,44 +9,30 @@ export default function ServiceSection() {
   return (
     <section className="w-full  mx-auto">
       {/* Header - Full Width */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-50px' }}
-        transition={{ duration: shouldReduceMotion ? 0.3 : 0.6 }}
-        className="border border-primary px-2.5 py-20"
-      >
+      <div className="border border-primary px-2.5 py-20">
         <h2 className="text-4xl md:text-5xl font-semibold leading-tight text-primary text-center">
           Our Service
         </h2>
-      </motion.div>
+      </div>
 
       {/* Content */}
       <div className="flex flex-col md:flex-row">
         {/* Left Column - Image */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: shouldReduceMotion ? 0.3 : 0.6 }}
+        <div
           className="md:w-1/2 relative aspect-square md:aspect-auto md:h-[560px] border-b md:border-b-0 md:border-r border-primary overflow-hidden"
         >
-          <div className="absolute inset-0 overflow-hidden">
-            <motion.div
-              whileHover={shouldReduceMotion ? undefined : { scale: 1.1 }}
-              transition={{ duration: 0.4 }}
-              className="absolute inset-0"
-            >
+          <div className="absolute inset-0 overflow-hidden group">
+            <div className="absolute inset-0 transition-transform duration-300 ease-out group-hover:scale-110">
               <Image
                 src="/images/service/service-bg.png"
                 alt="Flower Subscriptions"
                 fill
                 className="object-cover"
               />
-            </motion.div>
+            </div>
           </div>
           <div className="absolute inset-0 bg-overlay-medium" />
-        </motion.div>
+        </div>
 
         {/* Right Column - Content */}
         <motion.div
