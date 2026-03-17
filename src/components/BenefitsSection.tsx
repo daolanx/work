@@ -1,3 +1,7 @@
+'use client';
+
+import { motion, useReducedMotion } from 'motion/react';
+
 const benefits = [
   {
     title: "Stylish bouquets by florists",
@@ -24,34 +28,52 @@ const benefits = [
 function BenefitBlock({
   title,
   description,
+  index,
 }: {
   title: string;
   description: string;
+  index: number;
 }) {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
-    <div className="border-b border-l border-primary px-8 py-10 md:px-10 md:py-12 last:border-b-0">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ duration: shouldReduceMotion ? 0.2 : 0.5, delay: index * 0.15 }}
+      className="border-b border-l border-primary px-8 py-10 md:px-10 md:py-12 last:border-b-0"
+    >
       <h3 className="text-3xl md:text-4xl font-medium leading-tight text-primary mb-4">
         {title}
       </h3>
       <p className="text-base leading-relaxed text-primary-muted">
         {description}
       </p>
-    </div>
+    </motion.div>
   );
 }
 
 export default function BenefitsSection() {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <section className="w-full  mx-auto border-t border-b border-primary">
       <div className="flex flex-col md:flex-row">
         {/* Left Side - "Why choose us?" Title */}
-        <div className="md:w-1/2 md:sticky md:top-[73px] md:h-fit md:flex-shrink-0 border-b md:border-b-0 md:border-r border-primary">
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: shouldReduceMotion ? 0.3 : 0.6 }}
+          className="md:w-1/2 md:sticky md:top-[73px] md:h-fit md:flex-shrink-0 border-b md:border-b-0 md:border-r border-primary"
+        >
           <div className="px-8 py-12 md:px-20 md:py-20">
             <h2 className="text-4xl md:text-5xl font-semibold leading-tight text-primary">
               Why choose us?
             </h2>
           </div>
-        </div>
+        </motion.div>
 
         {/* Right Side - Benefits */}
         <div className="md:w-1/2 flex-shrink-0">
@@ -60,6 +82,7 @@ export default function BenefitsSection() {
               key={index}
               title={benefit.title}
               description={benefit.description}
+              index={index}
             />
           ))}
         </div>

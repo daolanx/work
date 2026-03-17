@@ -3,6 +3,7 @@
 import { useCallback, useState, useEffect } from 'react';
 import Image from 'next/image';
 import useEmblaCarousel from 'embla-carousel-react';
+import { motion } from 'motion/react';
 
 const reviews = [
   {
@@ -50,7 +51,13 @@ export default function ReviewsSection() {
     <section className="w-full  mx-auto px-8 md:px-20 py-10 md:py-20">
       <div className="flex flex-col gap-16 items-center">
         {/* Text Content */}
-        <div className="flex flex-col gap-6 items-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col gap-6 items-center"
+        >
           {/* Google Logo + Reviews */}
           <div className="flex flex-col gap-2 items-center">
             <Image
@@ -69,13 +76,15 @@ export default function ReviewsSection() {
           <h2 className="text-4xl md:text-5xl font-semibold leading-tight text-primary">
             Our Clients say
           </h2>
-        </div>
+        </motion.div>
 
         {/* Slider */}
         <div className="flex flex-col gap-8 items-center w-full max-w-7xl">
           <div className="flex gap-6 items-center w-full">
             {/* Left Arrow */}
-            <button
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={scrollPrev}
               className="shrink-0 w-8 h-8 flex items-center justify-center hover:opacity-70 transition-opacity rotate-180"
               aria-label="Previous review"
@@ -87,7 +96,7 @@ export default function ReviewsSection() {
                 height={32}
                 className="w-8 h-8"
               />
-            </button>
+            </motion.button>
 
             {/* Review Slide */}
             <div className="flex-1 overflow-hidden" ref={emblaRef}>
@@ -97,23 +106,35 @@ export default function ReviewsSection() {
                     key={index}
                     className="flex-[0_0_100%] min-w-0 flex flex-col gap-4 items-center justify-center text-center px-4"
                   >
-                    <p className="text-2xl md:text-3xl leading-tight text-primary">
+                    <motion.p
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      className="text-2xl md:text-3xl leading-tight text-primary"
+                    >
                       <span className="text-3xl">"</span>
                       <span className="italic font-normal">
                         {review.text}
                       </span>
                       <span className="text-3xl">"</span>
-                    </p>
-                    <p className="text-base font-medium text-primary">
+                    </motion.p>
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+                      className="text-base font-medium text-primary"
+                    >
                       – {review.author}
-                    </p>
+                    </motion.p>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Right Arrow */}
-            <button
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={scrollNext}
               className="shrink-0 w-8 h-8 flex items-center justify-center hover:opacity-70 transition-opacity"
               aria-label="Next review"
@@ -125,28 +146,44 @@ export default function ReviewsSection() {
                 height={32}
                 className="w-8 h-8"
               />
-            </button>
+            </motion.button>
           </div>
 
           {/* Slide Nav - Dots */}
-          <div className="flex gap-2">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="flex gap-2"
+          >
             {reviews.map((_, index) => (
-              <button
+              <motion.button
                 key={index}
                 onClick={() => emblaApi?.scrollTo(index)}
-                className={`w-[7px] h-[7px] rounded-full border border-[muted] transition-colors ${
-                  selectedIndex === index ? 'bg-[muted]' : 'bg-transparent hover:bg-[muted]'
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.8 }}
+                className={`w-2 h-2 rounded-full border transition-colors ${
+                  selectedIndex === index ? 'bg-primary border-primary' : 'border-muted hover:bg-muted'
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}
-          </div>
+          </motion.div>
         </div>
 
         {/* Button */}
-        <button className="h-14 px-6 border border-primary text-base font-medium uppercase tracking-widest text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+        <motion.button
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="h-14 px-6 border border-primary text-base font-medium uppercase tracking-widest text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
+        >
           Read reviews
-        </button>
+        </motion.button>
       </div>
     </section>
   );

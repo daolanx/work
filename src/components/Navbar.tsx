@@ -6,6 +6,7 @@ import {
   SheetContent,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { motion } from 'motion/react';
 
 const menuIcon =
   'https://www.figma.com/api/mcp/asset/b41ee3b8-8c35-4387-bac5-7a82ec86364d';
@@ -64,7 +65,7 @@ const socialLinks = [
 export default function Navbar() {
   return (
     <nav
-      className="sticky top-0 left-0 right-0 z-50 bg-white border border-primary border-solid"
+      className="sticky top-0 left-0 right-0 z-50 bg-white border-b border-primary border-solid"
       data-name="Navbar"
     >
       {/* Desktop: Full navigation (lg and above) */}
@@ -72,27 +73,29 @@ export default function Navbar() {
         {/* Left menu */}
         <div className="flex">
           {desktopNavLinks.map((link) => (
-            <a
+            <motion.a
               key={link.label}
               href={link.href}
-              className="flex items-center justify-center w-[180px] px-6 py-8 border-r border-primary font-medium text-base tracking-wide text-primary hover:bg-gray-50 transition-colors"
+              whileHover={{ backgroundColor: 'rgba(0,0,0,0.02)' }}
+              className="flex items-center justify-center w-[180px] px-6 py-8 border-r border-primary font-medium text-base tracking-wide text-primary"
               data-name="Navbar link/button"
             >
               {link.label}
-            </a>
+            </motion.a>
           ))}
         </div>
         {/* Right menu */}
         <div className="flex">
           {desktopRightLinks.map((link) => (
-            <a
+            <motion.a
               key={link.label}
               href={link.href}
-              className="flex items-center justify-center w-[180px] px-6 py-8 border-l border-primary font-medium text-base tracking-wide text-primary hover:bg-gray-50 transition-colors"
+              whileHover={{ backgroundColor: 'rgba(0,0,0,0.02)' }}
+              className="flex items-center justify-center w-[180px] px-6 py-8 border-l border-primary font-medium text-base tracking-wide text-primary"
               data-name="Navbar link/button"
             >
               {link.label}
-            </a>
+            </motion.a>
           ))}
         </div>
       </div>

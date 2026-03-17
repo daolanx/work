@@ -1,5 +1,8 @@
+'use client';
+
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { motion, useReducedMotion } from 'motion/react';
 
 const categories = [
   {
@@ -39,22 +42,29 @@ function CategoryRow({
 }: {
   category: { id: number; label: string; image: string; imageFirst: boolean };
 }) {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <div
+    
       className={cn(
-        'flex flex-row border-b border-primary',
+        'flex flex-row ',
         category.imageFirst ? 'flex-row-reverse' : ''
       )}
     >
       {/* Text Side */}
       <div className={cn(
-        "w-1/2 p-4 md:p-6 flex flex-col items-center justify-between aspect-square border-b md:border-b-0 border-primary",
-        category.imageFirst ? "border-l border-l-0" : "border-l border-primary"
+        "w-1/2 p-4 md:p-6 flex flex-col items-center justify-between aspect-square",
+        "border border-primary ml-[-1px] mt-[-1px] mb-[-1px]"
       )}>
         <span className="text-4xl font-medium leading-tight text-center text-primary">
           {category.label}
         </span>
-        <button className="flex items-center gap-1 text-base font-semibold tracking-wide text-primary">
+        <motion.button
+          whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
+          whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
+          className="flex items-center gap-1 text-base font-semibold tracking-wide text-primary"
+        >
           {category.imageFirst ? (
             <>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -70,29 +80,42 @@ function CategoryRow({
               </svg>
             </>
           )}
-        </button>
+        </motion.button>
       </div>
 
-      {/* Image Side */}
-      <div className="w-1/2 aspect-square relative">
-        <Image
-          src={category.image}
-          alt={category.label}
-          fill
-          className="object-cover"
-        />
+      {/* Image Side - Hover zoom effect */}
+      <div className="w-1/2 aspect-square relative overflow-hidden  border border-primary ml-[-1px] mt-[-1px] mb-[-1px]">
+        <motion.div
+          whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
+          transition={{ duration: 0.3 }}
+          className="absolute inset-0"
+        >
+          <Image
+            src={category.image}
+            alt={category.label}
+            fill
+            className="object-cover"
+          />
+        </motion.div>
       </div>
     </div>
   );
 }
 
 export default function HeroSection() {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <section className="w-full mx-auto">
       <div className="flex flex-col lg:flex-row">
         {/* Left Section - 720px */}
-        <div className="lg:flex-shrink-0 lg:sticky lg:top-[73px] border-r-0 lg:border-r border-primary">
-          <div className="px-8 lg:px-20 py-12 lg:py-20 border-b border-primary">
+        <div className="flex-1 lg:flex-shrink-0 lg:sticky lg:top-[73px] border-r-0 lg:border-r border-primary p-20">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: shouldReduceMotion ? 0.3 : 0.6 }}
+            className="px-8 lg:px-20 py-12 lg:py-20 border-b border-primary"
+          >
             <h1 className="text-4xl lg:text-6xl font-semibold leading-tight tracking-tight text-primary">
               Kyiv LuxeBouquets<sup className="text-2xl lg:text-4xl font-medium ml-1">®</sup>
             </h1>
@@ -101,28 +124,44 @@ export default function HeroSection() {
               <span className="italic">Online Flower</span>{' '}
               <span className="italic">Delivery Service</span>
             </p>
-          </div>
-          <div className="flex flex-col lg:flex-row">
+          </motion.div>
+          <div className="flex flex-col lg:flex-row pt-6">
             {/* Hero Image - left half */}
-            <div className="w-full lg:w-1/2 border-b lg:border-b-0 border-primary">
-              <div className="relative aspect-[4/3] lg:aspect-square">
-                <Image
-                  src="/images/hero/hero.jpg"
-                  alt="Hero flowers"
-                  fill
-                  className="object-cover"
-                  priority
-                />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: shouldReduceMotion ? 0.3 : 0.6, delay: 0.2 }}
+              className="w-full lg:w-1/2 border-b lg:border-b-0 border-primary overflow-hidden"
+            >
+              <div className="relative aspect-[4/3] aspect-square overflow-hidden ">
+                <motion.div
+                  whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute inset-0"
+                >
+                  <Image
+                    src="/images/hero/hero.jpg"
+                    alt="Hero flowers"
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                </motion.div>
               </div>
-            </div>
+            </motion.div>
             {/* Description text - right half */}
-            <div className="w-full lg:w-1/2 flex items-end border-l border-primary">
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: shouldReduceMotion ? 0.3 : 0.6, delay: 0.3 }}
+              className="w-full lg:w-1/2 flex items-end border-l border-primary ml-6"
+            >
               <div className="p-4 lg:p-6">
                 <p className="text-sm text-primary-muted leading-tight">
                   Experience the joy of giving with our modern floral studio. Order online and send fresh flowers, plants and gifts today.
                 </p>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
 
