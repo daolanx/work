@@ -5,6 +5,7 @@ import BenefitsSection from '@/components/BenefitsSection';
 import ContactSection from '@/components/ContactSection';
 import ServiceSection from '@/components/ServiceSection';
 import Service2Section from '@/components/Service2Section';
+import ReviewsSection from '@/components/ReviewsSection';
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <ContactSection />
       <ServiceSection />
       <Service2Section />
+      <ReviewsSection />
     </main>
   );
 }
