@@ -47,7 +47,7 @@ export default function ReviewsSection() {
   }, [emblaApi]);
 
   return (
-    <section className="w-full max-w-[1440px] mx-auto px-8 md:px-[80px] py-10 md:py-[80px]">
+    <section className="w-full  mx-auto px-8 md:px-20 py-10 md:py-20">
       <div className="flex flex-col gap-16 items-center">
         {/* Text Content */}
         <div className="flex flex-col gap-6 items-center">
@@ -60,19 +60,19 @@ export default function ReviewsSection() {
               height={28}
               className="h-7 w-[77px]"
             />
-            <p className="text-[14px] font-medium uppercase text-[#121212]">
+            <p className="text-sm font-medium uppercase text-primary">
               Reviews
             </p>
           </div>
 
           {/* Heading */}
-          <h2 className="text-[40px] md:text-[50px] font-semibold leading-[1.2] text-[#121212]">
+          <h2 className="text-4xl md:text-5xl font-semibold leading-tight text-primary">
             Our Clients say
           </h2>
         </div>
 
         {/* Slider */}
-        <div className="flex flex-col gap-8 items-center w-full max-w-[1280px]">
+        <div className="flex flex-col gap-8 items-center w-full max-w-7xl">
           <div className="flex gap-6 items-center w-full">
             {/* Left Arrow */}
             <button
@@ -97,14 +97,14 @@ export default function ReviewsSection() {
                     key={index}
                     className="flex-[0_0_100%] min-w-0 flex flex-col gap-4 items-center justify-center text-center px-4"
                   >
-                    <p className="text-[24px] md:text-[28px] leading-[1.2] text-[#121212]">
-                      <span className="text-[32px]">"</span>
+                    <p className="text-2xl md:text-3xl leading-tight text-primary">
+                      <span className="text-3xl">"</span>
                       <span className="italic font-normal">
                         {review.text}
                       </span>
-                      <span className="text-[32px]">"</span>
+                      <span className="text-3xl">"</span>
                     </p>
-                    <p className="text-[16px] font-medium text-[#121212]">
+                    <p className="text-base font-medium text-primary">
                       – {review.author}
                     </p>
                   </div>
@@ -134,8 +134,8 @@ export default function ReviewsSection() {
               <button
                 key={index}
                 onClick={() => emblaApi?.scrollTo(index)}
-                className={`w-[7px] h-[7px] rounded-full border border-[#808080] transition-colors ${
-                  selectedIndex === index ? 'bg-[#808080]' : 'bg-transparent hover:bg-[#808080]'
+                className={`w-[7px] h-[7px] rounded-full border border-[muted] transition-colors ${
+                  selectedIndex === index ? 'bg-[muted]' : 'bg-transparent hover:bg-[muted]'
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
@@ -144,7 +144,7 @@ export default function ReviewsSection() {
         </div>
 
         {/* Button */}
-        <button className="h-[56px] px-6 border border-[#121212] text-[16px] font-medium uppercase tracking-[0.48px] text-[#121212] flex items-center justify-center hover:bg-[#121212] hover:text-white transition-colors">
+        <button className="h-14 px-6 border border-primary text-base font-medium uppercase tracking-widest text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
           Read reviews
         </button>
       </div>

@@ -142,6 +142,18 @@
 }
 
 @theme inline {
+  /* Colors */
+  --color-primary: #121212;
+  --color-primary-muted: rgba(18, 18, 18, 0.9);
+  --color-muted: #808080;
+  --color-muted-light: #d2d2d7;
+
+  /* Overlay masks */
+  --overlay-light: rgba(18, 18, 18, 0.15);
+  --overlay-medium: rgba(18, 18, 18, 0.25);
+  --overlay-dark: rgba(18, 18, 18, 0.4);
+
+  /* Fonts */
   --font-sans: var(--font-sans);
 
   --color-sidebar-ring: var(--sidebar-ring);

@@ -42,19 +42,19 @@ function CategoryRow({
   return (
     <div
       className={cn(
-        'flex flex-col md:flex-row border-b border-[#121212]',
-        category.imageFirst ? 'md:flex-row-reverse' : ''
+        'flex flex-row border-b border-primary',
+        category.imageFirst ? 'flex-row-reverse' : ''
       )}
     >
       {/* Text Side */}
       <div className={cn(
-        "md:w-1/2 p-4 md:p-6 flex flex-col items-center justify-between aspect-square md:aspect-square border-b md:border-b-0 border-[#121212]",
-        category.imageFirst ? "md:border-l md:border-l-0" : "md:border-l border-[#121212]"
+        "w-1/2 p-4 md:p-6 flex flex-col items-center justify-between aspect-square border-b md:border-b-0 border-primary",
+        category.imageFirst ? "border-l border-l-0" : "border-l border-primary"
       )}>
-        <span className="text-[38px] font-medium leading-[1.2] text-center text-[#121212]">
+        <span className="text-4xl font-medium leading-tight text-center text-primary">
           {category.label}
         </span>
-        <button className="flex items-center gap-1 text-[16px] font-semibold tracking-[0.4px] text-[#121212]">
+        <button className="flex items-center gap-1 text-base font-semibold tracking-wide text-primary">
           {category.imageFirst ? (
             <>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -74,7 +74,7 @@ function CategoryRow({
       </div>
 
       {/* Image Side */}
-      <div className="md:w-1/2 aspect-square md:aspect-square relative">
+      <div className="w-1/2 aspect-square relative">
         <Image
           src={category.image}
           alt={category.label}
@@ -88,15 +88,15 @@ function CategoryRow({
 
 export default function HeroSection() {
   return (
-    <section className="w-full max-w-[1440px] mx-auto">
+    <section className="w-full mx-auto">
       <div className="flex flex-col lg:flex-row">
         {/* Left Section - 720px */}
-        <div className="lg:w-[720px] lg:flex-shrink-0 border-r-0 lg:border-r border-[#121212]">
-          <div className="px-8 lg:px-[80px] py-12 lg:py-[80px] border-b border-[#121212]">
-            <h1 className="text-[40px] lg:text-[67px] font-semibold leading-[1.2] tracking-tight text-[#121212]">
-              Kyiv LuxeBouquets<sup className="text-[24px] lg:text-[40px] font-medium ml-1">®</sup>
+        <div className="lg:flex-shrink-0 lg:sticky lg:top-[73px] border-r-0 lg:border-r border-primary">
+          <div className="px-8 lg:px-20 py-12 lg:py-20 border-b border-primary">
+            <h1 className="text-4xl lg:text-6xl font-semibold leading-tight tracking-tight text-primary">
+              Kyiv LuxeBouquets<sup className="text-2xl lg:text-4xl font-medium ml-1">®</sup>
             </h1>
-            <p className="mt-4 text-base lg:text-[18px] text-[rgba(18,18,18,0.9)] leading-[1.4]">
+            <p className="mt-4 text-base lg:text-lg text-primary-muted leading-relaxed">
               Discover Uniquely Crafted Bouquets and Gifts for Any Occasion: Spread Joy with Our{' '}
               <span className="italic">Online Flower</span>{' '}
               <span className="italic">Delivery Service</span>
@@ -104,7 +104,7 @@ export default function HeroSection() {
           </div>
           <div className="flex flex-col lg:flex-row">
             {/* Hero Image - left half */}
-            <div className="w-full lg:w-1/2 border-b lg:border-b-0 border-[#121212]">
+            <div className="w-full lg:w-1/2 border-b lg:border-b-0 border-primary">
               <div className="relative aspect-[4/3] lg:aspect-square">
                 <Image
                   src="/images/hero/hero.jpg"
@@ -116,9 +116,9 @@ export default function HeroSection() {
               </div>
             </div>
             {/* Description text - right half */}
-            <div className="w-full lg:w-1/2 flex items-end border-l border-[#121212]">
+            <div className="w-full lg:w-1/2 flex items-end border-l border-primary">
               <div className="p-4 lg:p-6">
-                <p className="text-sm lg:text-[14px] text-[rgba(18,18,18,0.9)] leading-[1.2]">
+                <p className="text-sm text-primary-muted leading-tight">
                   Experience the joy of giving with our modern floral studio. Order online and send fresh flowers, plants and gifts today.
                 </p>
               </div>

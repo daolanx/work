@@ -64,7 +64,7 @@ const socialLinks = [
 export default function Navbar() {
   return (
     <nav
-      className="w-full border border-[#121212] border-solid"
+      className="sticky top-0 left-0 right-0 z-50 bg-white border border-primary border-solid"
       data-name="Navbar"
     >
       {/* Desktop: Full navigation (lg and above) */}
@@ -75,7 +75,7 @@ export default function Navbar() {
             <a
               key={link.label}
               href={link.href}
-              className="flex items-center justify-center px-6 py-8 border-r border-[#121212] font-medium text-[16px] tracking-[0.4px] text-[#121212] hover:bg-gray-50 transition-colors"
+              className="flex items-center justify-center w-[180px] px-6 py-8 border-r border-primary font-medium text-base tracking-wide text-primary hover:bg-gray-50 transition-colors"
               data-name="Navbar link/button"
             >
               {link.label}
@@ -88,7 +88,7 @@ export default function Navbar() {
             <a
               key={link.label}
               href={link.href}
-              className="flex items-center justify-center px-6 py-8 border-r border-[#121212] font-medium text-[16px] tracking-[0.4px] text-[#121212] hover:bg-gray-50 transition-colors"
+              className="flex items-center justify-center w-[180px] px-6 py-8 border-l border-primary font-medium text-base tracking-wide text-primary hover:bg-gray-50 transition-colors"
               data-name="Navbar link/button"
             >
               {link.label}
@@ -102,7 +102,7 @@ export default function Navbar() {
         <div className="flex">
           <button
             type="button"
-            className="flex items-center justify-center p-4 border-r border-[#121212]"
+            className="flex items-center justify-center p-4 border-r border-primary"
             data-name="Navbar link/button"
             aria-label="Menu"
           >
@@ -112,7 +112,7 @@ export default function Navbar() {
         <div className="flex">
           <a
             href="/cart"
-            className="flex items-center justify-center p-4 border-l border-[#121212]"
+            className="flex items-center justify-center p-4 border-l border-primary"
             data-name="Navbar link/button"
             aria-label="Cart"
           >
@@ -127,7 +127,7 @@ export default function Navbar() {
           <SheetTrigger asChild>
             <button
               type="button"
-              className="flex items-center justify-center p-3 border-r border-[#121212]"
+              className="flex items-center justify-center p-3 border-r border-primary"
               data-name="Navbar link/button"
               aria-label="Menu"
             >
@@ -136,12 +136,12 @@ export default function Navbar() {
           </SheetTrigger>
           <SheetContent
             side="right"
-            className="w-[384px] border-l border-[#121212] p-0"
+            className="w-[384px] border-l border-primary p-0"
             showCloseButton={false}
           >
             <div className="flex flex-col h-full">
               {/* Header with close button */}
-              <div className="flex items-center px-4 py-3 border-b border-[#121212]">
+              <div className="flex items-center px-4 py-3 border-b border-primary">
                 <SheetClose asChild>
                   <button
                     type="button"
@@ -158,7 +158,7 @@ export default function Navbar() {
                 <a
                   key={link.label}
                   href={link.href}
-                  className="flex items-center px-6 py-[22px] border-b border-[#121212] font-medium text-[21px] text-[#121212]"
+                  className="flex items-center px-6 py-6 border-b border-primary font-medium text-xl text-primary"
                   data-name="Navbar link/button"
                 >
                   {link.label}
@@ -166,12 +166,12 @@ export default function Navbar() {
               ))}
 
               {/* Footer links */}
-              <div className="flex flex-col gap-4 px-6 py-6 border-b border-[#121212]">
+              <div className="flex flex-col gap-4 px-6 py-6 border-b border-primary">
                 {footerLinks.map((link) => (
                   <a
                     key={link.label}
                     href={link.href}
-                    className="font-medium text-[16px] tracking-[0.4px] text-[#121212]"
+                    className="font-medium text-base tracking-wide text-primary"
                   >
                     {link.label}
                   </a>
@@ -203,7 +203,7 @@ export default function Navbar() {
         <div className="flex">
           <a
             href="/cart"
-            className="flex items-center justify-center p-3 border-l border-[#121212]"
+            className="flex items-center justify-center p-3 border-l border-primary"
             data-name="Navbar link/button"
             aria-label="Cart"
           >

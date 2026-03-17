@@ -29,11 +29,11 @@ function BenefitBlock({
   description: string;
 }) {
   return (
-    <div className="border-b border-l border-[#121212] px-8 py-10 md:px-10 md:py-12 last:border-b-0">
-      <h3 className="text-[32px] md:text-[38px] font-medium leading-[1.2] text-[#121212] mb-4">
+    <div className="border-b border-l border-primary px-8 py-10 md:px-10 md:py-12 last:border-b-0">
+      <h3 className="text-3xl md:text-4xl font-medium leading-tight text-primary mb-4">
         {title}
       </h3>
-      <p className="text-[16px] leading-[1.4] text-[rgba(18,18,18,0.9)]">
+      <p className="text-base leading-relaxed text-primary-muted">
         {description}
       </p>
     </div>
@@ -42,12 +42,12 @@ function BenefitBlock({
 
 export default function BenefitsSection() {
   return (
-    <section className="w-full max-w-[1440px] mx-auto border-t border-b border-[#121212]">
+    <section className="w-full  mx-auto border-t border-b border-primary">
       <div className="flex flex-col md:flex-row">
         {/* Left Side - "Why choose us?" Title */}
-        <div className="md:w-1/2 flex-shrink-0 border-b md:border-b-0 md:border-r border-[#121212]">
-          <div className="px-8 py-12 md:px-[80px] md:py-[80px]">
-            <h2 className="text-[40px] md:text-[50px] font-semibold leading-[1.2] text-[#121212]">
+        <div className="md:w-1/2 md:sticky md:top-[73px] md:h-fit md:flex-shrink-0 border-b md:border-b-0 md:border-r border-primary">
+          <div className="px-8 py-12 md:px-20 md:py-20">
+            <h2 className="text-4xl md:text-5xl font-semibold leading-tight text-primary">
               Why choose us?
             </h2>
           </div>
