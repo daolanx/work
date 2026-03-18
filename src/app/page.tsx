@@ -1,6 +1,26 @@
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FadeIn } from '@/components/ui/fade-in';
+
+export const metadata: Metadata = {
+  title: 'Demo Gallery — Web Development Portfolio',
+  description:
+    'A curated collection of interactive web experiences built with Next.js, React, and modern technologies. View live demos and source code.',
+  keywords: [
+    'web development portfolio',
+    'Next.js demos',
+    'React examples',
+    'frontend showcase',
+    'web design examples',
+  ],
+  openGraph: {
+    title: 'Demo Gallery — Web Development Portfolio',
+    description:
+      'A curated collection of interactive web experiences built with Next.js, React, and modern technologies.',
+    type: 'website',
+  },
+};
 
 const demos = [
   {
