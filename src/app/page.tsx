@@ -38,7 +38,7 @@ const demos: Demo[] = [
     description:
       'E-commerce landing page for a luxury flower shop with hero section, services, reviews, contact form, and newsletter footer.',
     href: '/flower-shop',
-    image: '/images/hero/hero.jpg',
+    image: '/images/flower-shop/hero/hero.jpg',
     tags: ['Next.js', 'Tailwind CSS', 'Motion', 'Embla Carousel'],
   },
 ];
