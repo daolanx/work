@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -24,6 +23,15 @@
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --radius: 0.625rem;
+
+  /* Flower-shop specific muted colors */
+  --color-muted-light: #808080;
+  --color-muted-alt: #d2d2d7;
+
+  /* Flower-shop overlay masks */
+  --overlay-light: rgba(18, 18, 18, 0.15);
+  --overlay-medium: rgba(18, 18, 18, 0.25);
+  --overlay-dark: rgba(18, 18, 18, 0.4);
 }
 
 @theme inline {
@@ -49,6 +57,15 @@
 
   /* Shared muted color used in project */
   --color-primary-muted: rgba(18, 18, 18, 0.9);
+
+  /* Flower-shop specific muted colors */
+  --color-muted-light: var(--color-muted-light);
+  --color-muted-alt: var(--color-muted-alt);
+
+  /* Flower-shop overlay masks */
+  --overlay-light: var(--overlay-light);
+  --overlay-medium: var(--overlay-medium);
+  --overlay-dark: var(--overlay-dark);
 
   /* Radius */
   --radius-sm: calc(var(--radius) * 0.6);

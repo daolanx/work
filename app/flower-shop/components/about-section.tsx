@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useReducedMotion } from 'motion/react';
-import { FadeIn } from '@/components/ui/fade-in';
+import { FadeIn } from './fade-in';
 
 export default function AboutSection() {
   const shouldReduceMotion = useReducedMotion();

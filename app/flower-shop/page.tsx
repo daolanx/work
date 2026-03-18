@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import AboutSection from '@/app/flower-shop/components/about-section';
-import BenefitsSection from '@/app/flower-shop/components/benefits-section';
-import ContactSection from '@/app/flower-shop/components/contact-section';
-import Footer from '@/app/flower-shop/components/footer';
-import HeroSection from '@/app/flower-shop/components/hero-section';
-import Navbar from '@/app/flower-shop/components/navbar';
-import ReviewsSection from '@/app/flower-shop/components/reviews-section';
-import ServiceSection from '@/app/flower-shop/components/service-section';
-import Service2Section from '@/app/flower-shop/components/service2-section';
+import AboutSection from './components/about-section';
+import BenefitsSection from './components/benefits-section';
+import ContactSection from './components/contact-section';
+import Footer from './components/footer';
+import HeroSection from './components/hero-section';
+import Navbar from './components/navbar';
+import ReviewsSection from './components/reviews-section';
+import ServiceSection from './components/service-section';
+import Service2Section from './components/service2-section';
 
 export const metadata: Metadata = {
   title: 'Kyiv LuxeBouquets — Fresh Flowers Delivery in Kyiv',

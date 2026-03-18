@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from 'motion/react';
 import Image from 'next/image';
-import { FadeIn } from '@/components/ui/fade-in';
+import { FadeIn } from './fade-in';
 
 export default function Service2Section() {
   const shouldReduceMotion = useReducedMotion();

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { SocialLinks } from '@/components/ui/social-links';
+import { SocialLinks } from './social-links';
 
 const shopLinks = [
   'All Products',

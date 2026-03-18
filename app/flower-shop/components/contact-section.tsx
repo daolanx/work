@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { SocialLinks } from '@/components/ui/social-links';
+import { SocialLinks } from './social-links';
 
 const phoneNumbers = ['+380980099777', '+380980099111'];
 
@@ -55,7 +55,7 @@ export default function ContactSection() {
                   placeholder="Your Email"
                   aria-label="Your Email"
                   className='h-14 px-4 border border-muted-light text-base md:flex-1'
-                
+
                 />
                 <button
                   type="submit"

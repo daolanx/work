@@ -122,6 +122,7 @@
 		"@vitejs/plugin-react": "^5.1.2",
 		"@vitest/coverage-v8": "^4.0.18",
 		"@vitest/ui": "4.0.18",
+		"critters": "^0.0.25",
 		"drizzle-kit": "^0.31.8",
 		"husky": "^9.1.7",
 		"jsdom": "^28.0.0",
