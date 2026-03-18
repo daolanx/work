@@ -1,0 +1,61 @@
+name: Deploy Production
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  deploy:
+    name: Build, Sync and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 1. Environment Setup
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # 2. Vercel Build Phase (Build Once)
+      - name: Pull and Build Vercel Artifacts
+        run: |
+          pnpx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          pnpx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      # 3. CDN Offloading Phase (Sync to R2)
+      - name: Upload Static Assets to R2
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --follow-symlinks --delete
+        env:
+          SOURCE_DIR: '.vercel/output/static/'
+          AWS_S3_BUCKET: 'assets'
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'auto'
+          AWS_S3_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+
+      # 4. Final Deployment (Deploy Prebuilt)
+      - name: Deploy to Vercel
+        run: pnpx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      # 5. Success Notification (Optional)
+      - name: Post-deployment Notification
+        if: success()
+        run: echo "Successfully deployed to production and synced to R2."

@@ -1,23 +1,24 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Github, Twitter } from 'lucide-react';
 import { FadeIn } from '@/components/ui/fade-in';
 
 export const metadata: Metadata = {
-  title: 'Demo Gallery — Web Development Portfolio',
+  title: 'Code & Experiments',
   description:
-    'A curated collection of interactive web experiences built with Next.js, React, and modern technologies. View live demos and source code.',
+    'A collection of interactive web experiments, components, and MVP prototypes built with modern technologies.',
   keywords: [
-    'web development portfolio',
+    'web development',
     'Next.js demos',
-    'React examples',
+    'React experiments',
     'frontend showcase',
-    'web design examples',
+    'code experiments',
   ],
   openGraph: {
-    title: 'Demo Gallery — Web Development Portfolio',
+    title: 'Code & Experiments',
     description:
-      'A curated collection of interactive web experiences built with Next.js, React, and modern technologies.',
+      'A collection of interactive web experiments and prototypes.',
     type: 'website',
   },
 };
@@ -34,32 +35,57 @@ interface Demo {
 const demos: Demo[] = [
   {
     id: 'flower-shop',
-    title: 'Flower Shop',
+    title: 'Kyiv LuxeBouquets',
     description:
-      'E-commerce landing page for a luxury flower shop with hero section, services, reviews, contact form, and newsletter footer.',
+      'Luxury flower shop landing page with hero carousel, services showcase, and customer reviews.',
     href: '/flower-shop',
     image: '/images/flower-shop/hero/hero.jpg',
-    tags: ['Next.js', 'Tailwind CSS', 'Motion', 'Embla Carousel'],
+    tags: ['Next.js', 'Tailwind CSS v4', 'Framer Motion', 'Embla Carousel'],
   },
 ];
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-primary/5">
+      {/* Minimal Navbar */}
+      <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto">
+        <Link
+          href="https://daolanx.me"
+          className="text-sm text-primary-muted hover:text-primary transition-colors"
+        >
+          ← Return to Base
+        </Link>
+        <div className="flex items-center gap-4">
+          <a
+            href="https://github.com/daolanx"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary-muted hover:text-primary transition-colors"
+            aria-label="GitHub"
+          >
+            <Github size={20} />
+          </a>
+          <a
+            href="https://x.com/daolanx"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary-muted hover:text-primary transition-colors"
+            aria-label="Twitter"
+          >
+            <Twitter size={20} />
+          </a>
+        </div>
+      </nav>
+
       <div className="container mx-auto px-4 py-16 md:py-24 max-w-5xl">
-        {/* Header */}
+        {/* Hero */}
         <FadeIn delay={0} className="text-center mb-16">
-          <div className="inline-block px-4 py-1.5 mb-6 border border-primary/30">
-            <span className="text-xs font-medium uppercase tracking-widest text-primary/70">
-              Portfolio
-            </span>
-          </div>
           <h1 className="text-5xl md:text-7xl font-semibold text-primary mb-6 tracking-tight">
-            Demo Gallery
+            Code & Experiments
           </h1>
           <p className="text-lg md:text-xl text-primary-muted max-w-2xl mx-auto leading-relaxed">
-            A curated collection of interactive web experiences crafted with
-            modern technologies and thoughtful design.
+            A collection of component libraries, MVP prototypes, and AI-assisted
+            experiments built with modern technologies.
           </p>
         </FadeIn>
 
@@ -152,7 +178,6 @@ export default function Home() {
             role="contentinfo"
           >
             <div className="flex flex-col items-center gap-1">
-              {/* Copyright & Links */}
               <div className="flex items-center justify-center flex-wrap gap-x-3 text-sm text-primary-muted">
                 <span>Dax © 2026</span>
                 <span aria-hidden="true" className="text-primary/20">|</span>
