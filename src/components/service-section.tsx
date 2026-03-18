@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { motion, useReducedMotion } from 'motion/react';
+import { FadeIn } from '@/components/ui/fade-in';
 
 export default function ServiceSection() {
   const shouldReduceMotion = useReducedMotion();
@@ -35,44 +36,22 @@ export default function ServiceSection() {
         </div>
 
         {/* Right Column - Content */}
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: shouldReduceMotion ? 0.3 : 0.6 }}
+        <div
           className="md:w-1/2 flex flex-col justify-center px-8 md:px-20 py-10 md:py-20 bg-white"
         >
           <div className="flex flex-col gap-16 items-center">
             {/* Text Content */}
             <div className="flex flex-col gap-6 items-center text-center w-full">
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: shouldReduceMotion ? 0.2 : 0.5, delay: 0.1 }}
-                className="text-sm font-medium uppercase text-primary"
-              >
+              <FadeIn as="p" delay={0.1} className="text-sm font-medium uppercase text-primary">
                 service
-              </motion.p>
+              </FadeIn>
               <div className="flex flex-col gap-4 w-full">
-                <motion.h3
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: shouldReduceMotion ? 0.2 : 0.5, delay: 0.2 }}
-                  className="text-4xl md:text-5xl font-semibold leading-tight text-primary"
-                >
+                <FadeIn as="h3" delay={0.2} className="text-4xl md:text-5xl font-semibold leading-tight text-primary">
                   Flower Subcriptions
-                </motion.h3>
-                <motion.p
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: shouldReduceMotion ? 0.2 : 0.5, delay: 0.3 }}
-                  className="text-lg font-medium leading-relaxed text-primary-muted"
-                >
+                </FadeIn>
+                <FadeIn as="p" delay={0.3} className="text-lg font-medium leading-relaxed text-primary-muted">
                   Experience the convenience and savings of regular flower deliveries with our flexible subscription service - up to 30% more profitable than one-time purchases.
-                </motion.p>
+                </FadeIn>
               </div>
             </div>
 
@@ -89,7 +68,7 @@ export default function ServiceSection() {
               Subscribe Now
             </motion.button>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

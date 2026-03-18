@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { motion } from 'motion/react';
+import { SocialLinks } from '@/components/ui/social-links';
 
 const shopLinks = [
   'All Products',
@@ -51,19 +52,16 @@ export default function Footer() {
               Remember to offer beautiful flowers from Kyiv LuxeBouquets Valentines Day, Mothers Day, Christmas... Reminds you 7 days before. No spam or sharing your address
             </p>
             <div className="flex flex-col gap-4">
-              <motion.input
-                whileFocus={{ scale: 1.02 }}
+              <input
                 type="email"
                 placeholder="Your Email"
-                className="h-14 px-4 border border-muted-light text-sm  placeholder: focus:outline-none"
+                className="h-14 px-4 border border-muted-light text-sm focus:outline-none"
               />
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+              <button
                 className="h-14 bg-primary text-white text-base font-medium uppercase tracking-widest flex items-center justify-center hover:opacity-90 transition-opacity"
               >
                 Remind
-              </motion.button>
+              </button>
             </div>
           </div>
         </motion.div>
@@ -112,25 +110,7 @@ export default function Footer() {
 
             <div className="flex flex-col gap-4 pt-2">
               <h4 className="text-xl font-medium ">Follow Us</h4>
-              <div className="flex gap-8">
-                {socialLinks.map((social) => (
-                  <motion.a
-                    key={social.name}
-                    href="#"
-                    whileHover={{ scale: 1.2, rotate: 5 }}
-                    className="w-6 h-6 hover:opacity-70 transition-opacity"
-                    aria-label={social.name}
-                  >
-                    <Image
-                      src={social.icon}
-                      alt={social.name}
-                      width={24}
-                      height={24}
-                      className="w-6 h-6"
-                    />
-                  </motion.a>
-                ))}
-              </div>
+              <SocialLinks links={socialLinks} />
             </div>
           </div>
         </motion.div>

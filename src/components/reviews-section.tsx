@@ -51,11 +51,7 @@ export default function ReviewsSection() {
     <section className="w-full  mx-auto px-8 md:px-20 py-10 md:py-20">
       <div className="flex flex-col gap-16 items-center">
         {/* Text Content */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+        <div
           className="flex flex-col gap-6 items-center"
         >
           {/* Google Logo + Reviews */}
@@ -73,10 +69,16 @@ export default function ReviewsSection() {
           </div>
 
           {/* Heading */}
-          <h2 className="text-4xl md:text-5xl font-semibold leading-tight text-primary">
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-4xl md:text-5xl font-semibold leading-tight text-primary"
+          >
             Our Clients say
-          </h2>
-        </motion.div>
+          </motion.h2>
+        </div>
 
         {/* Slider */}
         <div className="flex flex-col gap-8 items-center w-full max-w-7xl">
@@ -150,11 +152,7 @@ export default function ReviewsSection() {
           </div>
 
           {/* Slide Nav - Dots */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.5 }}
+          <div
             className="flex gap-2"
           >
             {reviews.map((_, index) => (
@@ -169,7 +167,7 @@ export default function ReviewsSection() {
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}
-          </motion.div>
+          </div>
         </div>
 
         {/* Button */}

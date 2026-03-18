@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { motion } from 'motion/react';
+import { SocialLinks } from '@/components/ui/social-links';
 
 const phoneNumbers = [
   '+380980099777',
@@ -34,19 +35,18 @@ export default function ContactSection() {
                 Enter your number and we'll call you back ASAP to help you with any questions or to place an order
               </p>
               <div className=" w-full mt-4 flex flex-col md:flex-row gap-4">
-                 <motion.input
-                whileFocus={{ scale: 1.02 }}
+                 <input
+               
                 type="email"
                 placeholder="Your Email"
-                className="flex-1 px-4 border border-muted-light text-sm  placeholder: focus:outline-none"
+                className="h-14 flex-1 px-4 border border-muted-light text-base focus:outline-none"
               />
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="flex-1  bg-primary  text-white text-base font-medium uppercase tracking-widest flex items-center justify-center hover:opacity-90 transition-opacity"
+              <button
+               
+                className="h-14  flex-1  bg-primary  text-white text-base font-medium uppercase tracking-widest flex items-center justify-center hover:opacity-90 transition-opacity"
               >
                  REACH US
-              </motion.button>
+              </button>
                 
               </div>
             </div>
@@ -56,20 +56,19 @@ export default function ContactSection() {
           <div className="flex flex-col md:flex-row border-t border-primary    divide-x divide-primary">
             {/* Phone Column */}
             <div
-              className=" bg-white flex-1"
+              className=" bg-white flex-1  text-center"
             >
-              <div className="border-b border-primary px-4 md:px-2.5 py-4 text-center">
-                <h3 className="text-4xl font-medium leading-tight text-primary">
+              <div className="border-b border-primary px-4 md:px-2.5 py-4">
+                <h3 className="text-4xl font-medium leading-tight ">
                   Phone
                 </h3>
               </div>
-              <div className="flex flex-col gap-6 px-6 md:px-6 pt-6 pb-10">
+              <div className="py-6 px-4 flex flex-col justify-center items-center gap-4">
                 {phoneNumbers.map((phone) => (
-                  <motion.a
+                  <a
                     key={phone}
                     href={`tel:${phone}`}
-                    whileHover={{ scale: 1.02, x: 4 }}
-                    className="flex items-center gap-1 text-base font-semibold tracking-wide text-primary hover:opacity-70 transition-opacity"
+                    className="flex items-center justify-center w-full gap-2 text-base font-semibold tracking-wide text-primary hover:opacity-70 transition-opacity"
                   >
                     <Image
                       src="/images/contact/icon-call.svg"
@@ -79,7 +78,7 @@ export default function ContactSection() {
                       className="w-6 h-6"
                     />
                     {phone}
-                  </motion.a>
+                  </a>
                 ))}
               </div>
             </div>
@@ -93,14 +92,13 @@ export default function ContactSection() {
                   Address
                 </h3>
               </div>
-              <div className="flex flex-col gap-5 px-6 md:px-6 pt-6 pb-10">
-                <p className="text-sm font-medium uppercase tracking-wide text-primary">
+              <div className="py-6 px-4 flex flex-col justify-center items-center gap-4">
+                <p className="text-sm font-medium uppercase tracking-wide text-primary text-center">
                   Opening hours: 8 to 11 p.m.
                 </p>
-                <motion.a
+                <a
                   href="#"
-                  whileHover={{ scale: 1.02, x: 4 }}
-                  className="flex items-center gap-1 text-base font-semibold tracking-wide text-primary hover:opacity-70 transition-opacity"
+                  className="flex items-center justify-center gap-1 text-base font-semibold tracking-wide text-primary hover:opacity-70 transition-opacity"
                 >
                   <Image
                     src="/images/contact/icon-location.svg"
@@ -110,7 +108,7 @@ export default function ContactSection() {
                     className="w-6 h-6"
                   />
                   15/4 Khreshchatyk Street, Kyiv
-                </motion.a>
+                </a>
               </div>
             </div>
           </div>
@@ -132,44 +130,20 @@ export default function ContactSection() {
 
           {/* Follow us */}
           <div className="absolute bottom-0 left-0 right-0 flex">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
+            <div
+            
               className="bg-white border-t  border-primary px-10 py-4 flex-1 "
             >
               <h3 className="text-4xl font-medium leading-tight text-primary">
                 Follow us
               </h3>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.4 }}
+            </div>
+            <div
+             
               className="flex-1 bg-white border-t border-l border-r border-primary px-10 py-4 flex items-center justify-between"
             >
-              <div className="flex gap-8">
-                {socialLinks.map((social) => (
-                  <motion.a
-                    key={social.name}
-                    href={social.href}
-                    whileHover={{ scale: 1.2, rotate: 5 }}
-                    className="w-6 h-6 hover:opacity-70 transition-opacity"
-                    aria-label={social.name}
-                  >
-                    <Image
-                      src={social.icon}
-                      alt={social.name}
-                      width={24}
-                      height={24}
-                      className="w-6 h-6"
-                    />
-                  </motion.a>
-                ))}
-              </div>
-            </motion.div>
+              <SocialLinks links={socialLinks} />
+            </div>
           </div>
         </div>
       </div>

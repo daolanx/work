@@ -85,21 +85,28 @@ export default function HeroSection() {
         {/* Left Section */}
         <div className="flex-1  lg:sticky lg:top-[73px]  ">
           <div className='p-20'>
-       <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: animationDuration }}
+          <div
             className=" py-16"
           >
-            <h1 className="text-4xl lg:text-6xl font-semibold leading-tight tracking-tight text-primary">
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: animationDuration }}
+              className="text-4xl lg:text-6xl font-semibold leading-tight tracking-tight text-primary"
+            >
               Kyiv LuxeBouquets<sup className="text-2xl lg:text-4xl font-medium ml-1">®</sup>
-            </h1>
-            <p className="mt-4 text-base lg:text-lg text-primary-muted leading-relaxed">
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: animationDuration, delay: 0.1 }}
+              className="mt-4 text-base lg:text-lg text-primary-muted leading-relaxed"
+            >
               Discover Uniquely Crafted Bouquets and Gifts for Any Occasion: Spread Joy with Our{' '}
               <span className="italic">Online Flower</span>{' '}
               <span className="italic">Delivery Service</span>
-            </p>
-          </motion.div>
+            </motion.p>
+          </div>
 
           <div className="flex flex-col lg:flex-row pt-6 border-t border-primary">
             {/* Hero Image */}
@@ -120,7 +127,7 @@ export default function HeroSection() {
             <div
               className="w-full lg:w-1/2 flex items-end  md:ml-6  md:border-l border-primary"
             >
-              <div className="p-4 lg:p-6">
+              <div className="px-4 lg:px-6">
                 <p className="text-sm text-primary-muted leading-tight ">
                   Experience the joy of giving with our modern floral studio. Order online and send fresh flowers, plants and gifts today.
                 </p>

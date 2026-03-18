@@ -1,12 +1,12 @@
-import Navbar from '@/components/Navbar';
-import HeroSection from '@/components/HeroSection';
-import AboutSection from '@/components/AboutSection';
-import BenefitsSection from '@/components/BenefitsSection';
-import ContactSection from '@/components/ContactSection';
-import ServiceSection from '@/components/ServiceSection';
-import Service2Section from '@/components/Service2Section';
-import ReviewsSection from '@/components/ReviewsSection';
-import Footer from '@/components/Footer';
+import Navbar from '@/components/navbar';
+import HeroSection from '@/components/hero-section';
+import AboutSection from '@/components/about-section';
+import BenefitsSection from '@/components/benefits-section';
+import ContactSection from '@/components/contact-section';
+import ServiceSection from '@/components/service-section';
+import Service2Section from '@/components/service2-section';
+import ReviewsSection from '@/components/reviews-section';
+import Footer from '@/components/footer';
 
 export default function Home() {
   return (
