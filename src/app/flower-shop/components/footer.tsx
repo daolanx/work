@@ -59,7 +59,7 @@ export default function Footer() {
               />
               <button
                 type="submit"
-                className="h-14 bg-primary text-white text-base font-medium uppercase tracking-widest flex items-center justify-center hover:opacity-90 transition-opacity"
+                className="h-14 bg-primary text-white text-base font-medium uppercase tracking-widest flex items-center justify-center hover:opacity-90 transition-opacity cursor-pointer"
               >
                 Remind
               </button>

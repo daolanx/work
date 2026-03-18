@@ -78,7 +78,7 @@ export default function AboutSection() {
               }}
               whileHover={shouldReduceMotion ? undefined : { scale: 1.02 }}
               whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
-              className="w-[175px] h-14 border border-primary px-6 py-4 text-base font-medium uppercase tracking-widest text-primary hover:bg-primary hover:text-white transition-colors"
+              className="w-[175px] h-14 border border-primary px-6 py-4 text-base font-medium uppercase tracking-widest text-primary hover:bg-primary hover:text-white transition-colors cursor-pointer"
             >
               Learn more
             </motion.button>

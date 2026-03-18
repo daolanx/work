@@ -83,7 +83,7 @@ function CategoryCard({ category }: { category: Category }) {
           {category.label}
         </div>
 
-        <a className="flex gap-1 justify-end mb-6 font-semibold tracking-wide text-primary">
+        <button type="button" className="flex gap-1 justify-end mb-6 font-semibold tracking-wide text-primary cursor-pointer">
           <span
             className={cn(
               'transition-transform duration-300',
@@ -105,7 +105,7 @@ function CategoryCard({ category }: { category: Category }) {
           >
             {!category.imageFirst && <ArrowIcon direction="right" />}
           </span>
-        </a>
+        </button>
       </div>
 
       {/* Image Side */}

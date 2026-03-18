@@ -63,7 +63,7 @@ export default function Service2Section() {
             }}
             whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
             whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
-            className="h-14 px-8 border border-white text-sm font-semibold uppercase tracking-[0.2em] text-white flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300"
+            className="h-14 px-8 border border-white text-sm font-semibold uppercase tracking-[0.2em] text-white flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300 cursor-pointer"
           >
             Inquire Now
           </motion.button>

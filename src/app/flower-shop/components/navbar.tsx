@@ -107,7 +107,7 @@ export default function Navbar() {
         <div className="flex">
           <button
             type="button"
-            className="flex items-center justify-center p-4 border-r border-primary"
+            className="flex items-center justify-center p-4 border-r border-primary cursor-pointer"
             data-name="Navbar link/button"
             aria-label="Menu"
           >
@@ -144,7 +144,7 @@ export default function Navbar() {
           <SheetTrigger asChild>
             <button
               type="button"
-              className="flex items-center justify-center p-3 border-r border-primary"
+              className="flex items-center justify-center p-3 border-r border-primary cursor-pointer"
               data-name="Navbar link/button"
               aria-label="Menu"
             >
@@ -168,7 +168,7 @@ export default function Navbar() {
                 <SheetClose asChild>
                   <button
                     type="button"
-                    className="flex items-center justify-center w-8 h-8"
+                    className="flex items-center justify-center w-8 h-8 cursor-pointer"
                     aria-label="Close menu"
                   >
                     <Image

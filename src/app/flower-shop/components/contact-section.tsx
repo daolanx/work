@@ -59,7 +59,7 @@ export default function ContactSection() {
                 />
                 <button
                   type="submit"
-                  className='h-14 border border-muted-light text-base md:flex-1 bg-primary text-white'
+                  className='h-14 border border-muted-light text-base md:flex-1 bg-primary text-white cursor-pointer'
                 >
                   REACH US
                 </button>
