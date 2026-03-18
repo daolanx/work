@@ -15,9 +15,9 @@ const demos = [
 export default function Home() {
   return (
     <main className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-16 max-w-4xl">
-        <header className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-primary mb-4">Demo Gallery</h1>
+      <div className="container mx-auto px-4 py-12 max-w-3xl">
+        <header className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-primary mb-2">Demo Gallery</h1>
           <p className="text-lg text-primary-muted">A collection of showcase projects built with modern web technologies</p>
         </header>
 
@@ -28,7 +28,7 @@ export default function Home() {
               href={demo.href}
               className="group block bg-white border-2 border-primary overflow-hidden hover:shadow-lg transition-all duration-300"
             >
-              <div className="relative aspect-video overflow-hidden">
+              <div className="relative aspect-[16/9] sm:aspect-[2/1] h-48 sm:h-64 overflow-hidden">
                 <Image
                   src={demo.image}
                   alt={demo.title}
@@ -43,9 +43,9 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="p-6">
-                <h2 className="text-2xl font-bold text-primary mb-2">{demo.title}</h2>
-                <p className="text-primary-muted mb-4">{demo.description}</p>
+              <div className="p-4">
+                <h2 className="text-xl font-bold text-primary mb-1">{demo.title}</h2>
+                <p className="text-sm text-primary-muted mb-3">{demo.description}</p>
                 <div className="flex flex-wrap gap-2">
                   {demo.tags.map((tag) => (
                     <span
