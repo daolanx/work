@@ -74,24 +74,23 @@ const sites: SiteMeta[] = [
 		},
 	},
 
-	// {
-	// 	previewUrl: "/images/e-commerce-page.webp",
-	// 	webUrl: "x",
-	// 	sourceUrl: "x",
-	// 	isDeveloping: true,
-	// 	keywords: ["State Logic", "API", "Components"],
-	// 	en: {
-	// 		title: "E-commerce Page",
-
-	// 		description:
-	// 			"A high-performance storefront featuring complex state management and seamless shopping cart interactions. Responsive e-commerce interface optimized for core web vitals and conversion-driven UX.",
-	// 	},
-	// 	zh: {
-	// 		title: "电商页",
-	// 		description:
-	// 			"高性能电商前端，具备复杂的购物车状态管理和无缝交互。响应式界面针对核心 Web 指标优化，助力高转化率的交互体验。",
-	// 	},
-	// },
+	{
+		previewUrl: "/images/flower-shop.webp",
+		webUrl: "https://demo.daolanx.com/flower-shop",
+		sourceUrl: "https://github.com/daolanx/demo",
+		isDeveloping: false,
+		keywords: ["Next.js", "Tailwind CSS", "Motion", "Figma", "Claude Code"],
+		en: {
+			title: "E-commerce Page",
+			description:
+				"A responsive and accessible flower shop e-commerce page. Developed using Claude Code and Figma-assisted coding, featuring high-fidelity design reproduction and post-development optimization.",
+		},
+		zh: {
+			title: "电商页面",
+			description:
+				"花店电商页面，响应式设计，支持无障碍访问，Claude Code + Figma 辅助编程，设计稿高精度还原，加上后期优化。",
+		},
+	},
 ];
 
 export async function getSites(): Promise<Site[]> {
