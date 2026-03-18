@@ -77,6 +77,7 @@ export default function Navbar() {
               key={link.label}
               href={link.href}
               whileHover={{ backgroundColor: 'rgba(0,0,0,0.02)' }}
+              style={{ willChange: 'backgroundColor' }}
               className="flex items-center justify-center w-[180px] px-6 py-8 border-r border-primary font-medium text-base tracking-wide text-primary"
               data-name="Navbar link/button"
             >
@@ -91,6 +92,7 @@ export default function Navbar() {
               key={link.label}
               href={link.href}
               whileHover={{ backgroundColor: 'rgba(0,0,0,0.02)' }}
+              style={{ willChange: 'backgroundColor' }}
               className="flex items-center justify-center w-[180px] px-6 py-8 border-l border-primary font-medium text-base tracking-wide text-primary"
               data-name="Navbar link/button"
             >

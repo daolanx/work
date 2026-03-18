@@ -45,6 +45,7 @@ export default function Footer() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
+          style={{ willChange: 'opacity, transform' }}
           className="p-8 md:p-10"
         >
           <div className="flex flex-col gap-6">
@@ -72,6 +73,7 @@ export default function Footer() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.1 }}
+          style={{ willChange: 'opacity, transform' }}
           className="p-8 md:p-10 border-t md:border-t-0 md:border-l border-primary"
         >
           <div className="flex flex-col gap-6">
@@ -91,6 +93,7 @@ export default function Footer() {
               <motion.a
                 href="tel:+380980099777"
                 whileHover={{ x: 4 }}
+                style={{ willChange: 'transform' }}
                 className="text-base font-medium text-primary tracking-wide hover:opacity-70"
               >
                 +380980099777
@@ -102,6 +105,7 @@ export default function Footer() {
               <motion.a
                 href="mailto:Kiev.Florist.Studio@gmail.com"
                 whileHover={{ x: 4 }}
+                style={{ willChange: 'transform' }}
                 className="text-base font-medium text-primary tracking-wide hover:opacity-70"
               >
                 Kiev.Florist.Studio@gmail.com
@@ -121,6 +125,7 @@ export default function Footer() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
+          style={{ willChange: 'opacity, transform' }}
           className="p-8 md:p-10 border-t md:border-t-0 md:border-l border-primary"
         >
           <div className="flex flex-col gap-6">
@@ -160,6 +165,7 @@ export default function Footer() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
+          style={{ willChange: 'opacity, transform' }}
           className="p-8 md:p-10 border-t md:border-t-0 md:border-l border-primary"
         >
           <div className="flex flex-col gap-6">
