@@ -64,6 +64,7 @@ export default function ReviewsSection() {
               alt="Google"
               width={77}
               height={28}
+              unoptimized
               className="h-7 w-[77px]"
             />
             <p className="text-sm font-medium uppercase text-primary">
@@ -102,6 +103,7 @@ export default function ReviewsSection() {
                 alt="Previous"
                 width={32}
                 height={32}
+                unoptimized
                 className="w-8 h-8"
               />
             </motion.button>
@@ -154,6 +156,7 @@ export default function ReviewsSection() {
                 alt="Next"
                 width={32}
                 height={32}
+                unoptimized
                 className="w-8 h-8"
               />
             </motion.button>

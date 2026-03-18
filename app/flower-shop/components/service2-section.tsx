@@ -16,6 +16,7 @@ export default function Service2Section() {
           fill
           priority
           sizes="100vw"
+          unoptimized
           className="object-cover"
         />
       </div>

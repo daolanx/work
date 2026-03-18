@@ -86,6 +86,7 @@ export default function ContactSection() {
                       alt="Phone"
                       width={24}
                       height={24}
+                      unoptimized
                       className="w-6 h-6"
                     />
                     {phone}
@@ -114,6 +115,7 @@ export default function ContactSection() {
                     alt="Location"
                     width={24}
                     height={24}
+                    unoptimized
                     className="w-6 h-6"
                   />
                   15/4 Khreshchatyk Street, Kyiv
@@ -131,6 +133,7 @@ export default function ContactSection() {
               alt="Contact background"
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
+              unoptimized
               className="object-cover"
             />
             <div className="absolute inset-0 bg-overlay-light" />

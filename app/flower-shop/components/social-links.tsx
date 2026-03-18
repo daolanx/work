@@ -30,6 +30,7 @@ export function SocialLinks({ links, className }: SocialLinksProps) {
             alt={social.name}
             width={24}
             height={24}
+            unoptimized
             className="w-6 h-6"
           />
         </motion.a>

@@ -116,6 +116,7 @@ export default function Navbar() {
               alt="Menu"
               width={24}
               height={24}
+              unoptimized
               className="w-6 h-6"
             />
           </button>
@@ -132,6 +133,7 @@ export default function Navbar() {
               alt="Cart"
               width={24}
               height={24}
+              unoptimized
               className="w-6 h-6"
             />
           </Link>
@@ -153,6 +155,7 @@ export default function Navbar() {
                 alt="Menu"
                 width={24}
                 height={24}
+                unoptimized
                 className="w-6 h-6"
               />
             </button>
@@ -176,6 +179,7 @@ export default function Navbar() {
                       alt="Close"
                       width={32}
                       height={32}
+                      unoptimized
                       className="w-8 h-8"
                     />
                   </button>
@@ -223,6 +227,7 @@ export default function Navbar() {
                       alt={social.label}
                       width={24}
                       height={24}
+                      unoptimized
                       className="w-6 h-6"
                     />
                   </Link>
@@ -243,6 +248,7 @@ export default function Navbar() {
               alt="Cart"
               width={24}
               height={24}
+              unoptimized
               className="w-6 h-6"
             />
           </Link>

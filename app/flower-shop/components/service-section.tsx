@@ -27,6 +27,7 @@ export default function ServiceSection() {
                 alt="Flower Subscriptions"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
+                unoptimized
                 className="object-cover"
               />
             </div>

@@ -122,6 +122,7 @@ function CategoryCard({ category }: { category: Category }) {
             fill
             sizes="50vw"
             className="object-cover"
+            unoptimized
           />
         </div>
       </div>
@@ -186,6 +187,7 @@ export default function HeroSection() {
                       sizes="(max-width: 1024px) 100vw, 50vw"
                       className="object-cover"
                       priority
+                      unoptimized
                     />
                   </div>
                 </div>
