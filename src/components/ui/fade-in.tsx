@@ -23,86 +23,21 @@ export function FadeIn({
 }: FadeInProps) {
   const shouldReduceMotion = useReducedMotion();
 
-  if (as === 'span') {
-    return (
-      <motion.span
-        className={className}
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={viewport}
-        transition={{
-          duration: shouldReduceMotion ? 0.2 : 0.5,
-          delay,
-        }}
-      >
-        {children}
-      </motion.span>
-    );
-  }
+  const baseProps = {
+    className,
+    initial: { opacity: 0, y: 20 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport,
+    transition: {
+      duration: shouldReduceMotion ? 0.2 : 0.5,
+      delay,
+    },
+  };
 
-  if (as === 'p') {
-    return (
-      <motion.p
-        className={className}
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={viewport}
-        transition={{
-          duration: shouldReduceMotion ? 0.2 : 0.5,
-          delay,
-        }}
-      >
-        {children}
-      </motion.p>
-    );
-  }
+  if (as === 'span') return <motion.span {...baseProps}>{children}</motion.span>;
+  if (as === 'p') return <motion.p {...baseProps}>{children}</motion.p>;
+  if (as === 'h2') return <motion.h2 {...baseProps}>{children}</motion.h2>;
+  if (as === 'h3') return <motion.h3 {...baseProps}>{children}</motion.h3>;
 
-  if (as === 'h2') {
-    return (
-      <motion.h2
-        className={className}
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={viewport}
-        transition={{
-          duration: shouldReduceMotion ? 0.2 : 0.5,
-          delay,
-        }}
-      >
-        {children}
-      </motion.h2>
-    );
-  }
-
-  if (as === 'h3') {
-    return (
-      <motion.h3
-        className={className}
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={viewport}
-        transition={{
-          duration: shouldReduceMotion ? 0.2 : 0.5,
-          delay,
-        }}
-      >
-        {children}
-      </motion.h3>
-    );
-  }
-
-  return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={viewport}
-      transition={{
-        duration: shouldReduceMotion ? 0.2 : 0.5,
-        delay,
-      }}
-    >
-      {children}
-    </motion.div>
-  );
+  return <motion.div {...baseProps}>{children}</motion.div>;
 }

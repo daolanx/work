@@ -2,7 +2,12 @@
 
 import { motion, useReducedMotion } from 'motion/react';
 
-const benefits = [
+interface Benefit {
+  title: string;
+  description: string;
+}
+
+const benefits: Benefit[] = [
   {
     title: "Stylish bouquets by florists",
     description:

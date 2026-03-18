@@ -5,7 +5,12 @@ import Image from 'next/image';
 import useEmblaCarousel from 'embla-carousel-react';
 import { motion } from 'motion/react';
 
-const reviews = [
+interface Review {
+  text: string;
+  author: string;
+}
+
+const reviews: Review[] = [
   {
     text: "Ordered flowers online and they were the best bouquet! Impressed everyone around. Highly recommend this flower shop!",
     author: "Ronald Richards",
@@ -86,6 +91,7 @@ export default function ReviewsSection() {
           <div className="flex gap-6 items-center w-full">
             {/* Left Arrow */}
             <motion.button
+              type="button"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               style={{ willChange: 'transform' }}
@@ -139,6 +145,7 @@ export default function ReviewsSection() {
 
             {/* Right Arrow */}
             <motion.button
+              type="button"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               style={{ willChange: 'transform' }}
@@ -162,6 +169,7 @@ export default function ReviewsSection() {
           >
             {reviews.map((_, index) => (
               <motion.button
+                type="button"
                 key={index}
                 onClick={() => emblaApi?.scrollTo(index)}
                 whileHover={{ scale: 1.2 }}
@@ -177,6 +185,7 @@ export default function ReviewsSection() {
 
         {/* Button */}
         <motion.button
+          type="button"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

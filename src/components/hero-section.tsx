@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { motion, useReducedMotion } from 'motion/react';
 
 // Types
-type Category = {
+export type Category = {
   id: number;
   label: string;
   image: string;
@@ -22,7 +22,6 @@ const categories: Category[] = [
 ];
 
 // Constants
-const BORDER_OVERLAP = 'ml-[-1px] mt-[-1px] mb-[-1px]';
 const ANIMATION_DURATION = { fast: 0.3, normal: 0.6 };
 
 // Icons
@@ -44,11 +43,11 @@ function CategoryCard({ category }: { category: Category }) {
     <div className={cn('flex group', category.imageFirst && 'flex-row-reverse')}>
       {/* Text Side */}
       <div className={cn('w-1/2 flex flex-col items-center aspect-square ', 'border-l border-t border-primary')}>
-        <div className=" text-4xl font-medium leading-tight  justify-center m-auto">
+        <div className="text-4xl font-medium leading-tight justify-center m-auto">
           {category.label}
         </div>
-       
-        <a className="flex  gap-1 justify-end mb-6  font-semibold tracking-wide text-primary">
+
+        <a className="flex gap-1 justify-end mb-6 font-semibold tracking-wide text-primary">
           <span className={cn(
             'transition-transform duration-300',
             category.imageFirst ? 'group-hover:-translate-x-1' : 'group-hover:translate-x-1'
@@ -83,10 +82,10 @@ export default function HeroSection() {
     <section className="w-full mx-auto">
       <div className="flex flex-col lg:flex-row divide-x divide-primary">
         {/* Left Section */}
-        <div className="flex-1  lg:sticky lg:top-[73px]  ">
+        <div className="flex-1 lg:sticky lg:top-[73px]">
           <div className='p-20'>
           <div
-            className=" py-16"
+            className="py-16"
           >
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
@@ -128,10 +127,10 @@ export default function HeroSection() {
 
             {/* Description */}
             <div
-              className="w-full lg:w-1/2 flex items-end  md:ml-6  md:border-l border-primary"
+              className="w-full lg:w-1/2 flex items-end md:ml-6 md:border-l border-primary"
             >
               <div className="px-4 lg:px-6">
-                <p className="text-sm text-primary-muted leading-tight ">
+                <p className="text-sm text-primary-muted leading-tight">
                   Experience the joy of giving with our modern floral studio. Order online and send fresh flowers, plants and gifts today.
                 </p>
               </div>
@@ -143,7 +142,7 @@ export default function HeroSection() {
         </div>
 
         {/* Right Section - Categories */}
-        <div className="flex-1 ml-[-1px] mt-[-1px] ">
+        <div className="flex-1 ml-[-1px] mt-[-1px]">
           {categories.map((category) => (
             <CategoryCard key={category.id} category={category} />
           ))}

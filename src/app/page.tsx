@@ -22,7 +22,16 @@ export const metadata: Metadata = {
   },
 };
 
-const demos = [
+interface Demo {
+  id: string;
+  title: string;
+  description: string;
+  href: string;
+  image: string;
+  tags: string[];
+}
+
+const demos: Demo[] = [
   {
     id: 'flower-shop',
     title: 'Flower Shop',

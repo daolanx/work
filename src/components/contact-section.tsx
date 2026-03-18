@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { motion } from 'motion/react';
 import { SocialLinks } from '@/components/ui/social-links';
 
 const phoneNumbers = [
@@ -36,18 +35,18 @@ export default function ContactSection() {
               </p>
               <div className=" w-full mt-4 flex flex-col md:flex-row gap-4">
                  <input
-               
                 type="email"
                 placeholder="Your Email"
+                aria-label="Your Email"
                 className="h-14 flex-1 px-4 border border-muted-light text-base focus:outline-none"
               />
               <button
-               
+                type="submit"
                 className="h-14  flex-1  bg-primary  text-white text-base font-medium uppercase tracking-widest flex items-center justify-center hover:opacity-90 transition-opacity"
               >
                  REACH US
               </button>
-                
+
               </div>
             </div>
           </div>

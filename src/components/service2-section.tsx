@@ -2,21 +2,17 @@
 
 import Image from 'next/image';
 import { motion, useReducedMotion } from 'motion/react';
-import { useRef } from 'react';
 import { FadeIn } from '@/components/ui/fade-in';
 
 export default function Service2Section() {
-  const containerRef = useRef<HTMLElement>(null);
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <section 
-      ref={containerRef} 
-
+    <section
       className="w-full mx-auto relative h-[560px] md:h-[640px] overflow-hidden [clip-path:inset(0)]"
     >
 
-      <div className="fixed inset-0 w-full h-full -z-10">
+      <div className="absolute inset-0 w-full h-full -z-10">
         <Image
           src="/images/service2/service2-bg.png"
           alt="Wedding & Event Decor"
@@ -49,6 +45,7 @@ export default function Service2Section() {
 
           {/* Button */}
           <motion.button
+            type="button"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

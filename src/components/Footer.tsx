@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { motion } from 'motion/react';
 import { SocialLinks } from '@/components/ui/social-links';
 
@@ -56,9 +55,11 @@ export default function Footer() {
               <input
                 type="email"
                 placeholder="Your Email"
+                aria-label="Your Email"
                 className="h-14 px-4 border border-muted-light text-sm focus:outline-none"
               />
               <button
+                type="submit"
                 className="h-14 bg-primary text-white text-base font-medium uppercase tracking-widest flex items-center justify-center hover:opacity-90 transition-opacity"
               >
                 Remind
