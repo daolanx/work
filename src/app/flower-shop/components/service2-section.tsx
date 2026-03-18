@@ -14,7 +14,7 @@ export default function Service2Section() {
 
       <div className="absolute inset-0 w-full h-full -z-10">
         <Image
-          src="/images/service2/service2-bg.png"
+          src="/images/flower-shop/service2/service2-bg.png"
           alt="Wedding & Event Decor"
           fill
           priority

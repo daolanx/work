@@ -1,0 +1,9 @@
+export { default as Navbar } from './navbar';
+export { default as HeroSection } from './hero-section';
+export { default as AboutSection } from './about-section';
+export { default as BenefitsSection } from './benefits-section';
+export { default as ContactSection } from './contact-section';
+export { default as ServiceSection } from './service-section';
+export { default as Service2Section } from './service2-section';
+export { default as ReviewsSection } from './reviews-section';
+export { default as Footer } from './footer';

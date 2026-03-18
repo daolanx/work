@@ -27,11 +27,11 @@ const aboutLinks = [
 ];
 
 const socialLinks = [
-  { name: 'Instagram', icon: '/images/footer/icon-instagram.svg' },
-  { name: 'Pinterest', icon: '/images/footer/icon-pinterest.svg' },
-  { name: 'Facebook', icon: '/images/footer/icon-facebook.svg' },
-  { name: 'Twitter', icon: '/images/footer/icon-twitter.svg' },
-  { name: 'Telegram', icon: '/images/footer/icon-telegram.svg' },
+  { name: 'Instagram', icon: '/images/flower-shop/footer/icon-instagram.svg' },
+  { name: 'Pinterest', icon: '/images/flower-shop/footer/icon-pinterest.svg' },
+  { name: 'Facebook', icon: '/images/flower-shop/footer/icon-facebook.svg' },
+  { name: 'Twitter', icon: '/images/flower-shop/footer/icon-twitter.svg' },
+  { name: 'Telegram', icon: '/images/flower-shop/footer/icon-telegram.svg' },
 ];
 
 export default function Footer() {

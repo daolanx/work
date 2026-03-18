@@ -10,14 +10,14 @@ import {
 import Image from 'next/image';
 import { motion } from 'motion/react';
 
-const menuIcon = '/images/navbar/menu.svg';
-const cartIcon = '/images/navbar/cart.svg';
-const closeIcon = '/images/navbar/close.svg';
-const instagramIcon = '/images/navbar/instagram.svg';
-const pinterestIcon = '/images/navbar/pinterest.svg';
-const facebookIcon = '/images/navbar/facebook.svg';
-const twitterIcon = '/images/navbar/twitter.svg';
-const telegramIcon = '/images/navbar/telegram.svg';
+const menuIcon = '/images/flower-shop/navbar/menu.svg';
+const cartIcon = '/images/flower-shop/navbar/cart.svg';
+const closeIcon = '/images/flower-shop/navbar/close.svg';
+const instagramIcon = '/images/flower-shop/navbar/instagram.svg';
+const pinterestIcon = '/images/flower-shop/navbar/pinterest.svg';
+const facebookIcon = '/images/flower-shop/navbar/facebook.svg';
+const twitterIcon = '/images/flower-shop/navbar/twitter.svg';
+const telegramIcon = '/images/flower-shop/navbar/telegram.svg';
 
 // Desktop navigation links (left side)
 const desktopNavLinks = [

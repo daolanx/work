@@ -47,15 +47,8 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  /* Custom colors used in project */
+  /* Shared muted color used in project */
   --color-primary-muted: rgba(18, 18, 18, 0.9);
-  --color-muted-light: #808080;
-  --color-muted-alt: #d2d2d7;
-
-  /* Overlay masks */
-  --overlay-light: rgba(18, 18, 18, 0.15);
-  --overlay-medium: rgba(18, 18, 18, 0.25);
-  --overlay-dark: rgba(18, 18, 18, 0.4);
 
   /* Radius */
   --radius-sm: calc(var(--radius) * 0.6);

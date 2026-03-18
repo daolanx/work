@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+/*
+ * Flower Shop specific theme
+ * Only contains colors/patterns unique to flower-shop demo
+ * Shared colors remain in app/globals.css
+ */
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Flower-shop specific muted colors */
+  --color-muted-light: #808080;
+  --color-muted-alt: #d2d2d7;
+
+  /* Flower-shop overlay masks */
+  --overlay-light: rgba(18, 18, 18, 0.15);
+  --overlay-medium: rgba(18, 18, 18, 0.25);
+  --overlay-dark: rgba(18, 18, 18, 0.4);
+}
+
+@theme inline {
+  --color-muted-light: var(--color-muted-light);
+  --color-muted-alt: var(--color-muted-alt);
+  --overlay-light: var(--overlay-light);
+  --overlay-medium: var(--overlay-medium);
+  --overlay-dark: var(--overlay-dark);
+}

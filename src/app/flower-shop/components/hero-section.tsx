@@ -14,11 +14,11 @@ export type Category = {
 
 // Data
 const categories: Category[] = [
-  { id: 1, label: 'Fresh Flowers', image: '/images/hero/fresh-flowers.jpg', imageFirst: false },
-  { id: 2, label: 'Live Plants', image: '/images/hero/live-plants.jpg', imageFirst: true },
-  { id: 3, label: 'Dried Flowers', image: '/images/hero/dried-flowers.jpg', imageFirst: false },
-  { id: 4, label: 'Fresheners', image: '/images/hero/fresheners.jpg', imageFirst: true },
-  { id: 5, label: 'Aroma Candels', image: '/images/hero/aroma-candles.jpg', imageFirst: false },
+  { id: 1, label: 'Fresh Flowers', image: '/images/flower-shop/hero/fresh-flowers.jpg', imageFirst: false },
+  { id: 2, label: 'Live Plants', image: '/images/flower-shop/hero/live-plants.jpg', imageFirst: true },
+  { id: 3, label: 'Dried Flowers', image: '/images/flower-shop/hero/dried-flowers.jpg', imageFirst: false },
+  { id: 4, label: 'Fresheners', image: '/images/flower-shop/hero/fresheners.jpg', imageFirst: true },
+  { id: 5, label: 'Aroma Candels', image: '/images/flower-shop/hero/aroma-candles.jpg', imageFirst: false },
 ];
 
 // Constants
@@ -120,7 +120,7 @@ export default function HeroSection() {
             >
               <div className="relative aspect-square overflow-hidden group">
                 <div className="absolute inset-0 transition-transform duration-300 ease-out group-hover:scale-105 ">
-                  <Image src="/images/hero/hero.jpg" alt="Hero flowers" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" priority />
+                  <Image src="/images/flower-shop/hero/hero.jpg" alt="Hero flowers" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" priority />
                 </div>
               </div>
             </motion.div>

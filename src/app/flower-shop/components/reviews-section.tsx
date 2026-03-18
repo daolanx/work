@@ -62,7 +62,7 @@ export default function ReviewsSection() {
           {/* Google Logo + Reviews */}
           <div className="flex flex-col gap-2 items-center">
             <Image
-              src="/images/reviews/google-logo.svg"
+              src="/images/flower-shop/reviews/google-logo.svg"
               alt="Google"
               width={77}
               height={28}
@@ -100,7 +100,7 @@ export default function ReviewsSection() {
               aria-label="Previous review"
             >
               <Image
-                src="/images/reviews/right-arrow.svg"
+                src="/images/flower-shop/reviews/right-arrow.svg"
                 alt="Previous"
                 width={32}
                 height={32}
@@ -154,7 +154,7 @@ export default function ReviewsSection() {
               aria-label="Next review"
             >
               <Image
-                src="/images/reviews/right-arrow.svg"
+                src="/images/flower-shop/reviews/right-arrow.svg"
                 alt="Next"
                 width={32}
                 height={32}

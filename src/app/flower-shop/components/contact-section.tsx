@@ -9,11 +9,11 @@ const phoneNumbers = [
 ];
 
 const socialLinks = [
-  { name: 'Instagram', href: '#', icon: '/images/contact/icon-instagram.svg' },
-  { name: 'Pinterest', href: '#', icon: '/images/contact/icon-pinterest.svg' },
-  { name: 'Facebook', href: '#', icon: '/images/contact/icon-facebook.svg' },
-  { name: 'Twitter', href: '#', icon: '/images/contact/icon-twitter.svg' },
-  { name: 'Telegram', href: '#', icon: '/images/contact/icon-telegram.svg' },
+  { name: 'Instagram', href: '#', icon: '/images/flower-shop/contact/icon-instagram.svg' },
+  { name: 'Pinterest', href: '#', icon: '/images/flower-shop/contact/icon-pinterest.svg' },
+  { name: 'Facebook', href: '#', icon: '/images/flower-shop/contact/icon-facebook.svg' },
+  { name: 'Twitter', href: '#', icon: '/images/flower-shop/contact/icon-twitter.svg' },
+  { name: 'Telegram', href: '#', icon: '/images/flower-shop/contact/icon-telegram.svg' },
 ];
 
 export default function ContactSection() {
@@ -70,7 +70,7 @@ export default function ContactSection() {
                     className="flex items-center justify-center w-full gap-2 text-base font-semibold tracking-wide text-primary hover:opacity-70 transition-opacity"
                   >
                     <Image
-                      src="/images/contact/icon-call.svg"
+                      src="/images/flower-shop/contact/icon-call.svg"
                       alt="Phone"
                       width={24}
                       height={24}
@@ -100,7 +100,7 @@ export default function ContactSection() {
                   className="flex items-center justify-center gap-1 text-base font-semibold tracking-wide text-primary hover:opacity-70 transition-opacity"
                 >
                   <Image
-                    src="/images/contact/icon-location.svg"
+                    src="/images/flower-shop/contact/icon-location.svg"
                     alt="Location"
                     width={24}
                     height={24}
@@ -119,7 +119,7 @@ export default function ContactSection() {
         >
           <div className="absolute inset-0">
             <Image
-              src="/images/contact/contact-bg.png"
+              src="/images/flower-shop/contact/contact-bg.png"
               alt="Contact background"
               fill
               sizes="(max-width: 768px) 100vw, 50vw"

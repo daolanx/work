@@ -25,7 +25,7 @@ export default function ServiceSection() {
           <div className="absolute inset-0 overflow-hidden group">
             <div className="absolute inset-0 transition-transform duration-300 ease-out group-hover:scale-110">
               <Image
-                src="/images/service/service-bg.png"
+                src="/images/flower-shop/service/service-bg.png"
                 alt="Flower Subscriptions"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
