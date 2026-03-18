@@ -35,7 +35,8 @@ const demos: Demo[] = [
   {
     id: 'flower-shop',
     title: 'Flower Shop',
-    description: 'E-commerce landing page for a luxury flower shop with hero section, services, reviews, contact form, and newsletter footer.',
+    description:
+      'E-commerce landing page for a luxury flower shop with hero section, services, reviews, contact form, and newsletter footer.',
     href: '/flower-shop',
     image: '/images/hero/hero.jpg',
     tags: ['Next.js', 'Tailwind CSS', 'Motion', 'Embla Carousel'],
@@ -57,7 +58,8 @@ export default function Home() {
             Demo Gallery
           </h1>
           <p className="text-lg md:text-xl text-primary-muted max-w-2xl mx-auto leading-relaxed">
-            A curated collection of interactive web experiences crafted with modern technologies and thoughtful design.
+            A curated collection of interactive web experiences crafted with
+            modern technologies and thoughtful design.
           </p>
         </FadeIn>
 
@@ -145,10 +147,34 @@ export default function Home() {
 
         {/* Footer */}
         <FadeIn delay={0.4}>
-          <footer className="mt-20 text-center">
-            <div className="inline-flex items-center gap-2 text-sm text-primary-muted">
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <span>Built with Next.js 16 · React 19 · Tailwind CSS v4</span>
+          <footer
+            className="mt-20 pt-8 border-t border-primary/10"
+            role="contentinfo"
+          >
+            <div className="flex flex-col items-center gap-1">
+              {/* Copyright & Links */}
+              <div className="flex items-center justify-center flex-wrap gap-x-3 text-sm text-primary-muted">
+                <span>Dax © 2026</span>
+                <span aria-hidden="true" className="text-primary/20">|</span>
+                <nav aria-label="Footer Links" className="flex gap-x-3">
+                  {[
+                    { href: 'https://github.com/daolanx', label: 'GitHub' },
+                    { href: 'https://x.com/daolanx', label: 'Twitter' },
+                    { href: 'https://work.daolanx.me', label: 'Profile' },
+                    { href: 'mailto:daolanx.dev@gmail.com', label: 'Email' },
+                  ].map((item) => (
+                    <a
+                      key={item.label}
+                      href={item.href}
+                      className="hover:text-primary transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {item.label}
+                    </a>
+                  ))}
+                </nav>
+              </div>
             </div>
           </footer>
         </FadeIn>

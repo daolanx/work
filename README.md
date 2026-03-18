@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Demo Project
+
+A Next.js 16 web application showcasing various UI demos with React 19, TypeScript, and Tailwind CSS v4.
+
+## Tech Stack
+
+- **Framework**: Next.js 16.1.6 (App Router)
+- **UI Library**: React 19.2.3
+- **Styling**: Tailwind CSS v4 with "base-nova" theme
+- **Components**: shadcn/ui patterns
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# Install dependencies
+pnpm install
+
+# Start development server
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Start development server |
+| `pnpm build` | Production build |
+| `pnpm start` | Start production server |
+| `pnpm lint` | Run ESLint |
+| `pnpm format` | Format with Biome |
+| `pnpm check` | Biome check + fix |
 
-## Learn More
+## Demos
 
-To learn more about Next.js, take a look at the following resources:
+- **Flower Shop** (`/flower-shop`) - A modern floral studio landing page with carousel, animations, and responsive design
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+├── app/                 # Next.js App Router
+│   ├── layout.tsx       # Root layout
+│   ├── page.tsx         # Home page (demo gallery)
+│   ├── globals.css      # Tailwind CSS + CSS variables
+│   └── flower-shop/    # Demo modules
+├── components/
+│   ├── ui/              # Reusable UI components
+│   └── flower-shop/     # Demo-specific components
+└── lib/
+    └── utils.ts         # Utilities (cn, animation configs)
+```
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Build and start the production server:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+pnpm build
+pnpm start
+```
+
+The app can be deployed to any platform supporting Next.js (Vercel, Netlify, Docker, etc.).
