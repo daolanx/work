@@ -28,6 +28,7 @@ export default function ServiceSection() {
                 src="/images/service/service-bg.png"
                 alt="Flower Subscriptions"
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover"
               />
             </div>

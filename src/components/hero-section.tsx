@@ -68,7 +68,7 @@ function CategoryCard({ category }: { category: Category }) {
       {/* Image Side */}
       <div className={cn('w-1/2 aspect-square relative overflow-hidden ', 'border-l border-t border-primary')}>
         <div className="absolute inset-0 transition-transform duration-300 ease-out group-hover:scale-105">
-          <Image src={category.image} alt={category.label} fill className="object-cover" />
+          <Image src={category.image} alt={category.label} fill sizes="50vw" className="object-cover" />
         </div>
       </div>
     </div>
@@ -92,6 +92,7 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: animationDuration }}
+              style={{ willChange: 'opacity, transform' }}
               className="text-4xl lg:text-6xl font-semibold leading-tight tracking-tight text-primary"
             >
               Kyiv LuxeBouquets<sup className="text-2xl lg:text-4xl font-medium ml-1">®</sup>
@@ -100,6 +101,7 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: animationDuration, delay: 0.1 }}
+              style={{ willChange: 'opacity, transform' }}
               className="mt-4 text-base lg:text-lg text-primary-muted leading-relaxed"
             >
               Discover Uniquely Crafted Bouquets and Gifts for Any Occasion: Spread Joy with Our{' '}
@@ -114,11 +116,12 @@ export default function HeroSection() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: animationDuration, delay: 0.2 }}
+              style={{ willChange: 'opacity, transform' }}
               className="w-full lg:w-1/2 overflow-hidden"
             >
               <div className="relative aspect-square overflow-hidden group">
                 <div className="absolute inset-0 transition-transform duration-300 ease-out group-hover:scale-105 ">
-                  <Image src="/images/hero/hero.jpg" alt="Hero flowers" fill className="object-cover" priority />
+                  <Image src="/images/hero/hero.jpg" alt="Hero flowers" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" priority />
                 </div>
               </div>
             </motion.div>

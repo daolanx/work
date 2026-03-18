@@ -22,6 +22,7 @@ export default function Service2Section() {
           alt="Wedding & Event Decor"
           fill
           priority
+          sizes="100vw"
           className="object-cover"
         />
       </div>

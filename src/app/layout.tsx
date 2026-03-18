@@ -3,7 +3,7 @@ import './globals.css';
 import { Outfit } from 'next/font/google';
 import { cn } from '@/lib/utils';
 
-const gilroy = Outfit({ subsets: ['latin'], variable: '--font-gilroy' });
+const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit' });
 
 export const metadata: Metadata = {
   title: 'Demo App',
@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn('font-gilroy', gilroy.variable)}>
+    <html lang="en" className={cn('font-outfit', outfit.variable)}>
       <body>{children}</body>
     </html>
   );

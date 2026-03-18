@@ -123,6 +123,7 @@ export default function ContactSection() {
               src="/images/contact/contact-bg.png"
               alt="Contact background"
               fill
+              sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover"
             />
             <div className="absolute inset-0 bg-overlay-light" />

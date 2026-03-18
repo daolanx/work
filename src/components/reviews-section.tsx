@@ -74,6 +74,7 @@ export default function ReviewsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
+            style={{ willChange: 'opacity, transform' }}
             className="text-4xl md:text-5xl font-semibold leading-tight text-primary"
           >
             Our Clients say
@@ -87,6 +88,7 @@ export default function ReviewsSection() {
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
+              style={{ willChange: 'transform' }}
               onClick={scrollPrev}
               className="shrink-0 w-8 h-8 flex items-center justify-center hover:opacity-70 transition-opacity rotate-180"
               aria-label="Previous review"
@@ -112,6 +114,7 @@ export default function ReviewsSection() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
+                      style={{ willChange: 'opacity, transform' }}
                       className="text-2xl md:text-3xl leading-tight text-primary"
                     >
                       <span className="text-3xl">"</span>
@@ -124,6 +127,7 @@ export default function ReviewsSection() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+                      style={{ willChange: 'opacity' }}
                       className="text-base font-medium text-primary"
                     >
                       – {review.author}
@@ -137,6 +141,7 @@ export default function ReviewsSection() {
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
+              style={{ willChange: 'transform' }}
               onClick={scrollNext}
               className="shrink-0 w-8 h-8 flex items-center justify-center hover:opacity-70 transition-opacity"
               aria-label="Next review"
@@ -178,6 +183,7 @@ export default function ReviewsSection() {
           transition={{ duration: 0.5, delay: 0.6 }}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
+          style={{ willChange: 'opacity, transform' }}
           className="h-14 px-6 border border-primary text-base font-medium uppercase tracking-widest text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
         >
           Read reviews
