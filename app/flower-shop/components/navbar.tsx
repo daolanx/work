@@ -8,7 +8,7 @@ import {
   SheetClose,
   SheetContent,
   SheetTrigger,
-} from '@/components/ui/sheet';
+} from './sheet';
 
 const menuIcon = '/images/flower-shop/navbar/menu.svg';
 const cartIcon = '/images/flower-shop/navbar/cart.svg';

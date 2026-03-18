@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Next.js 16.1.6 web application with React 19.2.3, TypeScript, and Tailwind CSS v4. The project uses shadcn/ui component patterns and is styled with the "base-nova" theme.
+Next.js 16.1.1 web application with React 19.2.3, TypeScript, and Tailwind CSS v4. The project uses shadcn/ui component patterns, Drizzle ORM for database, Better Auth for authentication, and Vercel AI SDK for AI chat integration.
 
 ## Commands
 
@@ -15,57 +15,81 @@ pnpm dev          # Start development server (http://localhost:3000)
 # Building
 pnpm build        # Production build
 pnpm start        # Start production server
+pnpm type-check   # TypeScript check
 
 # Linting & Formatting
-pnpm lint         # Run ESLint
+pnpm lint         # Run Biome check
 pnpm format       # Format with Biome (write)
 pnpm lint:fix     # Fix lint issues with Biome (write)
-pnpm check        # Biome check + fix (format + lint)
+
+# Testing
+pnpm test         # Run all tests (vitest + playwright)
+pnpm test:unit    # Unit tests only (vitest)
+pnpm test:e2e     # E2E tests only (playwright)
+pnpm test:api     # API tests (vitest)
+pnpm test:ui      # Component tests (vitest)
+
+# Database
+pnpm db:gen       # Generate migrations (drizzle-kit)
+pnpm db:mi        # Run migrations
+pnpm db:push      # Push schema to DB
+pnpm db:studio    # Open Drizzle Studio
 ```
 
 ## Architecture
 
 ```
-src/
-├── app/              # Next.js App Router
-│   ├── layout.tsx    # Root layout (Outfit font, globals.css)
-│   ├── page.tsx      # Home page
-│   └── globals.css   # Tailwind CSS + CSS variables
-├── components/
-│   ├── ui/           # shadcn/ui components (button, sheet, etc.)
-│   └── *.tsx         # Page sections (Hero, Services, Reviews, etc.)
-└── lib/
-    └── utils.ts      # cn() utility for className merging
+app/                    # Next.js App Router (root directory)
+├── (profile)/          # Profile routes (grouped with parentheses)
+├── ai-chat/            # AI chat interface
+├── api/                # API routes (ai-chat, auth, console)
+├── auth/               # Authentication pages
+├── console/            # Admin dashboard
+├── flower-shop/        # Demo projects
+├── landing/            # Marketing page
+└── legal/              # Legal pages
+
+components/
+├── ui/                 # shadcn/ui components
+├── auth/               # Auth components
+├── ai-elements/        # AI chat components
+└── forms/              # Form components
+
+db/
+├── auth.schema.ts       # User, session, account tables
+├── biz.schema.ts        # Tasks, visit_stats tables
+└── index.ts            # DB connection (Drizzle)
+
+lib/
+├── auth/               # Auth utilities
+├── validations/        # Zod schemas
+└── utils.ts            # cn() utility for className merging
 ```
 
 ## Key Conventions
 
-- **Path alias**: `@/*` maps to `./src/*`
-- **Styling**: Tailwind CSS v4 (no tailwind.config.ts - uses CSS-based config)
+- **Path alias**: `@/*` maps to project root
+- **Styling**: Tailwind CSS v4 (CSS-based config, no tailwind.config.ts)
 - **Component patterns**: Uses `cva` for variants, `cn` for className merging
 - **Icons**: Lucide React
-- **Animations**: motion/react for scroll animations, Embla Carousel for carousels
+- **Animations**: motion/react for animations, Embla Carousel for carousels
 
-## Reusable UI Components
+## Database Schema
 
-The project includes shared components in `src/components/ui/`:
-
-- **FadeIn** - Fade-in on scroll animation with configurable delay
-- **SocialLinks** - Social media link icons with hover effects
-
-## Image Assets
-
-Static images are organized in `/public/images/` subdirectories by section (e.g., `/images/footer/`, `/images/contact/`, `/images/service/`)
+- **Users & Auth**: `user`, `session`, `account` tables (via Better Auth)
+- **Business Logic**: `tasks` (categories: PERSONAL/WORK/STUDY/OTHER, priorities, status), `visit_stats`
 
 ## Configuration
 
-- **shadcn/ui**: Style "base-nova", uses CSS variables in `src/app/globals.css`
+- **shadcn/ui**: Components in `components/ui/`, uses CSS variables in `app/globals.css`
 - **Biome**: Single quotes, 2-space indent, ES5 trailing commas
 - **TypeScript**: Strict mode enabled, bundler module resolution
+- **i18n**: next-intl for English/Chinese support
 
-## Adding shadcn Components
+## Testing
 
-Use the shadcn CLI to add new components:
-```bash
-npx shadcn@latest add [component-name]
-```
+Tests are organized in `tests/` directory:
+- `tests/unit/` - Unit tests (vitest)
+- `tests/e2e/` - E2E tests (playwright)
+- `tests/api/` - API tests (vitest)
+- `tests/components/` - Component tests (vitest)
