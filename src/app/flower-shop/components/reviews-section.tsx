@@ -1,9 +1,9 @@
 'use client';
 
-import { useCallback, useState, useEffect } from 'react';
-import Image from 'next/image';
 import useEmblaCarousel from 'embla-carousel-react';
 import { motion } from 'motion/react';
+import Image from 'next/image';
+import { useCallback, useEffect, useState } from 'react';
 
 interface Review {
   text: string;
@@ -12,16 +12,16 @@ interface Review {
 
 const reviews: Review[] = [
   {
-    text: "Ordered flowers online and they were the best bouquet! Impressed everyone around. Highly recommend this flower shop!",
-    author: "Ronald Richards",
+    text: 'Ordered flowers online and they were the best bouquet! Impressed everyone around. Highly recommend this flower shop!',
+    author: 'Ronald Richards',
   },
   {
-    text: "The wedding bouquet was absolutely stunning! The team understood exactly what I wanted and delivered beyond my expectations.",
-    author: "Sarah Johnson",
+    text: 'The wedding bouquet was absolutely stunning! The team understood exactly what I wanted and delivered beyond my expectations.',
+    author: 'Sarah Johnson',
   },
   {
-    text: "Fresh flowers, fast delivery, and amazing customer service. This is now my go-to flower shop!",
-    author: "Michael Chen",
+    text: 'Fresh flowers, fast delivery, and amazing customer service. This is now my go-to flower shop!',
+    author: 'Michael Chen',
   },
 ];
 
@@ -56,9 +56,7 @@ export default function ReviewsSection() {
     <section className="w-full  mx-auto px-8 md:px-20 py-10 md:py-20">
       <div className="flex flex-col gap-16 items-center">
         {/* Text Content */}
-        <div
-          className="flex flex-col gap-6 items-center"
-        >
+        <div className="flex flex-col gap-6 items-center">
           {/* Google Logo + Reviews */}
           <div className="flex flex-col gap-2 items-center">
             <Image
@@ -123,11 +121,9 @@ export default function ReviewsSection() {
                       style={{ willChange: 'opacity, transform' }}
                       className="text-2xl md:text-3xl leading-tight text-primary"
                     >
-                      <span className="text-3xl">"</span>
-                      <span className="italic font-normal">
-                        {review.text}
-                      </span>
-                      <span className="text-3xl">"</span>
+                      <span className="text-3xl">&quot;</span>
+                      <span className="italic font-normal">{review.text}</span>
+                      <span className="text-3xl">&quot;</span>
                     </motion.p>
                     <motion.p
                       initial={{ opacity: 0 }}
@@ -164,9 +160,7 @@ export default function ReviewsSection() {
           </div>
 
           {/* Slide Nav - Dots */}
-          <div
-            className="flex gap-2"
-          >
+          <div className="flex gap-2">
             {reviews.map((_, index) => (
               <motion.button
                 type="button"
@@ -175,7 +169,9 @@ export default function ReviewsSection() {
                 whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.8 }}
                 className={`w-2 h-2 rounded-full border transition-colors ${
-                  selectedIndex === index ? 'bg-primary border-primary' : 'border-muted hover:bg-muted'
+                  selectedIndex === index
+                    ? 'bg-primary border-primary'
+                    : 'border-muted hover:bg-muted'
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
               />

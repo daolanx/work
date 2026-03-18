@@ -13,10 +13,7 @@ const shopLinks = [
   'Freshener Diffuser',
 ];
 
-const serviceLinks = [
-  'Flower Subcription',
-  'Wedding & Event Decor',
-];
+const serviceLinks = ['Flower Subcription', 'Wedding & Event Decor'];
 
 const aboutLinks = [
   'Our story',
@@ -49,7 +46,9 @@ export default function Footer() {
         >
           <div className="flex flex-col gap-6">
             <p className="text-base text-primary leading-relaxed">
-              Remember to offer beautiful flowers from Kyiv LuxeBouquets Valentines Day, Mothers Day, Christmas... Reminds you 7 days before. No spam or sharing your address
+              Remember to offer beautiful flowers from Kyiv LuxeBouquets
+              Valentines Day, Mothers Day, Christmas... Reminds you 7 days
+              before. No spam or sharing your address
             </p>
             <div className="flex flex-col gap-4">
               <input
@@ -78,9 +77,7 @@ export default function Footer() {
           className="p-8 md:p-10 border-t md:border-t-0 md:border-l border-primary"
         >
           <div className="flex flex-col gap-6">
-            <h3 className="text-xl font-medium ">
-              Contact Us
-            </h3>
+            <h3 className="text-xl font-medium ">Contact Us</h3>
 
             <div className="flex flex-col gap-2">
               <p className="text-sm ">Address</p>

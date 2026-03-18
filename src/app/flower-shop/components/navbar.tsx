@@ -1,5 +1,7 @@
 'use client';
 
+import { motion } from 'motion/react';
+import Image from 'next/image';
 import Link from 'next/link';
 import {
   Sheet,
@@ -7,8 +9,6 @@ import {
   SheetContent,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import Image from 'next/image';
-import { motion } from 'motion/react';
 
 const menuIcon = '/images/flower-shop/navbar/menu.svg';
 const cartIcon = '/images/flower-shop/navbar/cart.svg';
@@ -111,7 +111,13 @@ export default function Navbar() {
             data-name="Navbar link/button"
             aria-label="Menu"
           >
-            <Image src={menuIcon} alt="Menu" width={24} height={24} className="w-6 h-6" />
+            <Image
+              src={menuIcon}
+              alt="Menu"
+              width={24}
+              height={24}
+              className="w-6 h-6"
+            />
           </button>
         </div>
         <div className="flex">
@@ -121,7 +127,13 @@ export default function Navbar() {
             data-name="Navbar link/button"
             aria-label="Cart"
           >
-            <Image src={cartIcon} alt="Cart" width={24} height={24} className="w-6 h-6" />
+            <Image
+              src={cartIcon}
+              alt="Cart"
+              width={24}
+              height={24}
+              className="w-6 h-6"
+            />
           </Link>
         </div>
       </div>
@@ -136,7 +148,13 @@ export default function Navbar() {
               data-name="Navbar link/button"
               aria-label="Menu"
             >
-              <Image src={menuIcon} alt="Menu" width={24} height={24} className="w-6 h-6" />
+              <Image
+                src={menuIcon}
+                alt="Menu"
+                width={24}
+                height={24}
+                className="w-6 h-6"
+              />
             </button>
           </SheetTrigger>
           <SheetContent
@@ -153,7 +171,13 @@ export default function Navbar() {
                     className="flex items-center justify-center w-8 h-8"
                     aria-label="Close menu"
                   >
-                    <Image src={closeIcon} alt="Close" width={32} height={32} className="w-8 h-8" />
+                    <Image
+                      src={closeIcon}
+                      alt="Close"
+                      width={32}
+                      height={32}
+                      className="w-8 h-8"
+                    />
                   </button>
                 </SheetClose>
               </div>
@@ -214,7 +238,13 @@ export default function Navbar() {
             data-name="Navbar link/button"
             aria-label="Cart"
           >
-            <Image src={cartIcon} alt="Cart" width={24} height={24} className="w-6 h-6" />
+            <Image
+              src={cartIcon}
+              alt="Cart"
+              width={24}
+              height={24}
+              className="w-6 h-6"
+            />
           </Link>
         </div>
       </div>

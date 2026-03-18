@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useReducedMotion } from 'motion/react';
-import { type ReactNode, type ElementType } from 'react';
+import type { ElementType, ReactNode } from 'react';
 
 interface FadeInProps {
   children: ReactNode;
@@ -34,7 +34,8 @@ export function FadeIn({
     },
   };
 
-  if (as === 'span') return <motion.span {...baseProps}>{children}</motion.span>;
+  if (as === 'span')
+    return <motion.span {...baseProps}>{children}</motion.span>;
   if (as === 'p') return <motion.p {...baseProps}>{children}</motion.p>;
   if (as === 'h2') return <motion.h2 {...baseProps}>{children}</motion.h2>;
   if (as === 'h3') return <motion.h3 {...baseProps}>{children}</motion.h3>;
