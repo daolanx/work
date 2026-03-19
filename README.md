@@ -1,11 +1,10 @@
-# My Work - Portfolio & Admin Dashboard
+# My Work - Demo Gallery
 
 **English Version** | [中文版本](README.zh.md)
 
-A modern full-stack portfolio and admin dashboard built with Next.js 16, featuring AI chat, task management, and analytics.
+A modern demo showcase built with Next.js 16, featuring various web experiments and UI components.
 
-**Live Demo**: [https://work.daolanx.me/](https://work.daolanx.me/)
-**Demo Gallery**: [https://demo.daolanx.com/](https://demo.daolanx.com/)
+**Live Demo**: [https://demo.daolanx.com/](https://demo.daolanx.com/)
 
 [![Unit Tests](https://github.com/daolanx/work/actions/workflows/unit-tests.yml/badge.svg?branch=main)](https://github.com/daolanx/work/actions/workflows/unit-tests.yml)
 [![E2E Tests](https://github.com/daolanx/work/actions/workflows/e2e-tests.yml/badge.svg?branch=main)](https://github.com/daolanx/work/actions/workflows/e2e-tests.yml)
@@ -94,12 +93,12 @@ pnpm start     # Start production server
 
 ## 📊 Key Features
 
-### Portfolio Page
-- Personal profile with skills
-- Project showcase
-- Contact information
+### Demo Gallery (Homepage)
+- Project showcase with preview images
+- Grayscale minimalist design
 - Theme switcher (light/dark)
 - Language switcher (EN/ZH)
+- MagicCard hover effects
 
 ### Admin Dashboard
 - **Summary Cards** - Key metrics overview
@@ -128,7 +127,8 @@ app/
 ├── console/       # Admin dashboard
 ├── landing/       # Marketing page
 ├── ai-chat/       # AI chat interface
-├── (profile)/     # Personal profile
+├── (profile)/     # Demo Gallery homepage
+├── flower-shop/   # Demo: flower shop e-commerce
 └── layout.tsx     # Root layout
 
 components/
