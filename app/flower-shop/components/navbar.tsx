@@ -3,12 +3,7 @@
 import { motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetTrigger,
-} from './sheet';
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from './sheet';
 
 const menuIcon = '/images/flower-shop/navbar/menu.svg';
 const cartIcon = '/images/flower-shop/navbar/cart.svg';
@@ -162,7 +157,7 @@ export default function Navbar() {
           </SheetTrigger>
           <SheetContent
             side="right"
-            className="w-[384px] border-l border-primary p-0"
+            className="w-[85vw] max-w-[384px] border-l border-primary p-0"
             showCloseButton={false}
           >
             <div className="flex flex-col h-full">
@@ -191,7 +186,7 @@ export default function Navbar() {
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="flex items-center px-6 py-6 border-b border-primary font-medium text-xl text-primary"
+                  className="flex items-center px-6 py-5 border-b border-primary font-medium text-base sm:text-lg text-primary"
                   data-name="Navbar link/button"
                 >
                   {link.label}
