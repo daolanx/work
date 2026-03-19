@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import FadeInWrapper from ".//fadeIn-wrapper";
 import { buttonVariants } from "@/components/ui/button";
 import {
 	Card,
@@ -21,6 +20,7 @@ import { IconCloud } from "@/components/ui/icon-cloud";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import FadeInWrapper from ".//fadeIn-wrapper";
 
 // Lightweight static calendar for decorative display (avoids react-day-picker ~25KB)
 const StaticCalendar = ({ className }: { className?: string }) => {
@@ -35,19 +35,16 @@ const StaticCalendar = ({ className }: { className?: string }) => {
 	return (
 		<div
 			className={cn(
-				"bg-background flex w-fit flex-col gap-4 rounded-md border border-border p-3",
+				"flex w-fit flex-col gap-4 rounded-md border border-border bg-background p-3",
 				className,
 			)}
 		>
-			<div className="text-muted-foreground flex justify-between text-sm">
+			<div className="flex justify-between text-muted-foreground text-sm">
 				<span className="font-medium text-foreground">May 2022</span>
 			</div>
 			<div className="grid grid-cols-7 gap-1 text-center">
 				{weekdays.map((d) => (
-					<span
-						key={d}
-						className="text-muted-foreground text-xs font-medium"
-					>
+					<span className="font-medium text-muted-foreground text-xs" key={d}>
 						{d}
 					</span>
 				))}
@@ -56,13 +53,13 @@ const StaticCalendar = ({ className }: { className?: string }) => {
 				))}
 				{days.map((d) => (
 					<span
-						key={d}
 						className={cn(
 							"flex aspect-square items-center justify-center rounded-md text-xs",
 							d === selectedDay
 								? "bg-primary text-primary-foreground"
 								: "text-foreground hover:bg-muted",
 						)}
+						key={d}
 					>
 						{d}
 					</span>
@@ -107,7 +104,7 @@ const CARDS = [
 		cta: "Learn more",
 		className: "col-span-3 lg:col-span-2",
 		background: (
-			<div className="absolute top-10 right-10 w-[70%] origin-to translate-x-0 flex flex-col rounded-md border border-border bg-popover p-2 transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_40%,#000_100%)] group-hover:-translate-x-10">
+			<div className="absolute top-10 right-10 flex w-[70%] origin-to translate-x-0 flex-col rounded-md border border-border bg-popover p-2 transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_40%,#000_100%)] group-hover:-translate-x-10">
 				<Input
 					className="border-0 bg-transparent focus-visible:ring-0"
 					placeholder="Type to search..."
@@ -181,9 +178,7 @@ const CARDS = [
 		href: "#",
 		cta: "Learn more",
 		background: (
-			<StaticCalendar
-				className="absolute top-10 right-0 origin-top transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_40%,#000_100%)] group-hover:scale-105"
-			/>
+			<StaticCalendar className="absolute top-10 right-0 origin-top transition-all duration-300 ease-out [mask-image:linear-gradient(to_top,transparent_40%,#000_100%)] group-hover:scale-105" />
 		),
 	},
 ];

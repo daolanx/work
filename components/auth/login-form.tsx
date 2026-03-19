@@ -1,14 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { EyeIcon, EyeOffIcon, Loader2, Sparkles } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { PasswordInput } from "@/components/auth/password-input";
-import { type LoginInput, loginSchema } from "@/lib/auth/schemas";
-
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -20,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { AUTH_CONFIG } from "@/lib/auth/paths";
+import { type LoginInput, loginSchema } from "@/lib/auth/schemas";
 import { loginUser } from "../../app/auth/login/action";
 import { FormError } from "../ui/form-messages";
 
@@ -66,7 +64,7 @@ const LoginForm = ({ onLoading }: LoginFormProps) => {
 			} else if (result.error) {
 				setServerError(result.error.reason);
 			}
-		} catch (err) {
+		} catch (_err) {
 			setServerError("An unexpected error occurred.");
 		}
 	};

@@ -6,6 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Next.js 16.1.1 web application with React 19.2.3, TypeScript, and Tailwind CSS v4. The project uses shadcn/ui component patterns, Drizzle ORM for database, Better Auth for authentication, and Vercel AI SDK for AI chat integration.
 
+**Live Demo**: https://demo.daolanx.com/
+
+
 ## Commands
 
 ```bash
@@ -34,18 +37,21 @@ pnpm db:gen       # Generate migrations (drizzle-kit)
 pnpm db:mi        # Run migrations
 pnpm db:push      # Push schema to DB
 pnpm db:studio    # Open Drizzle Studio
+
+# Git Hooks
+pnpm prepare      # Setup Husky hooks
 ```
 
 ## Architecture
 
 ```
 app/                    # Next.js App Router (root directory)
-├── (profile)/          # Profile routes (grouped with parentheses)
+├── (profile)/          # Profile/Demo Gallery routes
 ├── ai-chat/            # AI chat interface
 ├── api/                # API routes (ai-chat, auth, console)
 ├── auth/               # Authentication pages
 ├── console/            # Admin dashboard
-├── flower-shop/        # Demo projects
+├── flower-shop/        # Demo project: flower shop e-commerce
 ├── landing/            # Marketing page
 └── legal/              # Legal pages
 
@@ -64,6 +70,10 @@ lib/
 ├── auth/               # Auth utilities
 ├── validations/        # Zod schemas
 └── utils.ts            # cn() utility for className merging
+
+messages/               # i18n translation files
+├── en.json             # English
+└── zh.json             # Chinese
 ```
 
 ## Key Conventions

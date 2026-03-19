@@ -26,6 +26,7 @@ interface AvatarUploaderProps {
 	src?: string | null;
 	fallbackName?: string;
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	onSave: (url: string) => Promise<any>;
 }
 
@@ -86,9 +87,10 @@ export function AvatarUploader({
 
 			setIsOpen(false);
 			toast.success("Avatar updated");
-		} catch (err: any) {
+		} catch (err: unknown) {
 			console.error(err);
-			toast.error(err.message || "Failed to upload avatar");
+			const error = err as { message?: string };
+			toast.error(error.message || "Failed to upload avatar");
 		} finally {
 			setIsUploading(false);
 			// Reset input to allow re-uploading the same file if needed

@@ -2,8 +2,12 @@
 
 import dynamic from "next/dynamic";
 
-const FeatureSection = dynamic(() => import("./feature-section"), { ssr: false });
-const ProcessSection = dynamic(() => import("./process-section"), { ssr: false });
+const FeatureSection = dynamic(() => import("./feature-section"), {
+	ssr: false,
+});
+const ProcessSection = dynamic(() => import("./process-section"), {
+	ssr: false,
+});
 const FeedBackSection = dynamic(() => import("./feedback-section"), {
 	ssr: false,
 });

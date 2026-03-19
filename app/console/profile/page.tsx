@@ -98,8 +98,8 @@ function SectionLayout({ title, description, children }: SectionLayoutProps) {
 interface InlineEditFieldProps {
 	initialValue: string;
 	fieldName: string;
-	schema: z.ZodType<any>;
-	onSave: (value: string) => Promise<any>;
+	schema: z.ZodType<unknown>;
+	onSave: (value: string) => Promise<unknown>;
 	isPending?: boolean;
 	type?: string;
 }
@@ -122,9 +122,10 @@ function InlineEditField({
 		mode: "onChange",
 	});
 
-	const handleSubmit = async (data: any) => {
+	const handleSubmit = async (data: Record<string, unknown>) => {
 		try {
-			await onSave(data[fieldName]);
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			await onSave(data[fieldName] as any);
 			setIsEditing(false);
 		} catch (error) {
 			console.error("Submission error:", error);
@@ -150,7 +151,7 @@ function InlineEditField({
 							<FormItem className="flex-1">
 								<FormControl>
 									<Input
-										{...field}
+										{...(field as typeof field & { value?: string })}
 										autoFocus
 										className="focus-visible:ring-1"
 										disabled={isPending}

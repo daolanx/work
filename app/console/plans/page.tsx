@@ -90,7 +90,7 @@ const TIER_DATA = [
 ];
 
 export default function BillingPage() {
-	const userPlan = "entry";
+	const _userPlan = "entry";
 
 	const usage = { projects: 2, limit: 3 };
 

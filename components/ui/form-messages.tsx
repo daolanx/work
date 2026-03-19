@@ -1,5 +1,3 @@
-import React from "react";
-
 export function FormSuccess({ message }: { message: string }) {
   if (!message) return null;
   return (

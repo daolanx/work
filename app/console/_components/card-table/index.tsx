@@ -2,11 +2,15 @@
 
 import { IconLayoutColumns } from "@tabler/icons-react";
 import {
+	type Cell,
+	type Column,
 	flexRender,
 	getCoreRowModel,
+	type Table as ReactTable,
+	type Row,
 	useReactTable,
 } from "@tanstack/react-table";
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { forwardRef, useImperativeHandle } from "react";
 import { SearchInput } from "@/components/search-input";
 import { Button } from "@/components/ui/button";
 // UI Components
@@ -203,7 +207,7 @@ const CardTableInner = <T,>(
 /**
  * Helper component to toggle column visibility.
  */
-function ColumnToggle({ table }: { table: any }) {
+function ColumnToggle<T>({ table }: { table: ReactTable<T> }) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -214,8 +218,8 @@ function ColumnToggle({ table }: { table: any }) {
 			<DropdownMenuContent align="end">
 				{table
 					.getAllColumns()
-					.filter((c: any) => c.getCanHide())
-					.map((column: any) => (
+					.filter((c: Column<T>) => c.getCanHide())
+					.map((column: Column<T>) => (
 						<DropdownMenuCheckboxItem
 							checked={column.getIsVisible()}
 							key={column.id}
@@ -232,13 +236,23 @@ function ColumnToggle({ table }: { table: any }) {
 /**
  * Encapsulated TableBody logic to handle loading, empty states, and row rendering.
  */
-function TableBodyRender({
+interface TableBodyRenderProps<T> {
+	rows: Row<T>[];
+	isLoading: boolean;
+	columnCount: number;
+	pageSize: number;
+	isRowFlashed?: (taskId: string) => boolean;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	flashTaskId?: any;
+}
+
+function TableBodyRender<T>({
 	rows,
 	isLoading,
 	columnCount,
 	pageSize,
 	isRowFlashed,
-}: any) {
+}: TableBodyRenderProps<T>) {
 	if (isLoading) {
 		return <TableRowsSkeleton columnCount={columnCount} pageSize={pageSize} />;
 	}
@@ -256,7 +270,8 @@ function TableBodyRender({
 		);
 	}
 
-	return rows.map((row: any) => {
+	return rows.map((row: Row<T>) => {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const isFlashTaskRow = !!isRowFlashed?.((row.original as any).id);
 
 		return (
@@ -267,7 +282,7 @@ function TableBodyRender({
 				)}
 				key={row.id}
 			>
-				{row.getVisibleCells().map((cell: any) => (
+				{row.getVisibleCells().map((cell: Cell<T, unknown>) => (
 					<TableCell key={cell.id}>
 						{flexRender(cell.column.columnDef.cell, cell.getContext())}
 					</TableCell>

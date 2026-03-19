@@ -1,4 +1,4 @@
-import { format, formatDistanceToNow, isToday, isYesterday } from "date-fns";
+import { formatDistanceToNow, isToday, isYesterday } from "date-fns";
 
 export function getRelativeTimeString(dateValue: string | Date) {
 	const date = new Date(dateValue);

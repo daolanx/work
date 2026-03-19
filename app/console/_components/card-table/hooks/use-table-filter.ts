@@ -18,6 +18,7 @@ interface TableFilterState {
 	reset: () => void;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const stores: Record<string, any> = {};
 
 const createTableStore = (initialPageSize: number) =>

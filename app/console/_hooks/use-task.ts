@@ -111,15 +111,19 @@ export function useTask(taskId?: string) {
 export function useCreateTask() {
 	const { mutate: globalMutate } = useSWRConfig();
 
-	return useSWRMutation<Task, any, string, CreateTaskInput>(TASK_KEY, poster, {
-		onSuccess: async () => {
-			await revalidateTasks(globalMutate);
-			toast.success("Task created successfully!");
+	return useSWRMutation<Task, Error, string, CreateTaskInput>(
+		TASK_KEY,
+		poster,
+		{
+			onSuccess: async () => {
+				await revalidateTasks(globalMutate);
+				toast.success("Task created successfully!");
+			},
+			onError: (err) => {
+				toast.error(err.message || "Failed to create task");
+			},
 		},
-		onError: (err) => {
-			toast.error(err.message || "Failed to create task");
-		},
-	});
+	);
 }
 
 /**
@@ -128,7 +132,7 @@ export function useCreateTask() {
  */
 export function useUpdateTask(taskId?: string) {
 	const { mutate: globalMutate } = useSWRConfig();
-	return useSWRMutation<any, any, string | null, UpdateTaskInput>(
+	return useSWRMutation<Task, Error, string | null, UpdateTaskInput>(
 		taskId ? `${TASK_KEY}/${taskId}` : null,
 		patcher,
 		{
@@ -158,7 +162,7 @@ export function useDeleteTask(taskId?: string) {
 	const { mutate: globalMutate } = useSWRConfig();
 	const url = taskId ? `${TASK_KEY}/${taskId}` : null;
 
-	return useSWRMutation<void, any, string | null, void>(url, deleter, {
+	return useSWRMutation<void, Error, string | null, void>(url, deleter, {
 		populateCache: false,
 		revalidate: false,
 		onSuccess: async () => {
@@ -175,10 +179,9 @@ export function useDeleteTask(taskId?: string) {
  * Revalidates all SWR keys associated with the task list.
  * @param mutate - Global SWR mutate function.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function revalidateTasks(mutate: any) {
-	return await mutate((key: unknown) => {
-		if (typeof key !== "string") return false;
-
+	return await mutate((key: string) => {
 		// Matches the base key or keys with query strings (e.g., pagination/filters)
 		return key === TASK_KEY || key.startsWith(`${TASK_KEY}?`);
 	});

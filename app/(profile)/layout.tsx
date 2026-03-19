@@ -9,7 +9,7 @@ export default async function ProfileLayout({
 	const [locale, messages] = await Promise.all([getLocale(), getMessages()]);
 
 	return (
-		<NextIntlClientProvider messages={messages} locale={locale}>
+		<NextIntlClientProvider locale={locale} messages={messages}>
 			{children}
 		</NextIntlClientProvider>
 	);

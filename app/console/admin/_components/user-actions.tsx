@@ -50,8 +50,8 @@ export function UserActions({
 	 * This removes the need to write "await handleAction(() => ...)" repeatedly.
 	 */
 	const wrapAction =
-		(fn: (...args: any[]) => Promise<void>) =>
-		async (...args: any[]) => {
+		(fn: (...args: unknown[]) => Promise<void>) =>
+		async (...args: unknown[]) => {
 			if (isPending) return;
 			setIsPending(true);
 			try {

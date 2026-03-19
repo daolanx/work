@@ -5,7 +5,7 @@ import { tasks } from "@/db/biz.schema";
 import { authApi } from "@/lib/api-handler"; // Switched to authApi only
 import { taskResourceIdSchema, updateTaskSchema } from "@/lib/validations/task";
 
-export const GET = authApi(async (req: NextRequest, { params, user }) => {
+export const GET = authApi(async (_req: NextRequest, { params, user }) => {
 	const result = taskResourceIdSchema.safeParse(await params);
 
 	if (!result.success) {
@@ -76,7 +76,7 @@ export const PATCH = authApi(async (req: NextRequest, { params, user }) => {
 	return NextResponse.json(updatedTask);
 });
 
-export const DELETE = authApi(async (req: NextRequest, { params, user }) => {
+export const DELETE = authApi(async (_req: NextRequest, { params, user }) => {
 	const result = taskResourceIdSchema.safeParse(await params);
 
 	if (!result.success) {

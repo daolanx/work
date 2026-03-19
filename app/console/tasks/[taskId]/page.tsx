@@ -22,11 +22,10 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { Form, FormControl, FormField } from "@/components/ui/form";
 import {
 	Select,
 	SelectContent,
-	SelectGroup,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
@@ -68,7 +67,7 @@ function TaskTitleField({
 	form,
 	isEditing,
 }: {
-	form: UseFormReturn<any>;
+	form: UseFormReturn<TaskFormValues>;
 	isEditing: boolean;
 }) {
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -91,7 +90,7 @@ function TaskTitleField({
 						<textarea
 							{...field}
 							className="w-full resize-none border-none bg-transparent p-0 font-extrabold text-2xl text-slate-900 leading-tight tracking-tight outline-none focus:ring-0 sm:text-4xl"
-							onInput={(e: any) => {
+							onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
 								e.target.style.height = "auto";
 								e.target.style.height = `${e.target.scrollHeight}px`;
 							}}
@@ -109,7 +108,21 @@ function TaskTitleField({
 	);
 }
 
-function TaskEnumField({ form, name, isEditing, options, renderCell }: any) {
+interface TaskEnumFieldProps {
+	form: UseFormReturn<TaskFormValues>;
+	name: "status" | "priority" | "category";
+	isEditing: boolean;
+	options: { label: string; value: string }[];
+	renderCell: (v: string) => React.ReactNode;
+}
+
+function TaskEnumField({
+	form,
+	name,
+	isEditing,
+	options,
+	renderCell,
+}: TaskEnumFieldProps) {
 	return (
 		<FormField
 			control={form.control}
@@ -125,7 +138,7 @@ function TaskEnumField({ form, name, isEditing, options, renderCell }: any) {
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent>
-									{options.map((opt: any) => (
+									{options.map((opt) => (
 										<SelectItem
 											className="font-bold text-[10px] uppercase"
 											key={opt.value}
@@ -138,7 +151,7 @@ function TaskEnumField({ form, name, isEditing, options, renderCell }: any) {
 							</Select>
 						)}
 						isEditing={isEditing}
-						render={() => renderCell(field.value)}
+						render={() => renderCell(field.value as string)}
 					/>
 				</div>
 			)}
@@ -266,21 +279,21 @@ export default function TaskDetailPage() {
 							isEditing={isEditing}
 							name="status"
 							options={TASK_STATUS_ENUMS}
-							renderCell={(v: any) => <CellStatus value={v} />}
+							renderCell={(v) => <CellStatus value={v} />}
 						/>
 						<TaskEnumField
 							form={form}
 							isEditing={isEditing}
 							name="priority"
 							options={TASK_PRIORITY_ENUMS}
-							renderCell={(v: any) => <CellPriority value={v} />}
+							renderCell={(v) => <CellPriority value={v} />}
 						/>
 						<TaskEnumField
 							form={form}
 							isEditing={isEditing}
 							name="category"
 							options={TASK_CATEGORY_ENUMS}
-							renderCell={(v: any) => <CellCategory value={v} />}
+							renderCell={(v) => <CellCategory value={v} />}
 						/>
 					</div>
 

@@ -45,14 +45,19 @@ export async function registerUser(
 			},
 			error: null,
 		};
-	} catch (error: any) {
+	} catch (error: unknown) {
 		console.log("err", error);
 		// 3. Handle Specific Better-Auth API Errors
-		const status = error.status || error.statusCode;
+		const err = error as {
+			status?: string | number;
+			statusCode?: string | number;
+			body?: { message?: string };
+		};
+		const status = err.status || err.statusCode;
 		if (status === "UNPROCESSABLE_ENTITY" || status === 422) {
 			// Better-auth usually puts the specific reason in the body
 			const message =
-				error.body?.message || "Email already exists or invalid data.";
+				err.body?.message || "Email already exists or invalid data.";
 
 			return {
 				error: { reason: message },

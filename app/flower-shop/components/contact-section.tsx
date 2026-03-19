@@ -1,157 +1,155 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { SocialLinks } from './social-links';
+import Image from "next/image";
+import { SocialLinks } from "./social-links";
 
-const phoneNumbers = ['+380980099777', '+380980099111'];
+const phoneNumbers = ["+380980099777", "+380980099111"];
 
 const socialLinks = [
-  {
-    name: 'Instagram',
-    href: '#',
-    icon: '/images/flower-shop/contact/icon-instagram.svg',
-  },
-  {
-    name: 'Pinterest',
-    href: '#',
-    icon: '/images/flower-shop/contact/icon-pinterest.svg',
-  },
-  {
-    name: 'Facebook',
-    href: '#',
-    icon: '/images/flower-shop/contact/icon-facebook.svg',
-  },
-  {
-    name: 'Twitter',
-    href: '#',
-    icon: '/images/flower-shop/contact/icon-twitter.svg',
-  },
-  {
-    name: 'Telegram',
-    href: '#',
-    icon: '/images/flower-shop/contact/icon-telegram.svg',
-  },
+	{
+		name: "Instagram",
+		href: "#",
+		icon: "/images/flower-shop/contact/icon-instagram.svg",
+	},
+	{
+		name: "Pinterest",
+		href: "#",
+		icon: "/images/flower-shop/contact/icon-pinterest.svg",
+	},
+	{
+		name: "Facebook",
+		href: "#",
+		icon: "/images/flower-shop/contact/icon-facebook.svg",
+	},
+	{
+		name: "Twitter",
+		href: "#",
+		icon: "/images/flower-shop/contact/icon-twitter.svg",
+	},
+	{
+		name: "Telegram",
+		href: "#",
+		icon: "/images/flower-shop/contact/icon-telegram.svg",
+	},
 ];
 
 export default function ContactSection() {
-  return (
-    <section className="w-full  mx-auto">
-      <div className="flex flex-col md:flex-row">
-        {/* Left Column */}
-        <div className="md:w-1/2 flex flex-col">
-          {/* Top Block - Title + Form */}
-          <div className="border-t border-primary px-8 md:px-20 py-10 md:py-20">
-            <h2 className="text-4xl md:text-5xl font-semibold leading-tight text-primary">
-              Let&apos;s Talk
-            </h2>
-            <div className="mt-6">
-              <p className="text-lg font-medium leading-relaxed text-primary">
-                Enter your number and we&apos;ll call you back ASAP to help you
-                with any questions or to place an order
-              </p>
-              <div className=" w-full mt-4 flex flex-col md:flex-row gap-4">
-                <input
-                  type="email"
-                  placeholder="Your Email"
-                  aria-label="Your Email"
-                  className='h-14 px-4 border border-muted-light text-base md:flex-1'
+	return (
+		<section className="mx-auto w-full">
+			<div className="flex flex-col md:flex-row">
+				{/* Left Column */}
+				<div className="flex flex-col md:w-1/2">
+					{/* Top Block - Title + Form */}
+					<div className="border-primary border-t px-8 py-10 md:px-20 md:py-20">
+						<h2 className="font-semibold text-4xl text-primary leading-tight md:text-5xl">
+							Let&apos;s Talk
+						</h2>
+						<div className="mt-6">
+							<p className="font-medium text-lg text-primary leading-relaxed">
+								Enter your number and we&apos;ll call you back ASAP to help you
+								with any questions or to place an order
+							</p>
+							<div className="mt-4 flex w-full flex-col gap-4 md:flex-row">
+								<input
+									aria-label="Your Email"
+									className="h-14 border border-muted-light px-4 text-base md:flex-1"
+									placeholder="Your Email"
+									type="email"
+								/>
+								<button
+									className="h-14 cursor-pointer border border-muted-light bg-primary text-base text-white md:flex-1"
+									type="submit"
+								>
+									REACH US
+								</button>
+							</div>
+						</div>
+					</div>
 
-                />
-                <button
-                  type="submit"
-                  className='h-14 border border-muted-light text-base md:flex-1 bg-primary text-white cursor-pointer'
-                >
-                  REACH US
-                </button>
-              </div>
-            </div>
-          </div>
+					{/* Bottom Block - Phone + Address */}
+					<div className="flex flex-col md:flex-row md:divide-x md:divide-primary">
+						{/* Phone Column */}
+						<div className="flex-1 bg-white text-center">
+							<div className="border-primary border-t border-b px-4 py-4 md:px-2.5">
+								<h3 className="font-medium text-4xl leading-tight">Phone</h3>
+							</div>
+							<div className="flex flex-col items-center justify-center gap-4 px-4 py-6">
+								{phoneNumbers.map((phone) => (
+									<a
+										className="flex w-full items-center justify-center gap-2 font-semibold text-base text-primary tracking-wide transition-opacity hover:opacity-70"
+										href={`tel:${phone}`}
+										key={phone}
+									>
+										<Image
+											alt="Phone"
+											className="h-6 w-6"
+											height={24}
+											src="/images/flower-shop/contact/icon-call.svg"
+											unoptimized
+											width={24}
+										/>
+										{phone}
+									</a>
+								))}
+							</div>
+						</div>
 
-          {/* Bottom Block - Phone + Address */}
-          <div className="flex flex-col md:flex-row border-t border-primary    divide-x divide-primary">
-            {/* Phone Column */}
-            <div className=" bg-white flex-1  text-center">
-              <div className="border-b border-primary px-4 md:px-2.5 py-4">
-                <h3 className="text-4xl font-medium leading-tight ">Phone</h3>
-              </div>
-              <div className="py-6 px-4 flex flex-col justify-center items-center gap-4">
-                {phoneNumbers.map((phone) => (
-                  <a
-                    key={phone}
-                    href={`tel:${phone}`}
-                    className="flex items-center justify-center w-full gap-2 text-base font-semibold tracking-wide text-primary hover:opacity-70 transition-opacity"
-                  >
-                    <Image
-                      src="/images/flower-shop/contact/icon-call.svg"
-                      alt="Phone"
-                      width={24}
-                      height={24}
-                      unoptimized
-                      className="w-6 h-6"
-                    />
-                    {phone}
-                  </a>
-                ))}
-              </div>
-            </div>
+						{/* Address Column */}
+						<div className="flex-1 bg-white text-center">
+							<div className="border-primary border-t border-b px-4 py-4 md:px-2.5">
+								<h3 className="font-medium text-4xl text-primary leading-tight">
+									Address
+								</h3>
+							</div>
+							<div className="flex flex-col items-center justify-center gap-4 px-4 py-6">
+								<p className="text-center font-medium text-primary text-sm uppercase tracking-wide">
+									Opening hours: 8 to 11 p.m.
+								</p>
+								<a
+									className="flex items-center justify-center gap-1 font-semibold text-base text-primary tracking-wide transition-opacity hover:opacity-70"
+									href="#"
+								>
+									<Image
+										alt="Location"
+										className="h-6 w-6"
+										height={24}
+										src="/images/flower-shop/contact/icon-location.svg"
+										unoptimized
+										width={24}
+									/>
+									15/4 Khreshchatyk Street, Kyiv
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
 
-            {/* Address Column */}
-            <div className=" bg-white flex-1 text-center">
-              <div className=" border-b border-primary px-4 md:px-2.5 py-4">
-                <h3 className="text-4xl font-medium leading-tight text-primary">
-                  Address
-                </h3>
-              </div>
-              <div className="py-6 px-4 flex flex-col justify-center items-center gap-4">
-                <p className="text-sm font-medium uppercase tracking-wide text-primary text-center">
-                  Opening hours: 8 to 11 p.m.
-                </p>
-                <a
-                  href="#"
-                  className="flex items-center justify-center gap-1 text-base font-semibold tracking-wide text-primary hover:opacity-70 transition-opacity"
-                >
-                  <Image
-                    src="/images/flower-shop/contact/icon-location.svg"
-                    alt="Location"
-                    width={24}
-                    height={24}
-                    unoptimized
-                    className="w-6 h-6"
-                  />
-                  15/4 Khreshchatyk Street, Kyiv
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+				{/* Right Column - Background Image + Social */}
+				<div className="relative h-[360px] min-h-[400px] border-primary md:h-auto md:w-1/2 md:border-l">
+					<div className="absolute inset-0">
+						<Image
+							alt="Contact background"
+							className="object-cover"
+							fill
+							sizes="(max-width: 768px) 100vw, 50vw"
+							src="/images/flower-shop/contact/contact-bg.png"
+							unoptimized
+						/>
+					</div>
 
-        {/* Right Column - Background Image + Social */}
-        <div className="md:w-1/2 relative h-[360px] md:h-auto min-h-[400px]  md:border-l border-primary">
-          <div className="absolute inset-0">
-            <Image
-              src="/images/flower-shop/contact/contact-bg.png"
-              alt="Contact background"
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              unoptimized
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-overlay-light" />
-          </div>
-
-          {/* Follow us */}
-          <div className="absolute bottom-0 left-0 right-0 flex">
-            <div className="bg-white border-t  border-primary px-10 py-4 flex-1 ">
-              <h3 className="text-4xl font-medium leading-tight text-primary whitespace-nowrap">
-                Follow us
-              </h3>
-            </div>
-            <div className="flex-1 bg-white border-t border-l border-r border-primary px-10 py-4 flex items-center justify-between">
-              <SocialLinks links={socialLinks} />
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+					{/* Follow us */}
+					<div className="absolute right-0 bottom-0 left-0 flex flex-col md:flex-row">
+						<div className="flex-1 border-primary border-t bg-white px-10 py-4">
+							<h3 className="font-medium text-4xl text-primary leading-tight">
+								Follow us
+							</h3>
+						</div>
+						<div className="flex flex-1 items-center justify-between border-primary border-t border-l bg-white px-10 py-4">
+							<SocialLinks links={socialLinks} />
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	);
 }

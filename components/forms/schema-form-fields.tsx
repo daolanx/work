@@ -66,48 +66,48 @@ function SchemaFormControl({
 	field,
 	fieldProps,
 }: {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	field: FormFieldConfig<any>;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	fieldProps: any;
 }) {
 	return (
 		<FormControl>
-			<>
-				{field.type === "input" && (
-					<Input
-						className="h-10 border-slate-200 focus-visible:ring-slate-400"
-						placeholder={field.placeholder}
-						{...fieldProps}
-						value={fieldProps.value ?? ""}
-					/>
-				)}
+			{field.type === "input" && (
+				<Input
+					className="h-10 border-slate-200 focus-visible:ring-slate-400"
+					placeholder={field.placeholder}
+					{...fieldProps}
+					value={fieldProps.value ?? ""}
+				/>
+			)}
 
-				{field.type === "textarea" && (
-					<Textarea
-						className="min-h-[100px] resize-none border-slate-200 focus-visible:ring-slate-400"
-						placeholder={field.placeholder}
-						{...fieldProps}
-						value={fieldProps.value ?? ""}
-					/>
-				)}
+			{field.type === "textarea" && (
+				<Textarea
+					className="min-h-[100px] resize-none border-slate-200 focus-visible:ring-slate-400"
+					placeholder={field.placeholder}
+					{...fieldProps}
+					value={fieldProps.value ?? ""}
+				/>
+			)}
 
-				{field.type === "select" && (
-					<Select
-						defaultValue={fieldProps.value ?? undefined}
-						onValueChange={fieldProps.onChange}
-					>
-						<SelectTrigger className="h-10 border-slate-200 bg-slate-50/50">
-							<SelectValue placeholder={`Select ${field.label}`} />
-						</SelectTrigger>
-						<SelectContent>
-							{field.options?.map((opt) => (
-								<SelectItem key={opt.value} value={opt.value}>
-									{opt.label}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				)}
-			</>
+			{field.type === "select" && (
+				<Select
+					defaultValue={fieldProps.value ?? undefined}
+					onValueChange={fieldProps.onChange}
+				>
+					<SelectTrigger className="h-10 border-slate-200 bg-slate-50/50">
+						<SelectValue placeholder={`Select ${field.label}`} />
+					</SelectTrigger>
+					<SelectContent>
+						{field.options?.map((opt) => (
+							<SelectItem key={opt.value} value={opt.value}>
+								{opt.label}
+							</SelectItem>
+						))}
+					</SelectContent>
+				</Select>
+			)}
 		</FormControl>
 	);
 }

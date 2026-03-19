@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { PasswordInput } from "@/components/auth/password-input";
 import { Button } from "@/components/ui/button";
@@ -87,7 +87,7 @@ export function ResetPasswordForm({
 					},
 				},
 			);
-		} catch (err) {
+		} catch (_err) {
 			setServerState({ error: "An unexpected error occurred." });
 		}
 	};

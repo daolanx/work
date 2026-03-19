@@ -28,17 +28,16 @@ export default function HeroSection() {
 			</div>
 
 			<div className="relative w-full bg-transparent px-2 pt-20 pb-20 md:py-32">
-				{/* Hero image: no animation wrapper for faster LCP */}
 				<div className="-m-2 rounded-xl bg-opacity-50 p-2 ring-1 ring-foreground/20 ring-inset backdrop-blur-3xl lg:-m-4 lg:rounded-2xl">
 					<Image
 						alt="Dashboard"
 						className="rounded-md bg-foreground/10 ring-1 ring-border lg:rounded-xl"
-						width={1920}
+						fetchPriority="high"
 						height={956}
 						priority
-						fetchPriority="high"
 						sizes="(max-width: 1200px) 100vw, 1120px"
 						src="/landing/dashboard.webp"
+						width={1920}
 					/>
 					<div className="absolute inset-x-0 -bottom-4 z-40 h-1/2 w-full bg-gradient-to-t from-background"></div>
 					<div className="absolute inset-x-0 bottom-0 z-50 h-1/4 w-full bg-gradient-to-t from-background md:-bottom-8"></div>

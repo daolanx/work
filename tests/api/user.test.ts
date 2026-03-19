@@ -3,7 +3,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { GET, PATCH } from "@/app/api/console/user/route";
 import { db } from "@/db";
 import { auth } from "@/lib/auth/server";
-import { ApiError } from "@/lib/exceptions";
 
 // 1. Partially mock drizzle-orm to keep 'relations' and other utilities
 vi.mock("drizzle-orm", async (importOriginal) => {

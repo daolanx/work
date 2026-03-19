@@ -1,4 +1,4 @@
-import { format, subDays, subWeeks } from "date-fns";
+import { subDays, subWeeks } from "date-fns";
 import { describe, expect, it } from "vitest";
 import { getRelativeTimeString } from "@/lib/date";
 

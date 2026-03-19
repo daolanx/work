@@ -24,6 +24,10 @@ export default function SiteCard(props: Site) {
 		keywords,
 	} = props;
 
+	// 暗黑模式下使用更亮的渐变色，以便在深色背景上可见
+	const isDark = theme === "dark";
+	const gradientColor = isDark ? "#1a1a1a" : "#f5f5f5";
+
 	return (
 		<motion.div
 			initial={{ opacity: 0, y: 20 }}
@@ -33,7 +37,9 @@ export default function SiteCard(props: Site) {
 		>
 			<MagicCard
 				className="relative h-full overflow-hidden rounded-xl p-5 transition-all duration-300 hover:shadow-md md:p-6"
-				gradientColor={theme === "dark" ? "#262626" : "#f5f5f5"}
+				gradientColor={gradientColor}
+				gradientFrom={isDark ? "#a1a1a1" : "#a3a3a3"}
+				gradientTo={isDark ? "#d4d4d4" : "#d4d4d4"}
 			>
 				{isDeveloping && (
 					<div className="absolute inset-0 z-50 flex cursor-not-allowed items-center justify-center bg-white/60 backdrop-blur-[2px] dark:bg-black/40">

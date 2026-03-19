@@ -52,7 +52,7 @@ const RegisterForm = ({ onLoading }: RegisterFormProps) => {
 			} else if (result.error) {
 				setServerState({ error: result.error.reason });
 			}
-		} catch (err) {
+		} catch (_err) {
 			setServerState({ error: "Something went wrong. Please try again." });
 		}
 	};

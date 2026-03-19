@@ -33,9 +33,9 @@ export function TableFacedFilters<TData>({
 	/**
 	 * Removes a single value from a specific column's filter state.
 	 */
-	const handleRemoveFilter = (id: string, value: any) => {
+	const handleRemoveFilter = (id: string, value: string) => {
 		const column = table.getColumn(id);
-		const currentValues = (column?.getFilterValue() as any[]) ?? [];
+		const currentValues = (column?.getFilterValue() as string[]) ?? [];
 		const nextValues = currentValues.filter((v) => v !== value);
 
 		// TanStack Table clean-up: set to undefined if no values remain to remove the key from state
@@ -59,11 +59,15 @@ export function TableFacedFilters<TData>({
 				 * Accessing 'meta' from column definition to retrieve labels for IDs.
 				 * Mature pattern: Store option metadata in columnDef.meta for UI consistency.
 				 */
-				const options = (column?.columnDef.meta as any)?.options;
+				const options = (
+					column?.columnDef.meta as {
+						options?: { label: string; value: string; className?: string }[];
+					}
+				)?.options;
 
-				return (filter.value as any[]).map((val) => {
+				return (filter.value as string[]).map((val) => {
 					// Resolve label from metadata or fallback to the raw value
-					const option = options?.find((o: any) => o.value === val);
+					const option = options?.find((o) => o.value === val);
 					const label = option?.label ?? val;
 					const customClassName = option?.className;
 

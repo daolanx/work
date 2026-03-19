@@ -1,4 +1,5 @@
 import * as Icons from "@tabler/icons-react";
+import type React from "react";
 import { Badge } from "@/components/ui/badge";
 import {
 	TASK_STATUS_ENUM_MAP,
@@ -18,7 +19,9 @@ export function CellStatus({ value }: CellStatusProps) {
 		return "-";
 	}
 
-	const Icon = Icons[config.icon] as any;
+	const Icon = Icons[config.icon] as React.ComponentType<{
+		className?: string;
+	}>;
 
 	return (
 		<Badge

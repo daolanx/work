@@ -1,4 +1,4 @@
-const config = {
+const _config = {
 	theme: {
 		extend: {
 			keyframes: {

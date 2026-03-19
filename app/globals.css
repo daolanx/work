@@ -73,7 +73,7 @@
 	--secondary: oklch(0.967 0.001 286.375);
 	--secondary-foreground: oklch(0.21 0.006 285.885);
 	--muted: oklch(0.967 0.001 286.375);
-	--muted-foreground: oklch(0.4 0.016 285.938); 
+	--muted-foreground: oklch(0.4 0.016 285.938);
 
 	--accent: oklch(0.967 0.001 286.375);
 	--accent-foreground: oklch(0.21 0.006 285.885);
@@ -135,7 +135,6 @@
 	--sidebar-ring: oklch(0.38 0.189 293.745);
 }
 
-
 @layer base {
 	* {
 		@apply border-border outline-ring/50;
@@ -152,12 +151,14 @@
 	}
 
 	.gradient {
-		background: conic-gradient(from 230.29deg at 51.63% 52.16%,
-				rgb(36, 0, 255) 0deg,
-				rgb(0, 135, 255) 67.5deg,
-				rgb(108, 39, 157) 198.75deg,
-				rgb(24, 38, 163) 251.25deg,
-				rgb(54, 103, 196) 301.88deg,
-				rgb(105, 30, 255) 360deg);
+		background: conic-gradient(
+			from 230.29deg at 51.63% 52.16%,
+			rgb(36, 0, 255) 0deg,
+			rgb(0, 135, 255) 67.5deg,
+			rgb(108, 39, 157) 198.75deg,
+			rgb(24, 38, 163) 251.25deg,
+			rgb(54, 103, 196) 301.88deg,
+			rgb(105, 30, 255) 360deg
+		);
 	}
 }

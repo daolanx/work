@@ -1,218 +1,222 @@
-'use client';
+"use client";
 
-import { motion, useReducedMotion } from 'motion/react';
-import Image from 'next/image';
-import { cn } from '@/lib/utils';
+import { motion, useReducedMotion } from "motion/react";
+import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 // Types
 export type Category = {
-  id: number;
-  label: string;
-  image: string;
-  imageFirst: boolean;
+	id: number;
+	label: string;
+	image: string;
+	imageFirst: boolean;
 };
 
 // Data
 const categories: Category[] = [
-  {
-    id: 1,
-    label: 'Fresh Flowers',
-    image: '/images/flower-shop/hero/fresh-flowers.jpg',
-    imageFirst: false,
-  },
-  {
-    id: 2,
-    label: 'Live Plants',
-    image: '/images/flower-shop/hero/live-plants.jpg',
-    imageFirst: true,
-  },
-  {
-    id: 3,
-    label: 'Dried Flowers',
-    image: '/images/flower-shop/hero/dried-flowers.jpg',
-    imageFirst: false,
-  },
-  {
-    id: 4,
-    label: 'Fresheners',
-    image: '/images/flower-shop/hero/fresheners.jpg',
-    imageFirst: true,
-  },
-  {
-    id: 5,
-    label: 'Aroma Candels',
-    image: '/images/flower-shop/hero/aroma-candles.jpg',
-    imageFirst: false,
-  },
+	{
+		id: 1,
+		label: "Fresh Flowers",
+		image: "/images/flower-shop/hero/fresh-flowers.jpg",
+		imageFirst: false,
+	},
+	{
+		id: 2,
+		label: "Live Plants",
+		image: "/images/flower-shop/hero/live-plants.jpg",
+		imageFirst: true,
+	},
+	{
+		id: 3,
+		label: "Dried Flowers",
+		image: "/images/flower-shop/hero/dried-flowers.jpg",
+		imageFirst: false,
+	},
+	{
+		id: 4,
+		label: "Fresheners",
+		image: "/images/flower-shop/hero/fresheners.jpg",
+		imageFirst: true,
+	},
+	{
+		id: 5,
+		label: "Aroma Candels",
+		image: "/images/flower-shop/hero/aroma-candles.jpg",
+		imageFirst: false,
+	},
 ];
 
 // Constants
 const ANIMATION_DURATION = { fast: 0.3, normal: 0.6 };
 
 // Icons
-const ArrowIcon = ({ direction }: { direction: 'left' | 'right' }) => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <path
-      d={
-        direction === 'left'
-          ? 'M19 12H5M5 12L12 19M5 12L12 5'
-          : 'M5 12H19M19 12L12 5M19 12L12 19'
-      }
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
+const ArrowIcon = ({ direction }: { direction: "left" | "right" }) => (
+	<svg fill="none" height="24" viewBox="0 0 24 24" width="24">
+		<path
+			d={
+				direction === "left"
+					? "M19 12H5M5 12L12 19M5 12L12 5"
+					: "M5 12H19M19 12L12 5M19 12L12 19"
+			}
+			stroke="currentColor"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			strokeWidth="2"
+		/>
+	</svg>
 );
 
 // Components
 function CategoryCard({ category }: { category: Category }) {
-  return (
-    <div
-      className={cn('flex group', category.imageFirst && 'flex-row-reverse')}
-    >
-      {/* Text Side */}
-      <div
-        className={cn(
-          'w-1/2 flex flex-col items-center aspect-square ',
-          'border-l border-t border-primary'
-        )}
-      >
-        <div className="text-4xl font-medium leading-tight justify-center m-auto">
-          {category.label}
-        </div>
+	return (
+		<div
+			className={cn("group flex", category.imageFirst && "flex-row-reverse")}
+		>
+			{/* Text Side */}
+			<div
+				className={cn(
+					"flex aspect-square w-1/2 flex-col items-center",
+					"border-primary border-t border-l",
+				)}
+			>
+				<div className="m-auto justify-center font-medium text-4xl leading-tight">
+					{category.label}
+				</div>
 
-        <button type="button" className="flex gap-1 justify-end mb-6 font-semibold tracking-wide text-primary cursor-pointer">
-          <span
-            className={cn(
-              'transition-transform duration-300',
-              category.imageFirst
-                ? 'group-hover:-translate-x-1'
-                : 'group-hover:translate-x-1'
-            )}
-          >
-            {category.imageFirst && <ArrowIcon direction="left" />}
-          </span>
-          Shop now
-          <span
-            className={cn(
-              'transition-transform duration-300',
-              category.imageFirst
-                ? 'group-hover:-translate-x-1'
-                : 'group-hover:translate-x-1'
-            )}
-          >
-            {!category.imageFirst && <ArrowIcon direction="right" />}
-          </span>
-        </button>
-      </div>
+				<button
+					className="mb-6 flex cursor-pointer justify-end gap-1 font-semibold text-primary tracking-wide"
+					type="button"
+				>
+					<span
+						className={cn(
+							"transition-transform duration-300",
+							category.imageFirst
+								? "group-hover:-translate-x-1"
+								: "group-hover:translate-x-1",
+						)}
+					>
+						{category.imageFirst && <ArrowIcon direction="left" />}
+					</span>
+					Shop now
+					<span
+						className={cn(
+							"transition-transform duration-300",
+							category.imageFirst
+								? "group-hover:-translate-x-1"
+								: "group-hover:translate-x-1",
+						)}
+					>
+						{!category.imageFirst && <ArrowIcon direction="right" />}
+					</span>
+				</button>
+			</div>
 
-      {/* Image Side */}
-      <div
-        className={cn(
-          'w-1/2 aspect-square relative overflow-hidden ',
-          'border-l border-t border-primary'
-        )}
-      >
-        <div className="absolute inset-0 transition-transform duration-300 ease-out group-hover:scale-105">
-          <Image
-            src={category.image}
-            alt={category.label}
-            fill
-            sizes="50vw"
-            className="object-cover"
-            unoptimized
-          />
-        </div>
-      </div>
-    </div>
-  );
+			{/* Image Side */}
+			<div
+				className={cn(
+					"relative aspect-square w-1/2 overflow-hidden",
+					"border-primary border-t border-l",
+				)}
+			>
+				<div className="absolute inset-0 transition-transform duration-300 ease-out group-hover:scale-105">
+					<Image
+						alt={category.label}
+						className="object-cover"
+						fill
+						sizes="50vw"
+						src={category.image}
+						unoptimized
+					/>
+				</div>
+			</div>
+		</div>
+	);
 }
 
 export default function HeroSection() {
-  const shouldReduceMotion = Boolean(useReducedMotion());
-  const animationDuration = shouldReduceMotion
-    ? ANIMATION_DURATION.fast
-    : ANIMATION_DURATION.normal;
+	const shouldReduceMotion = Boolean(useReducedMotion());
+	const animationDuration = shouldReduceMotion
+		? ANIMATION_DURATION.fast
+		: ANIMATION_DURATION.normal;
 
-  return (
-    <section className="w-full mx-auto">
-      <div className="flex flex-col lg:flex-row divide-x divide-primary">
-        {/* Left Section */}
-        <div className="flex-1 lg:sticky lg:top-[73px]">
-          <div className="py-10 px-4 md:p-20 ">
-            <div className="mb-12">
-              <motion.h1
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: animationDuration }}
-                style={{ willChange: 'opacity, transform' }}
-                className="text-4xl flex flex-col lg:text-6xl font-semibold leading-tight tracking-tight text-primary"
-              >
-              
-                <span>Kyiv</span>
-                <span>LuxeBouquets<sup className="text-2xl lg:text-4xl font-medium ml-1">®</sup></span>
-                
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: animationDuration, delay: 0.1 }}
-                style={{ willChange: 'opacity, transform' }}
-                className="mt-4 text-base lg:text-lg text-primary-muted leading-relaxed"
-              >
-                Discover Uniquely Crafted Bouquets and Gifts for Any Occasion:
-                Spread Joy with Our{' '}
-                <span className="italic">Online Flower</span>{' '}
-                <span className="italic">Delivery Service</span>
-              </motion.p>
-            </div>
+	return (
+		<section className="mx-auto w-full">
+			<div className="flex flex-col md:divide-x md:divide-primary lg:flex-row">
+				{/* Left Section */}
+				<div className="flex-1 lg:sticky lg:top-[73px]">
+					<div className="px-4 py-10 md:p-20">
+						<div className="mb-12">
+							<motion.h1
+								animate={{ opacity: 1, y: 0 }}
+								className="flex flex-col font-semibold text-4xl text-primary leading-tight tracking-tight lg:text-6xl"
+								initial={{ opacity: 0, y: 30 }}
+								style={{ willChange: "opacity, transform" }}
+								transition={{ duration: animationDuration }}
+							>
+								<span>Kyiv</span>
+								<span>
+									LuxeBouquets
+									<sup className="ml-1 font-medium text-2xl lg:text-4xl">®</sup>
+								</span>
+							</motion.h1>
+							<motion.p
+								animate={{ opacity: 1, y: 0 }}
+								className="mt-4 text-base text-primary-muted leading-relaxed lg:text-lg"
+								initial={{ opacity: 0, y: 30 }}
+								style={{ willChange: "opacity, transform" }}
+								transition={{ duration: animationDuration, delay: 0.1 }}
+							>
+								Discover Uniquely Crafted Bouquets and Gifts for Any Occasion:
+								Spread Joy with Our{" "}
+								<span className="italic">Online Flower</span>{" "}
+								<span className="italic">Delivery Service</span>
+							</motion.p>
+						</div>
 
-            <div className="flex flex-col lg:flex-row pt-6 border-t border-primary">
-              {/* Hero Image */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: animationDuration, delay: 0.2 }}
-                style={{ willChange: 'opacity, transform' }}
-                className="w-full lg:w-1/2 overflow-hidden"
-              >
-                <div className="relative aspect-square overflow-hidden group">
-                  <div className="absolute inset-0 transition-transform duration-300 ease-out group-hover:scale-105 ">
-                    <Image
-                      src="/images/flower-shop/hero/hero.jpg"
-                      alt="Hero flowers"
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                      className="object-cover"
-                      priority
-                      unoptimized
-                    />
-                  </div>
-                </div>
-              </motion.div>
+						<div className="flex flex-col border-primary border-t pt-6 lg:flex-row">
+							{/* Hero Image */}
+							<motion.div
+								animate={{ opacity: 1, scale: 1 }}
+								className="w-full overflow-hidden lg:w-1/2"
+								initial={{ opacity: 0, scale: 0.95 }}
+								style={{ willChange: "opacity, transform" }}
+								transition={{ duration: animationDuration, delay: 0.2 }}
+							>
+								<div className="group relative aspect-square overflow-hidden">
+									<div className="absolute inset-0 transition-transform duration-300 ease-out group-hover:scale-105">
+										<Image
+											alt="Hero flowers"
+											className="object-cover"
+											fill
+											priority
+											sizes="(max-width: 1024px) 100vw, 50vw"
+											src="/images/flower-shop/hero/hero.jpg"
+											unoptimized
+										/>
+									</div>
+								</div>
+							</motion.div>
 
-              {/* Description */}
-              <div className="w-full lg:w-1/2 flex items-end md:ml-6 md:border-l border-primary">
-                <div className="px-4 lg:px-6">
-                  <p className="text-sm text-primary-muted leading-tight">
-                    Experience the joy of giving with our modern floral studio.
-                    Order online and send fresh flowers, plants and gifts today.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+							{/* Description */}
+							<div className="flex w-full items-end border-primary md:ml-6 md:border-l lg:w-1/2">
+								<div className="px-4 lg:px-6">
+									<p className="text-primary-muted text-sm leading-tight">
+										Experience the joy of giving with our modern floral studio.
+										Order online and send fresh flowers, plants and gifts today.
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 
-        {/* Right Section - Categories */}
-        <div className="flex-1 ml-[-1px] mt-[-1px]">
-          {categories.map((category) => (
-            <CategoryCard key={category.id} category={category} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+				{/* Right Section - Categories */}
+				<div className="mt-[-1px] ml-[-1px] flex-1">
+					{categories.map((category) => (
+						<CategoryCard category={category} key={category.id} />
+					))}
+				</div>
+			</div>
+		</section>
+	);
 }

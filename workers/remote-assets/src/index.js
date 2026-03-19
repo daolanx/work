@@ -4,7 +4,7 @@
  */
 
 export default {
-	async fetch(request, env, ctx) {
+	async fetch(request, env, _ctx) {
 		const url = new URL(request.url);
 		const { pathname, searchParams } = url;
 
@@ -26,14 +26,14 @@ export default {
 					headers: request.headers,
 					cf: {
 						image: {
-							width: parseInt(width),
-							quality: parseInt(quality),
+							width: parseInt(width, 10),
+							quality: parseInt(quality, 10),
 							format: "auto", // Auto-select best format (WebP/AVIF) based on browser support
 							fit: "scale-down",
 						},
 					},
-          cacheEverything: true,
-          cacheTtl: 31536000,
+					cacheEverything: true,
+					cacheTtl: 31536000,
 				});
 			}
 

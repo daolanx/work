@@ -1,13 +1,6 @@
 "use client";
 
-import {
-	Activity,
-	CheckSquare,
-	DollarSign,
-	MousePointer2,
-	TrendingUp,
-	Users,
-} from "lucide-react";
+import { Activity, TrendingUp } from "lucide-react";
 import { motion } from "motion/react";
 import type React from "react";
 

@@ -49,7 +49,9 @@ export function VisitorChart() {
 		const startDate = new Date(referenceDate);
 		startDate.setDate(startDate.getDate() - (daysMap[timeRange] || 90));
 
-		return data.filter((item: any) => new Date(item.date) >= startDate);
+		return data.filter(
+			(item: { date: string }) => new Date(item.date) >= startDate,
+		);
 	}, [data, timeRange]);
 
 	return (

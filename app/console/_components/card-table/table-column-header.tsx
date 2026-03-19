@@ -59,7 +59,11 @@ const HeaderActionButton = React.forwardRef<
 
 HeaderActionButton.displayName = "HeaderActionButton";
 
-const ColumnSorter = ({ column }: { column: Column<any, any> }) => {
+const ColumnSorter = <TData, TValue>({
+	column,
+}: {
+	column: Column<TData, TValue>;
+}) => {
 	const isSorted = column.getIsSorted();
 
 	const SortIcon = useMemo(() => {
@@ -77,11 +81,11 @@ const ColumnSorter = ({ column }: { column: Column<any, any> }) => {
 	);
 };
 
-const ColumnFilter = ({
+const ColumnFilter = <TData, TValue>({
 	column,
 	options,
 }: {
-	column: Column<any, any>;
+	column: Column<TData, TValue>;
 	options: { label: string; value: string }[];
 }) => {
 	const currentFilterValue = column.getFilterValue() as string[];
@@ -151,7 +155,9 @@ export function DataTableColumnHeader<TData, TValue>({
 	column,
 	title,
 }: DataTableColumnHeaderProps<TData, TValue>) {
-	const options = (column.columnDef.meta as any)?.options;
+	const options = (
+		column.columnDef.meta as { options?: { label: string; value: string }[] }
+	)?.options;
 	const canFilter = column.getCanFilter() && options;
 	const canSort = column.getCanSort();
 

@@ -194,13 +194,13 @@ function NavMenuItem({ item }: { item: NavMenuItemConfig }) {
 /**
  * Shared Avatar component to maintain visual consistency
  */
-function UserAvatar({
-	user,
-	className = "h-8 w-8",
-}: {
+interface UserAvatarProps {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	user: any;
 	className?: string;
-}) {
+}
+
+function UserAvatar({ user, className = "h-8 w-8" }: UserAvatarProps) {
 	return (
 		<Avatar className={className}>
 			<AvatarImage alt={user?.name} src={user?.image} />

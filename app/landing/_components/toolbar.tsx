@@ -43,7 +43,12 @@ function MiniToolbar() {
 		<div className="flex items-center justify-end md:hidden">
 			<Sheet onOpenChange={setIsOpen} open={isOpen}>
 				<SheetTrigger asChild>
-					<Button className="md:hidden" size="icon" variant="ghost" aria-label="Open menu">
+					<Button
+						aria-label="Open menu"
+						className="md:hidden"
+						size="icon"
+						variant="ghost"
+					>
 						<Menu className="h-6 w-6" />
 					</Button>
 				</SheetTrigger>
