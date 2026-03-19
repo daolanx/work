@@ -100,7 +100,7 @@ export default async function Home() {
                         href={site.sourceUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-4 py-2 text-sm text-neutral-900 dark:text-neutral-100 border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-900 hover:text-white dark:hover:bg-white dark:hover:text-neutral-900 transition-colors"
+                        className="px-4 py-2 text-sm text-neutral-900 dark:text-neutral-100 border border-neutral-300 dark:border-neutral-600 hover:bg-blue-700 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white transition-colors"
                       >
                         {t('view-source')}
                       </a>
