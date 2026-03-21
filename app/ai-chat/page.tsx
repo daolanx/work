@@ -30,7 +30,7 @@ import { MessageLoading } from "@/components/ui/message-loading";
 
 export default function AIChatPage() {
 	const [input, setInput] = useState("");
-	const { messages, sendMessage, status, regenerate } = useChat({
+	const { messages, sendMessage, status, regenerate, stop } = useChat({
 		transport: new DefaultChatTransport({
 			api: "/api/ai-chat",
 		}),
@@ -107,7 +107,11 @@ export default function AIChatPage() {
 						/>
 					</PromptInputBody>
 					<PromptInputFooter className="flex w-full justify-end">
-						<PromptInputSubmit disabled={!input && !status} status={status} />
+						<PromptInputSubmit
+							disabled={!input && !status}
+							onClick={stop}
+							status={status}
+						/>
 					</PromptInputFooter>
 				</PromptInput>
 			</div>

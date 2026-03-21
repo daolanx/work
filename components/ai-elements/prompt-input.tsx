@@ -1029,25 +1029,36 @@ export const PromptInputSubmit = ({
   size = 'icon-sm',
   status,
   children,
+  onClick,
   ...props
 }: PromptInputSubmitProps) => {
   let Icon = <CornerDownLeftIcon className="size-4" />;
+  const isStreaming = status === 'streaming';
 
   if (status === 'submitted') {
     Icon = <Loader2Icon className="size-4 animate-spin" />;
-  } else if (status === 'streaming') {
+  } else if (isStreaming) {
     Icon = <SquareIcon className="size-4" />;
   } else if (status === 'error') {
     Icon = <XIcon className="size-4" />;
   }
 
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (isStreaming && onClick) {
+      e.preventDefault();
+      e.stopPropagation();
+      onClick(e);
+    }
+  };
+
   return (
     <InputGroupButton
-      aria-label="Submit"
+      aria-label={isStreaming ? 'Stop' : 'Submit'}
       className={cn(className)}
       size={size}
-      type="submit"
+      type={isStreaming ? 'button' : 'submit'}
       variant={variant}
+      onClick={handleClick}
       {...props}
     >
       {children ?? Icon}
