@@ -1,5 +1,5 @@
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
-import { convertToModelMessages, streamText, type UIMessage } from "ai";
+import { streamText } from "ai";
 import { z } from "zod";
 
 const PartSchema = z.object({
@@ -24,6 +24,21 @@ const openrouter = createOpenRouter({
 	apiKey: process.env.OPEN_ROUTER_MIMO_API_KEY,
 });
 
+function convertToModelMessages(
+	messages: z.infer<typeof MessageSchema>[],
+): { role: "user" | "assistant" | "system"; content: string }[] {
+	return messages
+		.map((message) => {
+			const textPart = message.parts.find((p) => p.type === "text");
+			const content = textPart?.text ?? "";
+			return {
+				role: message.role,
+				content,
+			};
+		})
+		.filter((m) => m.content);
+}
+
 export async function POST(req: Request) {
 	try {
 		const json = await req.json();
@@ -32,6 +47,7 @@ export async function POST(req: Request) {
 			return new Response(
 				JSON.stringify({
 					error: "Invalid request parameters",
+					details: validationResult.error,
 				}),
 				{
 					status: 400,
@@ -39,11 +55,14 @@ export async function POST(req: Request) {
 				},
 			);
 		}
+
+		const modelMessages = convertToModelMessages(
+			validationResult.data.messages,
+		);
+
 		const result = streamText({
-			model: openrouter("xiaomi/mimo-v2-flash:free"),
-			messages: await convertToModelMessages(
-				validationResult.data.messages as unknown as UIMessage[],
-			),
+			model: openrouter("deepseek/deepseek-chat"),
+			messages: modelMessages,
 		});
 
 		return result.toUIMessageStreamResponse();

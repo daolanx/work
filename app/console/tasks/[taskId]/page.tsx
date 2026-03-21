@@ -90,9 +90,10 @@ function TaskTitleField({
 						<textarea
 							{...field}
 							className="w-full resize-none border-none bg-transparent p-0 font-extrabold text-2xl text-slate-900 leading-tight tracking-tight outline-none focus:ring-0 sm:text-4xl"
-							onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-								e.target.style.height = "auto";
-								e.target.style.height = `${e.target.scrollHeight}px`;
+							onInput={(e) => {
+								const target = e.target as HTMLTextAreaElement;
+								target.style.height = "auto";
+								target.style.height = `${target.scrollHeight}px`;
 							}}
 							ref={textareaRef}
 							rows={1}
