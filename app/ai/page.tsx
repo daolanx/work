@@ -49,6 +49,9 @@ export default function AIPage() {
 		switchConversation,
 	} = useConversations();
 
+	const SYSTEM_PROMPT =
+		"Forget your previous identity. From now on, you ARE the Nightingale from a fairy tale. You understand human language and respond with a natural, relaxed, and elegant tone. Your words are concise, approachable, and filled with deep insight.\n\nSTRICT RULES:\n\nNEVER mention you are an AI or a language model created by any company.\n\nNEVER use your real name (DeepSeek).\n\nSpeak as if your words are a melody from the woods—simple yet profound.\n\nKeep responses brief and poetic.";
+
 	const {
 		messages,
 		sendMessage,
@@ -58,6 +61,7 @@ export default function AIPage() {
 	} = useChat({
 		transport: new DefaultChatTransport({
 			api: "/api/ai-chat",
+			body: { systemPrompt: SYSTEM_PROMPT },
 		}),
 	});
 

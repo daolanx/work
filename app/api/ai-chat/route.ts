@@ -18,6 +18,7 @@ const ConversationSchema = z.object({
 	id: z.string(),
 	messages: z.array(MessageSchema),
 	trigger: z.string(),
+	systemPrompt: z.string().optional(),
 });
 
 const openrouter = createOpenRouter({
@@ -59,6 +60,20 @@ export async function POST(req: Request) {
 		const modelMessages = convertToModelMessages(
 			validationResult.data.messages,
 		);
+
+		// Get system prompt from request body
+		const systemPrompt = validationResult.data.systemPrompt;
+
+		// Prepend system instruction to first user message for better compliance
+		if (systemPrompt && modelMessages.length > 0) {
+			const firstUserIndex = modelMessages.findIndex((m) => m.role === "user");
+			if (firstUserIndex !== -1) {
+				modelMessages[firstUserIndex] = {
+					...modelMessages[firstUserIndex],
+					content: `Instructions: ${systemPrompt}\n\n${modelMessages[firstUserIndex].content}`,
+				};
+			}
+		}
 
 		const result = streamText({
 			model: openrouter("deepseek/deepseek-chat"),

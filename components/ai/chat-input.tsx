@@ -62,7 +62,7 @@ export function ChatInput({
 				className="flex items-center gap-2 rounded-2xl border p-2 transition-colors"
 				style={{
 					borderColor: "var(--color-primary)",
-					background: "var(--color-surface)",
+					background: "var(--color-surface-highest)",
 					boxShadow: "var(--shadow-sm)",
 				}}
 			>
