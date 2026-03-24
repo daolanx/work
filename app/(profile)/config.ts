@@ -35,11 +35,11 @@ const sites: SiteMeta[] = [
 
 		en: {
 			title: "Landing Page",
-			description: "Responsive with high-performance capabilities.",
+			description: "Responsive, performance-driven landing page.",
 		},
 		zh: {
 			title: "品牌落地页",
-			description: "具备响应性和优秀的性能",
+			description: "具备响应性和优秀的性能的落地页。",
 		},
 	},
 	{
@@ -50,11 +50,11 @@ const sites: SiteMeta[] = [
 		en: {
 			title: "Console Page",
 			description:
-				"Includes authentication, RBAC, Payment,and task management modules.",
+				"Comprehensive admin dashboard with built-in auth, payments, role-based permissions, and task tracking.",
 		},
 		zh: {
 			title: "控制台页面",
-			description: "具备登录，支付，角色管理，任务管理功能。",
+			description: "具备登录，支付，角色管理，任务管理功能的控制台。",
 		},
 	},
 
@@ -67,12 +67,12 @@ const sites: SiteMeta[] = [
 		en: {
 			title: "E-commerce Page",
 			description:
-				"A responsive and accessible flower shop e-commerce page. \nDeveloped using Claude Code and Figma-assisted coding, featuring high-fidelity design reproduction and post-development optimization.",
+				"Responsive and accessible flower shop e-commerce platform, \nachieving high-fidelity design-to-code reproduction via Claude Code and Figma MCP.",
 		},
 		zh: {
 			title: "电商页面",
 			description:
-				"花店电商页面，响应式设计，支持无障碍访问，\nClaude Code + Figma 辅助编程，设计稿高精度还原，加上后期优化。",
+				"花店电商页面，响应式设计，支持无障碍访问，\n使用 Claude Code + Figma MCP 实现设计稿高精度还原。",
 		},
 	},
 
@@ -91,12 +91,12 @@ const sites: SiteMeta[] = [
 			title: "AI Chat Page",
 
 			description:
-				"AI Large Language Model (LLM) chat interface with streaming response support.\nUI designed using Stitch, with development assisted by Claude Code.",
+				"AI chat interface featuring streaming responses, \nbuilt with Stitch UI and powered by Claude Code for intelligent coding assistance.",
 		},
 		zh: {
 			title: "AI 对话页",
 			description:
-				"AI 大语言模型（LLM）对话界面，支持流式响应输入,使用 Stitch 设计页面，Claude Code 辅助开发",
+				"AI 对话界面，支持流式响应输入,\n使用 Stitch 设计页面和 Claude Code 辅助开发。",
 		},
 	},
 ];

@@ -143,7 +143,7 @@ export default async function Home() {
 											label: "Twitter",
 										},
 										{
-											href: "https://work.daolanx.me",
+											href: "https://demo.daolanx.com",
 											label: "Profile",
 										},
 										{
