@@ -5,7 +5,7 @@ import type { UIMessage } from "ai";
 import { DefaultChatTransport } from "ai";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { ChatInput, ChatMessages, Sidebar } from "@/components/ai";
 import { IconGithub } from "@/components/auth/icon-github";
@@ -31,6 +31,14 @@ function uiMessageToMessage(uiMsg: UIMessage, sessionId: string): Message {
 	};
 }
 
+function messageToUiMessage(msg: Message): UIMessage {
+	return {
+		id: msg.id,
+		role: msg.role,
+		parts: [{ type: "text" as const, text: msg.content }],
+	};
+}
+
 export default function AIPage() {
 	const [input, setInput] = useState("");
 	const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -47,6 +55,8 @@ export default function AIPage() {
 		createConversation,
 		deleteConversation,
 		switchConversation,
+		saveMessages,
+		getMessages,
 	} = useConversations();
 
 	const SYSTEM_PROMPT =
@@ -65,41 +75,30 @@ export default function AIPage() {
 		}),
 	});
 
-	const messagesMapRef = useRef<Map<string, Message[]>>(new Map());
-	const currentSessionIdRef = useRef<string | null>(null);
-
+	// Load messages when switching sessions
 	useEffect(() => {
-		currentSessionIdRef.current = currentConversation?.id ?? null;
-	}, [currentConversation?.id]);
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: messagesMapRef is stable
-	useEffect(() => {
-		if (currentConversation) {
-			const stored = messagesMapRef.current.get(currentConversation.id) ?? [];
-			const uiMessages: UIMessage[] = stored.map((msg) => ({
-				id: msg.id,
-				role: msg.role,
-				parts: [{ type: "text" as const, text: msg.content }],
-			}));
-			setChatMessages(uiMessages);
+		if (currentConversation?.id) {
+			const stored = getMessages(currentConversation.id);
+			setChatMessages(stored.map(messageToUiMessage));
 		} else {
 			setChatMessages([]);
 		}
-	}, [currentConversation?.id, setChatMessages]);
+	}, [currentConversation?.id, getMessages, setChatMessages]);
 
+	// Sync messages to current session when AI SDK messages change
 	useEffect(() => {
-		const sessionId = currentSessionIdRef.current;
-		if (!sessionId) return;
-
-		const newStored: Message[] = messages.map((m) =>
-			uiMessageToMessage(m, sessionId),
-		);
-
-		messagesMapRef.current.set(sessionId, newStored);
-	}, [messages]);
+		if (currentConversation?.id) {
+			const messagesToSave = messages.map((m) =>
+				uiMessageToMessage(m, currentConversation.id),
+			);
+			saveMessages(currentConversation.id, messagesToSave);
+		}
+	}, [messages, currentConversation?.id, saveMessages]);
 
 	const handleSubmit = () => {
 		if (!input.trim()) return;
+		// Prevent duplicate submission while AI is generating
+		if (status === "streaming" || status === "submitted") return;
 
 		if (!currentConversation) {
 			createConversation();
@@ -109,15 +108,18 @@ export default function AIPage() {
 		setInput("");
 	};
 
-	const handleRetry = (userMessageId: string) => {
-		const userMessage = messages.find((m) => m.id === userMessageId);
-		if (userMessage && userMessage.role === "user") {
-			const text = extractText(userMessage.parts);
-			if (text) {
-				sendMessage({ text });
+	const handleRetry = useCallback(
+		(userMessageId: string) => {
+			const userMessage = messages.find((m) => m.id === userMessageId);
+			if (userMessage && userMessage.role === "user") {
+				const text = extractText(userMessage.parts);
+				if (text) {
+					sendMessage({ text });
+				}
 			}
-		}
-	};
+		},
+		[messages, sendMessage],
+	);
 
 	const handleNewChat = () => {
 		setChatMessages([]);
