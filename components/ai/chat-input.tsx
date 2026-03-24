@@ -4,8 +4,6 @@ import type { ChatStatus } from "ai";
 import { Send, Square } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import { styles } from "./styles";
-
 interface ChatInputProps {
 	input: string;
 	setInput: (value: string) => void;
@@ -24,7 +22,6 @@ export function ChatInput({
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const submitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-	// 清理定时器
 	useEffect(() => {
 		return () => {
 			if (submitTimerRef.current) {
@@ -33,7 +30,6 @@ export function ChatInput({
 		};
 	}, []);
 
-	// 监听 status 变化，当流式结束时重置提交状态
 	useEffect(() => {
 		if (status === "ready" || status === "error") {
 			setIsSubmitting(false);
@@ -46,7 +42,6 @@ export function ChatInput({
 		setIsSubmitting(true);
 		onSubmit();
 
-		// 1秒后重置防抖
 		submitTimerRef.current = setTimeout(() => {
 			setIsSubmitting(false);
 		}, 1000);
@@ -63,64 +58,67 @@ export function ChatInput({
 
 	return (
 		<div className="mx-auto flex w-full max-w-[50rem] flex-col gap-3">
-			{/* Input field */}
 			<div
-				className="flex items-center gap-2 rounded-2xl border bg-white p-2 transition-colors"
+				className="flex items-center gap-2 rounded-2xl border p-2 transition-colors"
 				style={{
-					borderColor: styles.primary,
-					boxShadow: styles.shadowSm,
+					borderColor: "var(--color-primary)",
+					background: "var(--color-surface)",
+					boxShadow: "var(--shadow-sm)",
 				}}
 			>
 				<div className="flex-1">
 					<textarea
-						className="w-full resize-none bg-transparent p-2 text-[14px] outline-none placeholder:text-[rgba(114,85,75,0.6)]"
+						className="w-full resize-none bg-transparent p-2 text-[14px] outline-none"
 						onChange={(e) => setInput(e.target.value)}
 						onKeyDown={handleKeyDown}
-						placeholder="Explore the depths of poetry..."
+						placeholder="Share what's on your mind..."
 						rows={1}
-						style={{ color: styles.onSurface }}
+						style={{ color: "var(--color-on-surface)" }}
 						value={input}
 					/>
 				</div>
 
 				<button
-					className="flex size-12 items-center justify-center rounded-xl text-white transition-all active:scale-95"
+					className="flex size-12 items-center justify-center rounded-xl transition-all active:scale-95"
 					disabled={(!input.trim() && !isStreaming) || isSubmitting}
 					onClick={isStreaming ? onStop : handleSubmit}
 					onMouseEnter={(e) => {
 						if (input.trim() || isStreaming) {
-							e.currentTarget.style.background = styles.primaryDarker;
+							e.currentTarget.style.background = "var(--color-primary-dark)";
 						}
 					}}
 					onMouseLeave={(e) => {
 						if (input.trim() || isStreaming) {
-							e.currentTarget.style.background = styles.primary;
+							e.currentTarget.style.background = "var(--color-primary)";
 						}
 					}}
 					style={{
 						background:
 							input.trim() || isStreaming
-								? styles.primary
-								: styles.outlineVariant,
+								? "var(--color-primary)"
+								: "var(--color-outline-variant)",
+						color: "var(--color-on-primary)",
 						boxShadow:
-							input.trim() || isStreaming ? styles.shadowPrimary : "none",
+							input.trim() || isStreaming ? "var(--shadow-primary)" : "none",
 					}}
 					type="button"
 				>
 					{isStreaming ? (
-						<Square className="size-4 fill-white text-white" />
+						<Square
+							className="size-4"
+							style={{ fill: "var(--color-on-primary)" }}
+						/>
 					) : (
 						<Send className="size-4" />
 					)}
 				</button>
 			</div>
 
-			{/* Disclaimer */}
 			<p
 				className="text-center text-[10px] uppercase tracking-[1px] opacity-60"
-				style={{ color: styles.tertiary }}
+				style={{ color: "var(--color-tertiary)" }}
 			>
-				Harnessing Autumnal Intelligence • Precise & Tactile
+				Light. Precise. Natural.
 			</p>
 		</div>
 	);

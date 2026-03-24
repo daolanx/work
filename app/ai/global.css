@@ -93,6 +93,46 @@
 	animation: shake 0.4s ease-in-out;
 }
 
+/* Dark mode - Tactile Scholar (Autumnal Editorial) */
+:root.dark {
+	/* Surface hierarchy */
+	--color-background: #1c1a17;
+	--color-surface-low: #252220;
+	--color-surface: #2a2825;
+	--color-surface-high: #353230;
+	--color-surface-highest: #1c1a17;
+
+	/* Primary colors - warmer for dark mode */
+	--color-primary: #e85a2b;
+	--color-primary-light: #f07140;
+	--color-primary-dark: #c44d20;
+	--color-primary-darker: #a8421a;
+
+	/* Secondary colors */
+	--color-secondary: #b86800;
+	--color-secondary-container: #c97a30;
+
+	/* Text colors */
+	--color-on-primary: #ffffff;
+	--color-on-surface: #f5f0e8;
+	--color-on-surface-variant: #d4c4b5;
+	--color-tertiary: #a69588;
+
+	/* Border/Outline */
+	--color-outline: #8a7b6c;
+	--color-outline-variant: #4a4540;
+
+	/* Shadows - softer in dark mode */
+	--shadow-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+	--shadow-md:
+		0px 4px 6px -1px rgba(0, 0, 0, 0.4), 0px 2px 4px -2px rgba(0, 0, 0, 0.3);
+	--shadow-lg:
+		0px 20px 25px -5px rgba(0, 0, 0, 0.3), 0px 8px 10px -6px rgba(0, 0, 0, 0.2);
+	--shadow-primary:
+		0px 10px 15px -3px rgba(232, 90, 43, 0.15),
+		0px 4px 6px -4px rgba(232, 90, 43, 0.1);
+}
+
 /* Hide scrollbar but keep scrolling */
 .hide-scrollbar {
 	scrollbar-width: none;

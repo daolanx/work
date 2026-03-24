@@ -3,16 +3,16 @@
 import { useChat } from "@ai-sdk/react";
 import type { UIMessage } from "ai";
 import { DefaultChatTransport } from "ai";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 
 import { ChatInput, ChatMessages, Sidebar } from "@/components/ai";
+import { IconGithub } from "@/components/auth/icon-github";
 import { useConversations } from "@/hooks/use-conversations";
 import type { Message } from "@/types/conversation";
 import "@/app/ai/global.css";
 
-/* ============================================================
-   工具函数
-   ============================================================ */
 function extractText(parts: UIMessage["parts"]): string {
 	return parts
 		.filter((p) => p.type === "text")
@@ -20,7 +20,6 @@ function extractText(parts: UIMessage["parts"]): string {
 		.join("");
 }
 
-// 将 useChat 的 UIMessage 转换为内部 Message
 function uiMessageToMessage(uiMsg: UIMessage, sessionId: string): Message {
 	return {
 		id: uiMsg.id,
@@ -32,16 +31,16 @@ function uiMessageToMessage(uiMsg: UIMessage, sessionId: string): Message {
 	};
 }
 
-/* ============================================================
-   主页面组件
-   ============================================================ */
 export default function AIPage() {
 	const [input, setInput] = useState("");
 	const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+	const { theme, setTheme } = useTheme();
+	const [mounted, setMounted] = useState(false);
 
-	// ----------------------------
-	// 1. 会话管理
-	// ----------------------------
+	useEffect(() => {
+		setMounted(true);
+	}, []);
+
 	const {
 		conversations,
 		currentConversation,
@@ -50,9 +49,6 @@ export default function AIPage() {
 		switchConversation,
 	} = useConversations();
 
-	// ----------------------------
-	// 2. useChat (流式响应)
-	// ----------------------------
 	const {
 		messages,
 		sendMessage,
@@ -65,19 +61,13 @@ export default function AIPage() {
 		}),
 	});
 
-	// 用 ref 存储消息映射（避免闭包问题）
 	const messagesMapRef = useRef<Map<string, Message[]>>(new Map());
-	// 追踪当前会话 ID
 	const currentSessionIdRef = useRef<string | null>(null);
 
-	// 同步 currentSessionIdRef
 	useEffect(() => {
 		currentSessionIdRef.current = currentConversation?.id ?? null;
 	}, [currentConversation?.id]);
 
-	// ----------------------------
-	// 3. 加载会话消息到 useChat
-	// ----------------------------
 	// biome-ignore lint/correctness/useExhaustiveDependencies: messagesMapRef is stable
 	useEffect(() => {
 		if (currentConversation) {
@@ -93,41 +83,28 @@ export default function AIPage() {
 		}
 	}, [currentConversation?.id, setChatMessages]);
 
-	// ----------------------------
-	// 4. 同步 useChat 消息到 ref
-	// ----------------------------
 	useEffect(() => {
 		const sessionId = currentSessionIdRef.current;
 		if (!sessionId) return;
 
-		// 转换当前 useChat 消息为内部格式
 		const newStored: Message[] = messages.map((m) =>
 			uiMessageToMessage(m, sessionId),
 		);
 
-		// 更新 ref
 		messagesMapRef.current.set(sessionId, newStored);
 	}, [messages]);
 
-	// ----------------------------
-	// 5. 提交消息
-	// ----------------------------
 	const handleSubmit = () => {
 		if (!input.trim()) return;
 
-		// 如果没有当前会话，创建一个
 		if (!currentConversation) {
 			createConversation();
 		}
 
-		// 发送消息
 		sendMessage({ text: input });
 		setInput("");
 	};
 
-	// ----------------------------
-	// 6. 重试
-	// ----------------------------
 	const handleRetry = (userMessageId: string) => {
 		const userMessage = messages.find((m) => m.id === userMessageId);
 		if (userMessage && userMessage.role === "user") {
@@ -138,24 +115,15 @@ export default function AIPage() {
 		}
 	};
 
-	// ----------------------------
-	// 7. 新建对话
-	// ----------------------------
 	const handleNewChat = () => {
 		setChatMessages([]);
 		switchConversation("");
 	};
 
-	// ----------------------------
-	// 8. 切换会话
-	// ----------------------------
 	const handleSwitchConversation = (id: string) => {
 		switchConversation(id);
 	};
 
-	// ----------------------------
-	// 渲染
-	// ----------------------------
 	return (
 		<div
 			className="flex h-screen w-full flex-col overflow-hidden"
@@ -177,12 +145,29 @@ export default function AIPage() {
 
 				<main className="relative flex h-full w-full flex-col overflow-hidden">
 					<header
-						className="flex h-16 shrink-0 items-center border-b px-12 backdrop-blur-[12px]"
+						className="flex h-16 shrink-0 items-center justify-between border-b px-12 backdrop-blur-[12px] dark:border-[rgba(255,255,255,0.1)]"
 						style={{
-							borderColor: "rgba(219,194,176,0.1)",
-							background: "rgba(252,249,242,0.8)",
+							borderColor: "rgba(0, 0, 0, 0.06)",
+							background: "var(--color-background)",
 						}}
-					/>
+					>
+						<div />
+
+						<div className="flex items-center gap-4">
+							{mounted && (
+								<button
+									aria-label="Toggle theme"
+									className="cursor-pointer p-2 transition-colors hover:opacity-70"
+									onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+									style={{ color: "var(--color-on-surface)" }}
+									type="button"
+								>
+									{theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
+								</button>
+							)}
+							<IconGithub />
+						</div>
+					</header>
 
 					<ChatMessages
 						messages={messages}

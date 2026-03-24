@@ -1,7 +1,7 @@
 "use client";
 
 import type { ChatStatus, UIMessage } from "ai";
-import { Bot } from "lucide-react";
+import { Bird } from "lucide-react";
 import { AIMessage } from "./ai-message";
 import { styles } from "./styles";
 import { TypingIndicator } from "./typing-indicator";
@@ -34,7 +34,7 @@ export function ChatMessages({ messages, status, onRetry }: ChatMessagesProps) {
 								borderColor: styles.surfaceHigh,
 							}}
 						>
-							<Bot className="size-10" style={{ color: styles.primary }} />
+							<Bird className="size-10" style={{ color: styles.primary }} />
 						</div>
 						<h2
 							className="mb-3 font-bold text-2xl"
@@ -43,14 +43,13 @@ export function ChatMessages({ messages, status, onRetry }: ChatMessagesProps) {
 								color: styles.onSurface,
 							}}
 						>
-							Welcome, Fellow Scholar
+							Welcome to Simple Chat.
 						</h2>
 						<p
 							className="max-w-sm text-sm leading-relaxed"
 							style={{ color: styles.tertiary }}
 						>
-							This is a warm space for thoughtful conversation. Ask anything —
-							from the mundane to the profound.
+							Your minimalist AI companion. How can I help today?
 						</p>
 					</div>
 				)}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Bot, Check, Copy, RotateCcw } from "lucide-react";
+import { Bird, Check, Copy, RotateCcw } from "lucide-react";
 import { useState } from "react";
 
 import { styles } from "./styles";
@@ -58,12 +58,12 @@ export function AIMessage({ children, onRetry }: AIMessageProps) {
 	return (
 		<div className="flex w-full flex-col gap-4">
 			<div className="flex gap-4">
-				{/* AI Bot Icon */}
+				{/* AI Icon */}
 				<div
 					className="flex size-9 shrink-0 items-center justify-center rounded-lg"
 					style={{ background: styles.primary, boxShadow: styles.shadowMd }}
 				>
-					<Bot className="size-4 text-white" />
+					<Bird className="size-4 text-white" />
 				</div>
 
 				{/* Content */}

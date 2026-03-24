@@ -1,6 +1,6 @@
 "use client";
 
-import { Bot } from "lucide-react";
+import { Bird } from "lucide-react";
 
 import { styles } from "./styles";
 
@@ -11,7 +11,7 @@ export function TypingIndicator() {
 				className="flex size-8 shrink-0 items-center justify-center rounded-lg"
 				style={{ background: styles.primary, boxShadow: styles.shadowMd }}
 			>
-				<Bot className="size-4 text-white" />
+				<Bird className="size-4 text-white" />
 			</div>
 			<div className="flex items-center gap-1 pt-2">
 				{[0, 1, 2].map((i) => (

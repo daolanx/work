@@ -1,6 +1,6 @@
 /* ---- Icons (Lucide React) ---- */
 export {
-	Bot,
+	Bird,
 	Copy,
 	Image,
 	MessageSquarePlus,

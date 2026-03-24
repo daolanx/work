@@ -4,9 +4,10 @@ import { RxGithubLogo } from "react-icons/rx";
 export function IconGithub() {
 	return (
 		<Link
-			className="hover:text-primary"
+			className="transition-colors hover:opacity-70"
 			href="https://github.com/daolanx"
 			rel="noopener noreferrer"
+			style={{ color: "var(--color-on-surface)" }}
 			target="_blank"
 		>
 			<RxGithubLogo className="h-5 w-5" />

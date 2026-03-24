@@ -1,4 +1,5 @@
 import { Bot } from "lucide-react";
+import ThemeSwitch from "@/app/(profile)/_components/theme-switch";
 import { IconGithub } from "@/components/auth/icon-github";
 
 export default function LandingLayout({
@@ -15,7 +16,10 @@ export default function LandingLayout({
 						AI Chat
 					</h1>
 				</div>
-				<IconGithub />
+				<div className="flex items-center gap-4">
+					<ThemeSwitch />
+					<IconGithub />
+				</div>
 			</header>
 			{children}
 			<footer>

@@ -8,6 +8,7 @@ import {
   MicIcon,
   PaperclipIcon,
   PlusIcon,
+  SendIcon,
   SquareIcon,
   XIcon,
 } from 'lucide-react';
@@ -1032,7 +1033,7 @@ export const PromptInputSubmit = ({
   onClick,
   ...props
 }: PromptInputSubmitProps) => {
-  let Icon = <CornerDownLeftIcon className="size-4" />;
+  let Icon = <SendIcon className="size-4" />;
   const isStreaming = status === 'streaming';
 
   if (status === 'submitted') {
