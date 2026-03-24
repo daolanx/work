@@ -22,7 +22,7 @@ type AuthHandler = (
 /**
  * Base logic: A high-order function to catch errors and return consistent JSON responses
  */
-function withErrorHandler(handler: Function) {
+function withErrorHandler(handler: (...args: any[]) => Promise<any>) {
 	return async (...args: any[]) => {
 		try {
 			return await handler(...args);

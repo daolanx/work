@@ -46,34 +46,44 @@ pnpm prepare      # Setup Husky hooks
 
 ```
 app/                    # Next.js App Router (root directory)
-├── (profile)/          # Profile/Demo Gallery routes
+├── (profile)/          # Route group: Demo Gallery homepage
 ├── ai-chat/            # AI chat interface
-├── api/                # API routes (ai-chat, auth, console)
-├── auth/               # Authentication pages
-├── console/            # Admin dashboard
+├── api/                # API routes (ai-chat, auth, console, upload)
+├── auth/               # Authentication pages (login, register, reset-password)
+├── console/            # Admin dashboard (tasks/, admin/, profile/, plans/)
 ├── flower-shop/        # Demo project: flower shop e-commerce
 ├── landing/            # Marketing page
-└── legal/              # Legal pages
+└── legal/              # Legal pages (privacy, refund, terms)
 
 components/
-├── ui/                 # shadcn/ui components
-├── auth/               # Auth components
-├── ai-elements/        # AI chat components
-└── forms/              # Form components
+├── ui/                 # shadcn/ui components (40+ components)
+├── auth/               # Auth components (login, register, oauth)
+├── ai-elements/        # AI chat components (conversation, message, prompt-input)
+├── forms/              # Schema-based form components
+└── creem/              # Payment integration (checkout, billing)
 
 db/
-├── auth.schema.ts       # User, session, account tables
+├── auth.schema.ts       # User, session, account tables (Better Auth)
 ├── biz.schema.ts        # Tasks, visit_stats tables
 └── index.ts            # DB connection (Drizzle)
 
 lib/
-├── auth/               # Auth utilities
-├── validations/        # Zod schemas
-└── utils.ts            # cn() utility for className merging
+├── auth/               # Auth utilities (client, server, paths, schemas)
+├── validations/        # Zod schemas (task validation)
+├── utils.ts            # cn() utility for className merging
+├── api-handler.ts      # Typed API handler wrapper
+├── email.tsx           # React Email templates
+├── r2.ts               # AWS S3/R2 file storage
+└── fetcher.ts          # Data fetching utilities
 
 messages/               # i18n translation files
 ├── en.json             # English
 └── zh.json             # Chinese
+
+i18n/                   # i18n configuration
+├── config.ts          # Locale configuration
+├── locale.ts          # Locale utilities
+└── request.ts         # Request-time i18n handling
 ```
 
 ## Key Conventions
@@ -81,8 +91,14 @@ messages/               # i18n translation files
 - **Path alias**: `@/*` maps to project root
 - **Styling**: Tailwind CSS v4 (CSS-based config, no tailwind.config.ts)
 - **Component patterns**: Uses `cva` for variants, `cn` for className merging
-- **Icons**: Lucide React
-- **Animations**: motion/react for animations, Embla Carousel for carousels
+- **Icons**: Lucide React (also `@tabler/icons-react` and `react-icons` available)
+- **Animations**: `motion/react` for animations, Embla Carousel for carousels
+- **Data fetching**: SWR for client-side data fetching
+- **State management**: Zustand for global client state
+- **Charts**: Recharts for analytics charts
+- **Tables**: `@tanstack/react-table` for data tables
+- **Drag & drop**: `@dnd-kit/core`, `@dnd-kit/sortable`
+- **Toasts**: Sonner for toast notifications
 
 ## Database Schema
 

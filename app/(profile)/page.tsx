@@ -77,7 +77,7 @@ export default async function Home() {
 
 								{/* Description */}
 								<div className="mt-6 px-8">
-									<p className="max-w-xl text-neutral-500 leading-relaxed dark:text-neutral-400">
+									<p className="whitespace-pre-line text-neutral-500 leading-relaxed dark:text-neutral-400">
 										{site.description}
 									</p>
 								</div>

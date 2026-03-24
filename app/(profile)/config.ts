@@ -57,22 +57,6 @@ const sites: SiteMeta[] = [
 			description: "具备登录，支付，角色管理，任务管理功能。",
 		},
 	},
-	{
-		previewUrl: "/images/ai-chat-page.webp",
-		webUrl: "/ai-chat",
-		sourceUrl: "https://github.com/daolanx/work/tree/main/app/ai-chat",
-		keywords: ["Next.js", "Vercel AI SDK", "OpenRouter SDK"],
-		en: {
-			title: "AI Chat Page",
-
-			description:
-				"AI Large Language Model (LLM) chat interface with streaming response input",
-		},
-		zh: {
-			title: "AI 对话页",
-			description: "AI 大模型对话界面，输入问题流式响应。",
-		},
-	},
 
 	{
 		previewUrl: "/images/flower-shop.webp",
@@ -83,12 +67,36 @@ const sites: SiteMeta[] = [
 		en: {
 			title: "E-commerce Page",
 			description:
-				"A responsive and accessible flower shop e-commerce page. Developed using Claude Code and Figma-assisted coding, featuring high-fidelity design reproduction and post-development optimization.",
+				"A responsive and accessible flower shop e-commerce page. \nDeveloped using Claude Code and Figma-assisted coding, featuring high-fidelity design reproduction and post-development optimization.",
 		},
 		zh: {
 			title: "电商页面",
 			description:
-				"花店电商页面，响应式设计，支持无障碍访问，Claude Code + Figma 辅助编程，设计稿高精度还原，加上后期优化。",
+				"花店电商页面，响应式设计，支持无障碍访问，\nClaude Code + Figma 辅助编程，设计稿高精度还原，加上后期优化。",
+		},
+	},
+
+	{
+		previewUrl: "/images/ai-chat-page.webp",
+		webUrl: "/ai-chat",
+		sourceUrl: "https://github.com/daolanx/work/tree/main/app/ai-chat",
+		keywords: [
+			"Next.js",
+			"Vercel AI SDK",
+			"OpenRouter SDK",
+			"Stitch",
+			"Claude Code",
+		],
+		en: {
+			title: "AI Chat Page",
+
+			description:
+				"AI Large Language Model (LLM) chat interface with streaming response support.\nUI designed using Stitch, with development assisted by Claude Code.",
+		},
+		zh: {
+			title: "AI 对话页",
+			description:
+				"AI 大语言模型（LLM）对话界面，支持流式响应输入,使用 Stitch 设计页面，Claude Code 辅助开发",
 		},
 	},
 ];

@@ -15,8 +15,8 @@ A modern demo showcase built with Next.js 16, featuring various web experiments 
 ## 🛠️ Tech Stack
 
 ### Core Framework
-- **Next.js 16** (App Router) - Server components
-- **React 19** - Latest React with hooks
+- **Next.js 16.1.1** (App Router) - Server components
+- **React 19.2.3** - Latest React with hooks
 - **TypeScript** - Type-safe development
 
 ### UI & Styling
@@ -122,30 +122,37 @@ pnpm start     # Start production server
 
 ```
 app/
-├── api/           # API routes (ai-chat, auth, console)
-├── auth/          # Authentication pages
-├── console/       # Admin dashboard
+├── api/           # API routes (ai-chat, auth, console, upload)
+├── auth/          # Authentication pages (login, register, reset-password)
+├── console/       # Admin dashboard (tasks/, admin/, profile/, plans/)
 ├── landing/       # Marketing page
-├── ai-chat/       # AI chat interface
-├── (profile)/     # Demo Gallery homepage
+├── ai-chat/       # AI chat interface (Simple Chat)
 ├── flower-shop/   # Demo: flower shop e-commerce
+├── legal/         # Legal pages (privacy, refund, terms)
+├── (profile)/     # Route group: Demo Gallery homepage
 └── layout.tsx     # Root layout
 
 components/
-├── ui/            # shadcn/ui components
-├── auth/          # Auth components
-├── ai-elements/   # AI chat components
+├── ui/            # shadcn/ui components (40+)
+├── auth/          # Auth components (login, register, oauth)
+├── ai/            # AI chat UI (chat messages, input, sidebar)
+├── ai-elements/   # AI chat components (conversation, message, prompt)
+├── creem/          # Payment integration (checkout, billing)
 └── forms/         # Form components
 
 db/
-├── auth.schema.ts # User, session, account
-├── biz.schema.ts  # Tasks, visit_stats
-└── index.ts       # DB connection
+├── auth.schema.ts # User, session, account tables (Better Auth)
+├── biz.schema.ts  # Tasks, visit_stats tables
+└── index.ts       # DB connection (Drizzle)
 
 lib/
-├── auth/          # Auth utilities
-├── validations/   # Zod schemas
-└── utils.ts       # General utilities
+├── auth/          # Auth utilities (client, server, paths, schemas)
+├── validations/   # Zod schemas (task validation)
+├── utils.ts       # cn() utility for className merging
+├── api-handler.ts # Typed API handler wrapper
+├── email.tsx      # React Email templates
+├── r2.ts          # AWS S3/R2 file storage
+└── fetcher.ts     # Data fetching utilities
 
 i18n/
 ├── config.ts      # Locale config
@@ -160,10 +167,11 @@ messages/
 ## 🧪 Testing
 
 ```bash
-pnpm test        # All tests
-pnpm test:unit   # Unit tests
-pnpm test:e2e    # End-to-end tests
-pnpm test:api    # API tests
+pnpm test        # All tests (vitest + playwright)
+pnpm test:unit   # Unit tests (vitest)
+pnpm test:e2e    # End-to-end tests (playwright)
+pnpm test:api    # API tests (vitest)
+pnpm test:ui     # Component tests (vitest)
 ```
 
 ## 📦 Database Schema

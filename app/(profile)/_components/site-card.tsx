@@ -73,7 +73,7 @@ export default function SiteCard(props: Site) {
 
 					<div className="flex flex-1 flex-col justify-between">
 						<div>
-							<p className="text-sm leading-relaxed md:text-base">
+							<p className="whitespace-pre-line text-sm leading-relaxed md:text-base">
 								{description}
 							</p>
 
