@@ -6,9 +6,9 @@ const isProd = process.env.NODE_ENV === "production";
 const nextConfig: NextConfig = {
 	/**
 	 * IMPORTANT: Point this to your Worker path on the MAIN domain.
-	 * This ensures all JS/CSS are served from work.daolanx.me/remote-assets/
+	 * This ensures all JS/CSS are served from demo.daolanx.com/remote-assets/
 	 */
-	assetPrefix: isProd ? "https://work.daolanx.me/remote-assets" : undefined,
+	assetPrefix: isProd ? "https://demo.daolanx.com/remote-assets" : undefined,
 
 	images: {
 		loader: "custom",
