@@ -53,13 +53,13 @@ export function Sidebar({
 								color: styles.primary,
 							}}
 						>
-							Autumnal AI
+							Simple Chat
 						</h2>
 						<p
 							className="font-medium text-[12px]"
 							style={{ color: styles.onSurfaceVariant }}
 						>
-							The Tactile Scholar
+							Intelligence, simplified.
 						</p>
 					</div>
 				)}
@@ -198,7 +198,7 @@ export function Sidebar({
 								className="text-[12px]"
 								style={{ color: styles.onSurfaceVariant }}
 							>
-								Premium Scholar
+								Casual Guest
 							</p>
 						</div>
 					</button>
