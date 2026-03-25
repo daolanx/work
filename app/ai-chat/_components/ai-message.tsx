@@ -2,7 +2,6 @@
 
 import { Bird, Check, Copy, RotateCcw } from "lucide-react";
 import { useState } from "react";
-
 import { styles } from "./styles";
 
 interface AIMessageProps {

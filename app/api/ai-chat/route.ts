@@ -1,32 +1,17 @@
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { streamText } from "ai";
-import { z } from "zod";
 
-const PartSchema = z.object({
-	type: z.string(),
-	text: z.string().optional(),
-	state: z.string().optional(),
-});
-
-const MessageSchema = z.object({
-	id: z.string(),
-	role: z.enum(["user", "assistant", "system"]),
-	parts: z.array(PartSchema),
-});
-
-const ConversationSchema = z.object({
-	id: z.string(),
-	messages: z.array(MessageSchema),
-	trigger: z.string(),
-	systemPrompt: z.string().optional(),
-});
+import {
+	type ConversationRequest,
+	ConversationRequestSchema,
+} from "@/lib/schemas/chat";
 
 const openrouter = createOpenRouter({
 	apiKey: process.env.OPEN_ROUTER_MIMO_API_KEY,
 });
 
 function convertToModelMessages(
-	messages: z.infer<typeof MessageSchema>[],
+	messages: ConversationRequest["messages"],
 ): { role: "user" | "assistant" | "system"; content: string }[] {
 	return messages
 		.map((message) => {
@@ -43,7 +28,7 @@ function convertToModelMessages(
 export async function POST(req: Request) {
 	try {
 		const json = await req.json();
-		const validationResult = ConversationSchema.safeParse(json);
+		const validationResult = ConversationRequestSchema.safeParse(json);
 		if (!validationResult.success) {
 			return new Response(
 				JSON.stringify({

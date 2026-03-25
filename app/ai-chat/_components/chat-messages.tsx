@@ -2,6 +2,13 @@
 
 import type { ChatStatus, UIMessage } from "ai";
 import { Bird } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { useConversationsStore } from "@/hooks/use-conversations";
+import {
+	extractText,
+	messageToUiMessage,
+	uiMessageToMessage,
+} from "@/lib/chat/transformers";
 import { AIMessage } from "./ai-message";
 import { styles } from "./styles";
 import { TypingIndicator } from "./typing-indicator";
@@ -10,17 +17,62 @@ import { UserMessage } from "./user-message";
 interface ChatMessagesProps {
 	messages: UIMessage[];
 	status: ChatStatus;
-	onRetry?: (messageId: string) => void;
+	setMessages: (messages: UIMessage[]) => void;
+	/** Function to send message to AI - used for retry */
+	sendMessage: (message: { text: string }) => void;
 }
 
-function extractText(parts: UIMessage["parts"]): string {
-	return parts
-		.filter((p) => p.type === "text")
-		.map((p) => (p as { type: "text"; text: string }).text)
-		.join("");
-}
+export function ChatMessages({
+	messages,
+	status,
+	setMessages,
+	sendMessage,
+}: ChatMessagesProps) {
+	const {
+		currentConversationId,
+		getMessages,
+		saveMessages,
+		getCurrentConversation,
+	} = useConversationsStore();
 
-export function ChatMessages({ messages, status, onRetry }: ChatMessagesProps) {
+	// Load messages when switching sessions
+	const lastLoadedSessionRef = useRef<string | null>(null);
+	const currentConversation = getCurrentConversation();
+
+	useEffect(() => {
+		const sessionId = currentConversationId;
+
+		if (sessionId && sessionId !== lastLoadedSessionRef.current) {
+			lastLoadedSessionRef.current = sessionId;
+			const stored = getMessages(sessionId);
+			setMessages(stored.map(messageToUiMessage));
+		} else if (!sessionId && currentConversation === null) {
+			lastLoadedSessionRef.current = null;
+			setMessages([]);
+		}
+	}, [currentConversationId, getMessages, setMessages, currentConversation]);
+
+	// Sync messages to current session when AI SDK messages change
+	useEffect(() => {
+		if (currentConversationId) {
+			const messagesToSave = messages.map((m) =>
+				uiMessageToMessage(m, currentConversationId),
+			);
+			saveMessages(currentConversationId, messagesToSave);
+		}
+	}, [messages, currentConversationId, saveMessages]);
+
+	// Handle retry - re-send the user message to get a new AI response
+	const handleRetry = (userMessageId: string) => {
+		const userMessage = messages.find((m) => m.id === userMessageId);
+		if (userMessage && userMessage.role === "user") {
+			const text = extractText(userMessage.parts);
+			if (text) {
+				sendMessage({ text });
+			}
+		}
+	};
+
 	return (
 		<div className="hide-scrollbar flex-1 overflow-y-auto px-12">
 			<div className="mx-auto flex w-full max-w-[50rem] flex-col gap-12 py-8">
@@ -43,13 +95,13 @@ export function ChatMessages({ messages, status, onRetry }: ChatMessagesProps) {
 								color: styles.onSurface,
 							}}
 						>
-							Welcome to Simple Chat.
+							Welcome to Parrot Chat.
 						</h2>
 						<p
 							className="max-w-sm text-sm leading-relaxed"
 							style={{ color: styles.tertiary }}
 						>
-							Your minimalist AI companion. How can I help today?
+							Let‘s Talk with Parrot. How's your day, feather-less friend?
 						</p>
 					</div>
 				)}
@@ -78,12 +130,14 @@ export function ChatMessages({ messages, status, onRetry }: ChatMessagesProps) {
 							.find((m) => m.role === "user");
 						// Show retry when not actively streaming/submitting and has previous user message
 						const isIdle = status === "ready" || status === "error";
-						const canRetry = onRetry && prevUserMsg && isIdle;
+						const canRetry = prevUserMsg && isIdle;
 
 						return (
 							<AIMessage
 								key={msg.id}
-								onRetry={canRetry ? () => onRetry(prevUserMsg.id) : undefined}
+								onRetry={
+									canRetry ? () => handleRetry(prevUserMsg.id) : undefined
+								}
 							>
 								<p
 									className="text-[16px] leading-6"

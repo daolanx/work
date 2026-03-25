@@ -1,16 +1,16 @@
 // ============================================================
-// ChatSession - 会话元数据（用于左侧列表渲染）
+// ChatSession - Session metadata (for sidebar list)
 // ============================================================
 export interface ChatSession {
 	id: string;
 	title: string;
 	createdAt: number;
 	updatedAt: number;
-	summary: string; // 最后一条消息预览
+	summary: string;
 }
 
 // ============================================================
-// Message - 消息明细（与 sessionId 关联）
+// Message - Message detail (associated with sessionId)
 // ============================================================
 export interface Message {
 	id: string;
@@ -22,7 +22,7 @@ export interface Message {
 }
 
 // ============================================================
-// 内部类型别名（兼容旧代码）
+// Type aliases for backward compatibility
 // ============================================================
+/** @deprecated Use ChatSession instead */
 export type Conversation = ChatSession;
-export type ConversationMessage = Message;

@@ -1,147 +1,79 @@
-import { useCallback, useRef, useState } from "react";
+import { create } from "zustand";
 import type { ChatSession, Message } from "@/types/conversation";
 
-/* ============================================================
-   useChatList - session list management
-   ============================================================ */
-export interface UseChatListReturn {
-	sessions: ChatSession[];
-	currentSessionId: string | null;
-	createSession: (title?: string) => ChatSession;
-	removeSession: (id: string) => void;
-	updateSession: (id: string, updates: Partial<ChatSession>) => void;
-	switchSession: (id: string) => void;
-	clearCurrentSession: () => void;
-}
-
-export function useChatList(): UseChatListReturn {
-	const [sessions, setSessions] = useState<ChatSession[]>([]);
-	const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
-
-	const createSession = useCallback(
-		(title?: string) => {
-			const newSession: ChatSession = {
-				id: crypto.randomUUID(),
-				title: title ?? `Chat ${sessions.length + 1}`,
-				createdAt: Date.now(),
-				updatedAt: Date.now(),
-				summary: "",
-			};
-			setSessions((prev) => [newSession, ...prev]);
-			setCurrentSessionId(newSession.id);
-			return newSession;
-		},
-		[sessions.length],
-	);
-
-	// Functional Updater pattern for zero dependencies.
-	// Nested setCurrentSessionId inside setSessions callback to read latest state.
-	const removeSession = useCallback((id: string) => {
-		setSessions((prev) => {
-			const nextSessions = prev.filter((s) => s.id !== id);
-			setCurrentSessionId((currentId) => {
-				if (currentId === id) {
-					return nextSessions[0]?.id ?? null;
-				}
-				return currentId;
-			});
-			return nextSessions;
-		});
-	}, []);
-
-	const updateSession = useCallback(
-		(id: string, updates: Partial<ChatSession>) => {
-			setSessions((prev) =>
-				prev.map((s) =>
-					s.id === id ? { ...s, ...updates, updatedAt: Date.now() } : s,
-				),
-			);
-		},
-		[],
-	);
-
-	const switchSession = useCallback((id: string) => {
-		setCurrentSessionId(id);
-	}, []);
-
-	const clearCurrentSession = useCallback(() => {
-		setCurrentSessionId(null);
-	}, []);
-
-	return {
-		sessions,
-		currentSessionId,
-		createSession,
-		removeSession,
-		updateSession,
-		switchSession,
-		clearCurrentSession,
-	};
-}
-
-/* ============================================================
-   useConversations - unified message and session management (single source of truth)
-   ============================================================ */
-export interface UseConversationsReturn {
-	// Session management
+interface ConversationsState {
 	conversations: ChatSession[];
-	currentConversation: ChatSession | null;
+	currentConversationId: string | null;
+
 	createConversation: (title?: string) => ChatSession;
 	deleteConversation: (id: string) => void;
 	switchConversation: (id: string) => void;
 
-	// Message management (ref-based to avoid unnecessary re-renders)
+	messagesMap: Map<string, Message[]>;
 	saveMessages: (sessionId: string, messages: Message[]) => void;
 	getMessages: (sessionId: string) => Message[];
+
+	// Computed
+	getCurrentConversation: () => ChatSession | null;
 }
 
-export function useConversations(): UseConversationsReturn {
-	const {
-		sessions,
-		currentSessionId,
-		createSession,
-		removeSession,
-		switchSession,
-	} = useChatList();
+export const useConversationsStore = create<ConversationsState>((set, get) => ({
+	conversations: [],
+	currentConversationId: null,
 
-	// Ref-based storage for all session messages to avoid re-renders on every message change
-	const messagesMapRef = useRef<Map<string, Message[]>>(new Map());
+	createConversation: (title?: string) => {
+		const { conversations } = get();
+		const newSession: ChatSession = {
+			id: crypto.randomUUID(),
+			title: title ?? `Chat ${conversations.length + 1}`,
+			createdAt: Date.now(),
+			updatedAt: Date.now(),
+			summary: "",
+		};
+		set((state) => ({
+			conversations: [newSession, ...state.conversations],
+			currentConversationId: newSession.id,
+		}));
+		return newSession;
+	},
 
-	const currentConversation =
-		sessions.find((s) => s.id === currentSessionId) ?? null;
+	deleteConversation: (id: string) => {
+		set((state) => {
+			const next = new Map(state.messagesMap);
+			next.delete(id);
+			return {
+				conversations: state.conversations.filter((s) => s.id !== id),
+				messagesMap: next,
+				currentConversationId:
+					state.currentConversationId === id
+						? null
+						: state.currentConversationId,
+			};
+		});
+	},
 
-	const createConversation = useCallback(
-		(title?: string) => createSession(title),
-		[createSession],
-	);
+	switchConversation: (id: string) => {
+		set({ currentConversationId: id });
+	},
 
-	const deleteConversation = useCallback(
-		(id: string) => removeSession(id),
-		[removeSession],
-	);
+	messagesMap: new Map(),
 
-	const switchConversation = useCallback(
-		(id: string) => switchSession(id),
-		[switchSession],
-	);
+	saveMessages: (sessionId: string, messages: Message[]) => {
+		set((state) => {
+			const next = new Map(state.messagesMap);
+			next.set(sessionId, messages);
+			return { messagesMap: next };
+		});
+	},
 
-	// Save messages to a session
-	const saveMessages = useCallback((sessionId: string, messages: Message[]) => {
-		messagesMapRef.current.set(sessionId, messages);
-	}, []);
+	getMessages: (sessionId: string): Message[] => {
+		return get().messagesMap.get(sessionId) ?? [];
+	},
 
-	// Get messages from a session
-	const getMessages = useCallback((sessionId: string): Message[] => {
-		return messagesMapRef.current.get(sessionId) ?? [];
-	}, []);
-
-	return {
-		conversations: sessions,
-		currentConversation,
-		createConversation,
-		deleteConversation,
-		switchConversation,
-		saveMessages,
-		getMessages,
-	};
-}
+	getCurrentConversation: () => {
+		const { conversations, currentConversationId } = get();
+		return currentConversationId
+			? (conversations.find((s) => s.id === currentConversationId) ?? null)
+			: null;
+	},
+}));

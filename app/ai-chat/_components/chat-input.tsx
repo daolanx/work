@@ -4,24 +4,22 @@ import type { ChatStatus } from "ai";
 import { Send, Square } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import { useConversationsStore } from "@/hooks/use-conversations";
+
 interface ChatInputProps {
-	input: string;
-	setInput: (value: string) => void;
-	onSubmit: () => void;
 	status: ChatStatus;
 	onStop: () => void;
+	sendMessage: (message: { text: string }) => void;
 }
 
-export function ChatInput({
-	input,
-	setInput,
-	onSubmit,
-	status,
-	onStop,
-}: ChatInputProps) {
+export function ChatInput({ status, onStop, sendMessage }: ChatInputProps) {
+	const [input, setInput] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const submitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+	const { currentConversationId, createConversation } = useConversationsStore();
+
+	// Cleanup timer on unmount
 	useEffect(() => {
 		return () => {
 			if (submitTimerRef.current) {
@@ -30,23 +28,34 @@ export function ChatInput({
 		};
 	}, []);
 
+	// Reset submitting state when status changes
 	useEffect(() => {
 		if (status === "ready" || status === "error") {
 			setIsSubmitting(false);
 		}
 	}, [status]);
 
+	// Handle submit
 	const handleSubmit = () => {
-		if (!input.trim() || isSubmitting) return;
+		const trimmed = input.trim();
+		if (!trimmed || isSubmitting) return;
+
+		// Ensure conversation exists before sending
+		if (!currentConversationId) {
+			createConversation();
+		}
 
 		setIsSubmitting(true);
-		onSubmit();
+		setInput(""); // Clear input immediately
+		sendMessage({ text: trimmed });
 
+		// Reset submitting state after a delay
 		submitTimerRef.current = setTimeout(() => {
 			setIsSubmitting(false);
 		}, 1000);
 	};
 
+	// Handle keyboard shortcuts
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		if (e.key === "Enter" && !e.shiftKey) {
 			e.preventDefault();
@@ -55,6 +64,7 @@ export function ChatInput({
 	};
 
 	const isStreaming = status === "submitted";
+	const canSubmit = input.trim() && !isStreaming && !isSubmitting;
 
 	return (
 		<div className="mx-auto flex w-full max-w-[50rem] flex-col gap-3">
@@ -80,26 +90,26 @@ export function ChatInput({
 
 				<button
 					className="flex size-12 items-center justify-center rounded-xl transition-all active:scale-95"
-					disabled={(!input.trim() && !isStreaming) || isSubmitting}
+					disabled={!canSubmit && !isStreaming}
 					onClick={isStreaming ? onStop : handleSubmit}
 					onMouseEnter={(e) => {
-						if (input.trim() || isStreaming) {
+						if (canSubmit || isStreaming) {
 							e.currentTarget.style.background = "var(--color-primary-dark)";
 						}
 					}}
 					onMouseLeave={(e) => {
-						if (input.trim() || isStreaming) {
+						if (canSubmit || isStreaming) {
 							e.currentTarget.style.background = "var(--color-primary)";
 						}
 					}}
 					style={{
 						background:
-							input.trim() || isStreaming
+							canSubmit || isStreaming
 								? "var(--color-primary)"
 								: "var(--color-outline-variant)",
 						color: "var(--color-on-primary)",
 						boxShadow:
-							input.trim() || isStreaming ? "var(--shadow-primary)" : "none",
+							canSubmit || isStreaming ? "var(--shadow-primary)" : "none",
 					}}
 					type="button"
 				>

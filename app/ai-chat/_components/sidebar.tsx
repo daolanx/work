@@ -7,30 +7,28 @@ import {
 	Trash2,
 	User,
 } from "lucide-react";
-import { useState } from "react";
-import type { Conversation } from "@/types/conversation";
+import { useCallback, useState } from "react";
+
+import { useConversationsStore } from "@/hooks/use-conversations";
 import { styles } from "./styles";
 
-interface SidebarProps {
-	collapsed: boolean;
-	onToggle: () => void;
-	conversations: Conversation[];
-	currentConversation: Conversation | null;
-	onNewChat: () => void;
-	onDeleteConversation: (id: string) => void;
-	onSwitchConversation: (id: string) => void;
-}
-
-export function Sidebar({
-	collapsed,
-	onToggle,
-	conversations,
-	currentConversation,
-	onNewChat,
-	onDeleteConversation,
-	onSwitchConversation,
-}: SidebarProps) {
+export function Sidebar() {
+	const [collapsed, setCollapsed] = useState(false);
 	const [hoveredId, setHoveredId] = useState<string | null>(null);
+
+	const {
+		conversations,
+		createConversation,
+		deleteConversation,
+		switchConversation,
+		getCurrentConversation,
+	} = useConversationsStore();
+
+	const currentConversation = getCurrentConversation();
+
+	const toggle = useCallback(() => {
+		setCollapsed((prev) => !prev);
+	}, []);
 
 	return (
 		<aside
@@ -53,7 +51,7 @@ export function Sidebar({
 								color: styles.primary,
 							}}
 						>
-							Simple Chat
+							Parrot Chat
 						</h2>
 						<p
 							className="font-medium text-[12px]"
@@ -65,7 +63,7 @@ export function Sidebar({
 				)}
 				<button
 					className="flex size-8 items-center justify-center rounded-lg transition-colors"
-					onClick={onToggle}
+					onClick={toggle}
 					style={{
 						background: styles.surfaceHigh,
 						color: styles.tertiary,
@@ -82,8 +80,8 @@ export function Sidebar({
 
 			{/* New Chat button */}
 			<button
-				className="mt-6 flex items-center gap-2 rounded-xl font-bold text-[14px] text-white transition-all active:scale-[0.98]"
-				onClick={onNewChat}
+				className="mt-6 flex items-center justify-center gap-2 rounded-xl font-bold text-[14px] text-white transition-all active:scale-[0.98]"
+				onClick={() => createConversation()}
 				onMouseEnter={(e) => {
 					e.currentTarget.style.background = styles.primaryDark;
 				}}
@@ -93,8 +91,8 @@ export function Sidebar({
 				style={{
 					background: styles.primary,
 					boxShadow: styles.shadowSm,
-					justifyContent: "center",
-					padding: collapsed ? "12px 8px" : "12px 71px",
+					padding: collapsed ? "12px" : "12px 24px",
+					width: collapsed ? "40px" : "auto",
 				}}
 				type="button"
 			>
@@ -118,11 +116,11 @@ export function Sidebar({
 								<div
 									className="group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-[14px] transition-colors"
 									key={item.id}
-									onClick={() => onSwitchConversation(item.id)}
+									onClick={() => switchConversation(item.id)}
 									onKeyDown={(e) => {
 										if (e.key === "Enter" || e.key === " ") {
 											e.preventDefault();
-											onSwitchConversation(item.id);
+											switchConversation(item.id);
 										}
 									}}
 									onMouseEnter={() => setHoveredId(item.id)}
@@ -154,7 +152,7 @@ export function Sidebar({
 										className="flex size-6 shrink-0 items-center justify-center rounded transition-all hover:bg-red-100"
 										onClick={(e) => {
 											e.stopPropagation();
-											onDeleteConversation(item.id);
+											deleteConversation(item.id);
 										}}
 										style={{
 											color: styles.tertiary,
@@ -192,7 +190,7 @@ export function Sidebar({
 								className="font-semibold text-[14px]"
 								style={{ color: styles.onSurface }}
 							>
-								Julian Vane
+								Guest User
 							</p>
 							<p
 								className="text-[12px]"
