@@ -61,7 +61,7 @@ const sites: SiteMeta[] = [
 	{
 		previewUrl: "/images/flower-shop.webp",
 		webUrl: "/flower-shop",
-		sourceUrl: "https://github.com/daolanx/demo",
+		sourceUrl: "https://github.com/daolanx/work/tree/main/app/flower-shop",
 		isDeveloping: false,
 		keywords: ["Next.js", "Tailwind CSS", "Motion", "Figma", "Claude Code"],
 		en: {
