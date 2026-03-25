@@ -6,13 +6,19 @@ import {
 	MessageSquarePlus,
 	Trash2,
 	User,
+	X,
 } from "lucide-react";
 import { useCallback, useState } from "react";
 
 import { useConversationsStore } from "@/hooks/use-conversations";
 import { styles } from "./styles";
 
-export function Sidebar() {
+interface SidebarProps {
+	/** Callback for closing the sidebar (used in mobile overlay mode) */
+	onClose?: () => void;
+}
+
+export function Sidebar({ onClose }: SidebarProps) {
 	const [collapsed, setCollapsed] = useState(false);
 	const [hoveredId, setHoveredId] = useState<string | null>(null);
 
@@ -30,17 +36,28 @@ export function Sidebar() {
 		setCollapsed((prev) => !prev);
 	}, []);
 
+	const handleNewChat = () => {
+		createConversation();
+		// Close sidebar on mobile after creating a new chat
+		onClose?.();
+	};
+
+	const handleSwitchConversation = (id: string) => {
+		switchConversation(id);
+		onClose?.();
+	};
+
 	return (
 		<aside
-			className="flex shrink-0 flex-col border-[rgba(219,194,176,0.1)] border-r py-6 transition-all duration-300 ease-in-out"
+			className="flex h-full w-[288px] shrink-0 flex-col border-r py-6 transition-all duration-300 ease-in-out"
 			style={{
 				background: styles.surfaceLow,
-				width: collapsed ? "64px" : "288px",
+				borderColor: "rgba(219,194,176,0.1)",
 				paddingLeft: collapsed ? "12px" : "24px",
 				paddingRight: collapsed ? "12px" : "24px",
 			}}
 		>
-			{/* Top row: Brand + Collapse button */}
+			{/* Top row: Brand + Controls */}
 			<div className="flex items-center justify-between">
 				{!collapsed && (
 					<div>
@@ -61,27 +78,48 @@ export function Sidebar() {
 						</p>
 					</div>
 				)}
-				<button
-					className="flex size-8 items-center justify-center rounded-lg transition-colors"
-					onClick={toggle}
-					style={{
-						background: styles.surfaceHigh,
-						color: styles.tertiary,
-					}}
-					type="button"
-				>
-					{collapsed ? (
-						<ChevronRight className="size-4" />
-					) : (
-						<ChevronLeft className="size-4" />
+
+				<div className="flex items-center gap-2">
+					{/* Close button (mobile overlay mode) */}
+					{onClose && (
+						<button
+							className="flex size-8 items-center justify-center rounded-lg transition-colors"
+							onClick={onClose}
+							style={{
+								background: styles.surfaceHigh,
+								color: styles.tertiary,
+							}}
+							type="button"
+						>
+							<X className="size-4" />
+						</button>
 					)}
-				</button>
+
+					{/* Collapse button (desktop mode) */}
+					{!onClose && (
+						<button
+							className="flex size-8 items-center justify-center rounded-lg transition-colors"
+							onClick={toggle}
+							style={{
+								background: styles.surfaceHigh,
+								color: styles.tertiary,
+							}}
+							type="button"
+						>
+							{collapsed ? (
+								<ChevronRight className="size-4" />
+							) : (
+								<ChevronLeft className="size-4" />
+							)}
+						</button>
+					)}
+				</div>
 			</div>
 
 			{/* New Chat button */}
 			<button
 				className="mt-6 flex items-center justify-center gap-2 rounded-xl font-bold text-[14px] text-white transition-all active:scale-[0.98]"
-				onClick={() => createConversation()}
+				onClick={handleNewChat}
 				onMouseEnter={(e) => {
 					e.currentTarget.style.background = styles.primaryDark;
 				}}
@@ -116,11 +154,11 @@ export function Sidebar() {
 								<div
 									className="group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-[14px] transition-colors"
 									key={item.id}
-									onClick={() => switchConversation(item.id)}
+									onClick={() => handleSwitchConversation(item.id)}
 									onKeyDown={(e) => {
 										if (e.key === "Enter" || e.key === " ") {
 											e.preventDefault();
-											switchConversation(item.id);
+											handleSwitchConversation(item.id);
 										}
 									}}
 									onMouseEnter={() => setHoveredId(item.id)}
@@ -173,7 +211,7 @@ export function Sidebar() {
 			{!collapsed ? (
 				<div className="mt-auto border-[rgba(219,194,176,0.2)] border-t pt-6">
 					<button
-						className="mb-4 flex w-full cursor-pointer items-center gap-3 rounded-xl p-3 transition-colors"
+						className="flex w-full cursor-pointer items-center gap-3 rounded-xl p-3 transition-colors"
 						onMouseEnter={(e) => {
 							e.currentTarget.style.background = styles.surfaceHigh;
 						}}

@@ -69,7 +69,7 @@ export function ChatInput({ status, onStop, sendMessage }: ChatInputProps) {
 	return (
 		<div className="mx-auto flex w-full max-w-[50rem] flex-col gap-3">
 			<div
-				className="flex items-center gap-2 rounded-2xl border p-2 transition-colors"
+				className="flex items-center gap-3 rounded-2xl border p-3 transition-colors sm:p-2"
 				style={{
 					borderColor: "var(--color-primary)",
 					background: "var(--color-surface-highest)",
@@ -78,11 +78,11 @@ export function ChatInput({ status, onStop, sendMessage }: ChatInputProps) {
 			>
 				<div className="flex-1">
 					<textarea
-						className="w-full resize-none bg-transparent p-2 text-[14px] outline-none"
+						className="w-full resize-none bg-transparent p-1 text-[15px] outline-none"
 						onChange={(e) => setInput(e.target.value)}
 						onKeyDown={handleKeyDown}
 						placeholder="Share what's on your mind..."
-						rows={1}
+						rows={3}
 						style={{ color: "var(--color-on-surface)" }}
 						value={input}
 					/>
