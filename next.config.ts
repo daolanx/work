@@ -21,13 +21,9 @@ const nextConfig: NextConfig = {
 	transpilePackages: ["recharts", "react-smooth", "shiki"],
 	experimental: {
 		optimizeCss: true,
-		optimizePackageImports: [
-			"lucide-react",
-			"recharts",
-			"@tabler/icons-react",
-			"@radix-ui/react-icons",
-		],
+		optimizePackageImports: ["lucide-react", "recharts", "@tabler/icons-react"],
 	},
+	reactCompiler: true,
 };
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
