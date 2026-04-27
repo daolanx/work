@@ -3,6 +3,7 @@
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { renderToString } from 'react-dom/server';
+import { useInView } from 'motion/react';
 
 interface Icon {
   x: number;
@@ -24,6 +25,8 @@ function easeOutCubic(t: number): number {
 
 export function IconCloud({ icons, images }: IconCloudProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isVisible = useInView(containerRef, { margin: '200px', once: true });
   const [iconPositions, setIconPositions] = useState<Icon[]>([]);
   const [rotation, _setRotation] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -45,7 +48,7 @@ export function IconCloud({ icons, images }: IconCloudProps) {
 
   // Create icon canvases once when icons/images change
   useEffect(() => {
-    if (!icons && !images) return;
+    if (!isVisible || (!icons && !images)) return;
 
     const items = icons || images || [];
     imagesLoadedRef.current = new Array(items.length).fill(false);
@@ -93,7 +96,7 @@ export function IconCloud({ icons, images }: IconCloudProps) {
     });
 
     iconCanvasesRef.current = newIconCanvases;
-  }, [icons, images]);
+  }, [icons, images, isVisible]);
 
   // Generate initial icon positions on a sphere
   useEffect(() => {
@@ -216,6 +219,7 @@ export function IconCloud({ icons, images }: IconCloudProps) {
 
   // Animation and rendering
   useEffect(() => {
+    if (!isVisible) return;
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
     if (!canvas || !ctx) return;
@@ -309,20 +313,21 @@ export function IconCloud({ icons, images }: IconCloudProps) {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [icons, images, iconPositions, isDragging, mousePos, targetRotation]);
+  }, [icons, images, iconPositions, isDragging, mousePos, targetRotation, isVisible]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      width={400}
-      height={400}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-      className="rounded-lg"
-      aria-label="Interactive 3D Icon Cloud"
-      role="img"
-    />
+    <div ref={containerRef} className="rounded-lg">
+      <canvas
+        ref={canvasRef}
+        width={400}
+        height={400}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        aria-label="Interactive 3D Icon Cloud"
+        role="img"
+      />
+    </div>
   );
 }
