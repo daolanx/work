@@ -6,6 +6,7 @@ import {
 	SearchIcon,
 	WaypointsIcon,
 } from "lucide-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { buttonVariants } from "@/components/ui/button";
@@ -16,7 +17,11 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { IconCloud } from "@/components/ui/icon-cloud";
+
+const IconCloud = dynamic(() =>
+	import("@/components/ui/icon-cloud").then((mod) => mod.IconCloud),
+);
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
