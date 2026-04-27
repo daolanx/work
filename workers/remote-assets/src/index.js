@@ -31,9 +31,9 @@ export default {
 							format: "auto", // Auto-select best format (WebP/AVIF) based on browser support
 							fit: "scale-down",
 						},
+						cacheEverything: true,
+						cacheTtl: 31536000,
 					},
-					cacheEverything: true,
-					cacheTtl: 31536000,
 				});
 			}
 
