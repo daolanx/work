@@ -20,7 +20,7 @@ import { IconCloud } from "@/components/ui/icon-cloud";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import FadeInWrapper from ".//fadeIn-wrapper";
+import FadeInWrapper from "./fadeIn-wrapper";
 
 // Lightweight static calendar for decorative display (avoids react-day-picker ~25KB)
 const StaticCalendar = ({ className }: { className?: string }) => {

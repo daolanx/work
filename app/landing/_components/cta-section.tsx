@@ -1,6 +1,6 @@
 import { ArrowRightIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import FadeInWrapper from ".//fadeIn-wrapper";
+import FadeInWrapper from "./fadeIn-wrapper";
 
 export default function CTASection() {
 	return (

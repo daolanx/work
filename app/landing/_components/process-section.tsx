@@ -1,5 +1,5 @@
 import { BarChart3Icon, FolderOpenIcon, WandSparklesIcon } from "lucide-react";
-import FadeInWrapper from ".//fadeIn-wrapper";
+import FadeInWrapper from "./fadeIn-wrapper";
 
 export const PROCESS = [
 	{

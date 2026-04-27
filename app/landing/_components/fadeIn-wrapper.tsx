@@ -5,14 +5,12 @@ import { motion, useReducedMotion } from "motion/react";
 interface FadeInWrapperProps {
 	children: React.ReactNode;
 	delay?: number;
-	reverse?: boolean;
 	className?: string;
 }
 
 export default function FadeInWrapper({
 	children,
 	className,
-	reverse: _reverse,
 	delay,
 }: FadeInWrapperProps) {
 	const shouldReduceMotion = useReducedMotion();

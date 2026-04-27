@@ -108,8 +108,10 @@ export default function FeedBackCard() {
 										alt={review.name}
 										className="rounded-full"
 										height={40}
+										loading="lazy"
 										sizes="40px"
 										src={review.avatar}
+										unoptimized
 										width={40}
 									/>
 									<div>
