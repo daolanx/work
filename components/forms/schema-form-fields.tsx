@@ -71,27 +71,31 @@ function SchemaFormControl({
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	fieldProps: any;
 }) {
-	return (
-		<FormControl>
-			{field.type === "input" && (
+	let content: React.ReactNode = null;
+
+	switch (field.type) {
+		case "input":
+			content = (
 				<Input
 					className="h-10 border-slate-200 focus-visible:ring-slate-400"
 					placeholder={field.placeholder}
 					{...fieldProps}
 					value={fieldProps.value ?? ""}
 				/>
-			)}
-
-			{field.type === "textarea" && (
+			);
+			break;
+		case "textarea":
+			content = (
 				<Textarea
 					className="min-h-[100px] resize-none border-slate-200 focus-visible:ring-slate-400"
 					placeholder={field.placeholder}
 					{...fieldProps}
 					value={fieldProps.value ?? ""}
 				/>
-			)}
-
-			{field.type === "select" && (
+			);
+			break;
+		case "select":
+			content = (
 				<Select
 					defaultValue={fieldProps.value ?? undefined}
 					onValueChange={fieldProps.onChange}
@@ -107,7 +111,9 @@ function SchemaFormControl({
 						))}
 					</SelectContent>
 				</Select>
-			)}
-		</FormControl>
-	);
+			);
+			break;
+	}
+
+	return <FormControl>{content}</FormControl>;
 }
