@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckCircleIcon } from "lucide-react";
-import { motion } from "motion/react";
+import * as m from "motion/react-m";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -227,7 +227,7 @@ const PricingCards = () => {
 											{plan.name !== "Free" ? "/year" : ""}
 										</div>
 										{plan.name !== "Free" && (
-											<motion.span
+											<m.span
 												animate={{ opacity: 1, y: 0 }}
 												className="ml-2 rounded-md bg-purple-500 px-2 py-0.5 font-medium text-foreground text-sm"
 												exit={{ opacity: 0, y: 10 }}
@@ -239,7 +239,7 @@ const PricingCards = () => {
 												}}
 											>
 												-12%
-											</motion.span>
+											</m.span>
 										)}
 									</h5>
 								</CardHeader>

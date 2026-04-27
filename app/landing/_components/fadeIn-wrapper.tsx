@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { useReducedMotion } from "motion/react";
+import * as m from "motion/react-m";
 
 interface FadeInWrapperProps {
 	children: React.ReactNode;
@@ -16,7 +17,7 @@ export default function FadeInWrapper({
 	const shouldReduceMotion = useReducedMotion();
 
 	return (
-		<motion.div
+		<m.div
 			className={className}
 			initial={shouldReduceMotion ? undefined : { opacity: 0 }}
 			transition={
@@ -35,6 +36,6 @@ export default function FadeInWrapper({
 			whileInView={shouldReduceMotion ? undefined : { opacity: 1 }}
 		>
 			{children}
-		</motion.div>
+		</m.div>
 	);
 }
