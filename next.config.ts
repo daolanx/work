@@ -24,6 +24,12 @@ const nextConfig: NextConfig = {
 		optimizePackageImports: ["lucide-react", "recharts", "@tabler/icons-react"],
 	},
 	reactCompiler: true,
+	turbopack: {
+		resolveAlias: {
+			"../build/polyfills/polyfill-module": "./lib/modern-polyfill.js",
+			"next/dist/build/polyfills/polyfill-module": "./lib/modern-polyfill.js",
+		},
+	},
 };
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
