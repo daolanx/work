@@ -40,6 +40,10 @@ export default {
 			// 3. Standard asset request (JS, CSS, or non-resized images)
 			const response = await fetch(staticResUrl, {
 				headers: request.headers,
+				cf: {
+					cacheEverything: true, // 关键：强制边缘缓存
+					cacheTtl: 31536000, // 设置长缓存
+				},
 			});
 
 			// Apply aggressive caching for hashed Next.js static assets
