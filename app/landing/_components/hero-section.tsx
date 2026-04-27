@@ -35,7 +35,7 @@ export default function HeroSection() {
 						fetchPriority="high"
 						height={956}
 						priority
-						sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1120px"
+						sizes="(max-width: 640px) 80vw, (max-width: 1024px) 90vw, 1120px"
 						src="/landing/dashboard.webp"
 						width={1920}
 					/>
