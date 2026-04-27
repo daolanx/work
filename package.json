@@ -26,6 +26,7 @@
 		"db:seed": "tsx db/seed.ts",
 		"db:check": "drizzle-kit check",
 		"db:studio": "drizzle-kit studio",
+		"deploy-worker": "cd workers/remote-assets && wrangler deploy",
 		"prepare": "husky",
 		"email": "email dev"
 	},
