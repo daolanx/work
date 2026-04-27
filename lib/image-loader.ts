@@ -4,7 +4,7 @@ interface LoaderProps {
 	quality?: number;
 }
 
-const ALL_SIZES = [64, 256, 640, 828, 1120, 1920];
+const ALL_SIZES = [64, 256, 480, 640, 828, 1120, 1920];
 
 export default function myImageLoader({ src, width, quality }: LoaderProps) {
 	const isProd = process.env.NODE_ENV === "production";

@@ -111,7 +111,6 @@ export default function FeedBackCard() {
 										loading="lazy"
 										sizes="40px"
 										src={review.avatar}
-										unoptimized
 										width={40}
 									/>
 									<div>
