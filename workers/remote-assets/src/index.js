@@ -1,6 +1,6 @@
 /**
- * Remote Assets Proxy Worker (Final Version)
- * Utilizes Cloudflare Built-in Image Resizing & R2 Storage
+ * Remote Assets Proxy Worker
+ * Efficiently routes requests to R2 storage or triggers Cloudflare Image Resizing.
  */
 
 export default {
@@ -8,63 +8,60 @@ export default {
 		const url = new URL(request.url);
 		const { pathname, searchParams } = url;
 
-		// 1. Match custom prefix for remote assets
+		// 1. Check if the request targets the defined remote asset prefix
 		if (pathname.startsWith(env.REMOTE_PREFIX)) {
-			// Clean up path to ensure no double slashes during concatenation
+			// Normalize path by removing the prefix and leading slash
 			let originPath = pathname.replace(env.REMOTE_PREFIX, "");
 			if (originPath.startsWith("/")) originPath = originPath.slice(1);
 
-			const staticResUrl = `${env.R2_DOMAIN}/${originPath}`;
-
+			// Determine if the asset is an image based on file extension
 			const isImage = /\.(jpg|jpeg|png|webp|avif|gif)$/i.test(originPath);
 			const width = searchParams.get("w");
-			const quality = searchParams.get("q") || "75";
 
-			// 2. Trigger Image Resizing if 'w' parameter is present
+			// 2. Handle Image Resizing requests
+			// Uses Cloudflare's built-in Image Resizing via fetch()
 			if (isImage && width) {
+				const staticResUrl = `${env.R2_DOMAIN}/${originPath}`;
 				return fetch(staticResUrl, {
 					headers: request.headers,
 					cf: {
 						image: {
 							width: parseInt(width, 10),
-							quality: parseInt(quality, 10),
-							format: "auto", // Auto-select best format (WebP/AVIF) based on browser support
+							quality: parseInt(searchParams.get("q") || "75", 10),
+							format: "auto",
 							fit: "scale-down",
 						},
 						cacheEverything: true,
-						cacheTtl: 31536000,
+						cacheTtl: 31536000, // 1 year cache TTL
 					},
 				});
 			}
 
-			// 3. Standard asset request (JS, CSS, or non-resized images)
-			const response = await fetch(staticResUrl, {
-				headers: request.headers,
-				cf: {
-					cacheEverything: true, // 关键：强制边缘缓存
-					cacheTtl: 31536000, // 设置长缓存
-				},
-			});
+			// 3. Handle standard static assets (JS, CSS, etc.)
+			// Access R2 directly via Service Binding to eliminate network latency
+			const object = await env.R2_BUCKET.get(originPath);
 
-			// Apply aggressive caching for hashed Next.js static assets
-			if (pathname.includes("/_next/static/")) {
-				const newHeaders = new Headers(response.headers);
-				/**
-				 * 'immutable' prevents browsers from revalidating the file,
-				 * reducing server round-trips to zero for repeat visits.
-				 */
-				newHeaders.set("Cache-Control", "public, max-age=31536000, immutable");
-				return new Response(response.body, {
-					status: response.status,
-					statusText: response.statusText,
-					headers: newHeaders,
-				});
+			if (!object) {
+				return new Response("Not Found", { status: 404 });
 			}
 
-			return response;
+			// Prepare headers for the response
+			const headers = new Headers();
+			object.writeHttpMetadata(headers); // Preserve content-type/encoding metadata
+			headers.set("etag", object.httpEtag);
+
+			// Apply aggressive caching for hashed Next.js static assets or general assets
+			if (pathname.includes("/_next/static/")) {
+				headers.set("Cache-Control", "public, max-age=31536000, immutable");
+			} else {
+				headers.set("Cache-Control", "public, max-age=31536000");
+			}
+
+			// Return the object body as a stream
+			return new Response(object.body, { headers });
 		}
 
-		// 4. Passthrough all other requests to the main origin (e.g., Vercel)
+		// 4. Fallback: Passthrough to the main origin (e.g., Vercel)
 		return fetch(request);
 	},
 };

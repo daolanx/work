@@ -9,3 +9,7 @@ REMOTE_PREFIX = "/remote-assets/"
 [[routes]]
 pattern = "demo.daolanx.com/remote-assets/*"
 zone_name = "daolanx.com"
+
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "assets" 
