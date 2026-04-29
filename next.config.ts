@@ -21,7 +21,13 @@ const nextConfig: NextConfig = {
 	transpilePackages: ["recharts", "react-smooth", "shiki"],
 	experimental: {
 		optimizeCss: true,
-		optimizePackageImports: ["lucide-react", "recharts", "@tabler/icons-react"],
+		optimizePackageImports: [
+			"lucide-react",
+			"recharts",
+			"@tabler/icons-react",
+			"motion/react",
+			"motion/react-m",
+		],
 	},
 	reactCompiler: true,
 	turbopack: {
