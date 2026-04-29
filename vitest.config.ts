@@ -15,7 +15,7 @@ export default defineConfig({
 			"tests/components/**/*.{test,spec}.tsx",
 			"tests/unit/**/*.{test,spec}.ts",
 		],
-		exclude: ["**/node_modules/**", "**/tests/e2e/**"],
+		exclude: ["**/node_modules/**", "**/tests/e2e/**", "**/workers/**"],
 		coverage: {
 			provider: "v8",
 			enabled: true,

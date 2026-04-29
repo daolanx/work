@@ -27,6 +27,7 @@
 		"db:check": "drizzle-kit check",
 		"db:studio": "drizzle-kit studio",
 		"deploy-worker": "cd workers/remote-assets && wrangler deploy",
+		"test:worker": "cd workers/remote-assets && vitest run",
 		"prepare": "husky",
 		"email": "email dev"
 	},
@@ -106,6 +107,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.3.11",
+		"@cloudflare/vitest-pool-workers": "^0.15.1",
 		"@playwright/test": "^1.57.0",
 		"@react-email/preview-server": "5.2.6",
 		"@tailwindcss/postcss": "^4",
