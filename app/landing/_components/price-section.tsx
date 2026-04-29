@@ -111,6 +111,7 @@ const PricingCards = () => {
 				<Tabs
 					className="flex w-full flex-col items-center justify-center"
 					defaultValue="monthly"
+					id="pricing-tabs"
 				>
 					<TabsList>
 						<TabsTrigger value="monthly">monthly</TabsTrigger>
