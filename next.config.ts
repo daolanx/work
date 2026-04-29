@@ -20,7 +20,6 @@ const nextConfig: NextConfig = {
 
 	transpilePackages: ["recharts", "react-smooth", "shiki"],
 	experimental: {
-		optimizeCss: true,
 		optimizePackageImports: [
 			"lucide-react",
 			"recharts",
