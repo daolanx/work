@@ -35,11 +35,13 @@ const sites: SiteMeta[] = [
 
 		en: {
 			title: "Landing Page",
-			description: "Responsive, performance-driven landing page.",
+			description:
+				"Responsive, High-Performance, and Cost-Effective: Optimizing Speed and Costs with Cloudflare R2 and Workers.",
 		},
 		zh: {
 			title: "品牌落地页",
-			description: "具备响应性和优秀的性能的落地页。",
+			description:
+				"支持响应式且性能优秀性价比高，使用 Cloudflare R2 和 Worker 优化速度和成本。",
 		},
 	},
 	{
