@@ -89,6 +89,7 @@ export default async function Home() {
 									<Image
 										alt={`${site.title} - ${site.description}`}
 										className="cursor-default object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
+										fetchPriority={index === 0 ? "high" : "auto"}
 										fill
 										priority={index === 0}
 										sizes="(max-width: 1024px) calc(100vw - 96px), 928px"
