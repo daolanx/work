@@ -1,4 +1,9 @@
-import * as Icons from "@tabler/icons-react";
+import {
+	IconCircleCheckFilled,
+	IconCircleDashed,
+	IconCircleDot,
+	IconCircleMinus,
+} from "@tabler/icons-react";
 import type React from "react";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -6,6 +11,13 @@ import {
 	type TypeTaskStatus,
 } from "@/constants/task-enums";
 import { cn } from "@/lib/utils";
+
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+	IconCircleDashed,
+	IconCircleDot,
+	IconCircleCheckFilled,
+	IconCircleMinus,
+};
 
 interface CellStatusProps {
 	value: string;
@@ -19,9 +31,7 @@ export function CellStatus({ value }: CellStatusProps) {
 		return "-";
 	}
 
-	const Icon = Icons[config.icon] as React.ComponentType<{
-		className?: string;
-	}>;
+	const Icon = iconMap[config.icon];
 
 	return (
 		<Badge

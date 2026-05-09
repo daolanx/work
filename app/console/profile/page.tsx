@@ -1,17 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { IconCheck, IconEdit, IconLoader2, IconX } from "@tabler/icons-react";
+import dynamic from "next/dynamic";
 import type React from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-import "react-image-crop/dist/ReactCrop.css";
-import { IconCheck, IconEdit, IconLoader2, IconX } from "@tabler/icons-react";
-
 // UI Components
 import { Button } from "@/components/ui/button";
-
 import {
 	Form,
 	FormControl,
@@ -25,7 +22,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { UpdateUserSchema } from "@/lib/auth/schemas";
 // Business Logic
 import { useUser } from "../_hooks/useUser";
-import { AvatarUploader } from "./_components/avatar-uploader";
+
+const AvatarUploader = dynamic(
+	() =>
+		import("./_components/avatar-uploader").then((mod) => ({
+			default: mod.AvatarUploader,
+		})),
+	{ ssr: false },
+);
 
 export default function AccountPage() {
 	const { user, isLoading, updateUser, isMutating } = useUser();

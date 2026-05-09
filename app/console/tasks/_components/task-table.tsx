@@ -1,6 +1,5 @@
 "use client";
 
-import { format } from "date-fns";
 import Link from "next/link";
 import { useRef } from "react";
 import {
@@ -75,7 +74,12 @@ export default function TaskTable({
 				const date = row.original.createdAt;
 				if (!date) return <span className="text-slate-400">-</span>;
 				return (
-					<div title={format(new Date(date), "PPPpp")}>
+					<div
+						title={new Intl.DateTimeFormat("en-US", {
+							dateStyle: "long",
+							timeStyle: "short",
+						}).format(new Date(date))}
+					>
 						{getRelativeTimeString(date)}
 					</div>
 				);
