@@ -1,4 +1,5 @@
 import { Home as HomeIcon } from "lucide-react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { DemoCard } from "./_components/demo-card";
@@ -7,11 +8,32 @@ import LocaleSwitch from "./_components/locale-switch";
 import ThemeSwitch from "./_components/theme-switch";
 import { getSites, type Site } from "./config";
 
-export async function generateMetadata() {
+const metadataBase = new URL("https://demo.daolanx.com");
+
+export async function generateMetadata(): Promise<Metadata> {
 	const t = await getTranslations("profile");
+	const title = t("gallery-title");
+	const description = t("intro");
+
 	return {
-		title: t("gallery-title"),
-		description: t("intro"),
+		title,
+		description,
+		metadataBase,
+		alternates: {
+			canonical: "/",
+		},
+		openGraph: {
+			title,
+			description,
+			url: "/",
+			siteName: "Dax's Demo Gallery",
+			type: "website",
+		},
+		twitter: {
+			card: "summary_large_image",
+			title,
+			description,
+		},
 	};
 }
 
@@ -65,7 +87,7 @@ export default async function Home() {
 
 								<div className="relative mx-8 mt-6 aspect-[21/9] overflow-hidden border border-neutral-200 dark:border-neutral-800">
 									<Image
-										alt={site.title}
+										alt={`${site.title} - ${site.description}`}
 										className="cursor-default object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
 										fill
 										priority={index === 0}
@@ -142,10 +164,6 @@ export default async function Home() {
 											label: "Twitter",
 										},
 										{
-											href: "https://demo.daolanx.com",
-											label: "Profile",
-										},
-										{
 											href: "mailto:daolanx.dev@gmail.com",
 											label: "Email",
 										},
@@ -154,8 +172,9 @@ export default async function Home() {
 											className="transition-colors hover:text-neutral-900 dark:hover:text-neutral-100"
 											href={item.href}
 											key={item.label}
-											rel="noopener noreferrer"
-											target="_blank"
+											{...(item.href.startsWith("http")
+												? { rel: "noopener noreferrer", target: "_blank" }
+												: {})}
 										>
 											{item.label}
 										</a>
