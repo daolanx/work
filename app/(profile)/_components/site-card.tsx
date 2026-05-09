@@ -65,7 +65,6 @@ export default function SiteCard(props: Site) {
 								height={240}
 								priority
 								src={previewUrl}
-								unoptimized
 								width={400}
 							/>
 						</div>

@@ -8,9 +8,14 @@ export default function myImageLoader({ src, width, quality }: LoaderProps) {
 	const isProd = process.env.NODE_ENV === "production";
 	const isExternal = src.startsWith("http");
 
-	// Local development or External images: Use original URL
-	if (!isProd || isExternal) {
+	// External images: Use original URL
+	if (isExternal) {
 		return src;
+	}
+
+	// Development: return src with params (Next.js requires width to be used)
+	if (!isProd) {
+		return `${src}?w=${width}&q=${quality || 75}`;
 	}
 
 	// Clean path: remove leading slash for consistency

@@ -69,9 +69,8 @@ export default async function Home() {
 										className="cursor-default object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
 										fill
 										priority={index === 0}
-										sizes="(max-width: 768px) 100vw, 80vw"
+										sizes="(max-width: 1024px) calc(100vw - 96px), 928px"
 										src={site.previewUrl}
-										unoptimized
 									/>
 								</div>
 
