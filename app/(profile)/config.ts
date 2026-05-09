@@ -12,8 +12,10 @@ type SiteMeta = {
 	sourceUrl: string;
 	keywords: string[];
 	isDeveloping?: boolean;
-	en: SiteContent;
-	zh: SiteContent;
+	locale: {
+		en: SiteContent;
+		zh: SiteContent;
+	};
 };
 
 export type Site = {
@@ -32,16 +34,17 @@ const sites: SiteMeta[] = [
 		webUrl: "/landing",
 		sourceUrl: "https://github.com/daolanx/work/tree/main/app/landing",
 		keywords: ["Next.js", "TwindCSS", "MagicUI", "Motion", "Cloudflare"],
-
-		en: {
-			title: "Landing Page",
-			description:
-				"Responsive, High-Performance, and Cost-Effective: Optimizing Speed and Costs with Cloudflare R2 and Workers.",
-		},
-		zh: {
-			title: "品牌落地页",
-			description:
-				"支持响应式且性能优秀性价比高，使用 Cloudflare R2 和 Worker 优化速度和成本。",
+		locale: {
+			en: {
+				title: "Landing Page",
+				description:
+					"Responsive, High-Performance, and Cost-Effective: Optimizing Speed and Costs with Cloudflare R2 and Workers.",
+			},
+			zh: {
+				title: "品牌落地页",
+				description:
+					"支持响应式且性能优秀性价比高，使用 Cloudflare R2 和 Worker 优化速度和成本。",
+			},
 		},
 	},
 	{
@@ -49,14 +52,16 @@ const sites: SiteMeta[] = [
 		webUrl: "/console",
 		sourceUrl: "https://github.com/daolanx/work/tree/main/app/console",
 		keywords: ["Shadcn", "Drizzle", "Neon", "SWR", "Better-Auth", "Creem"],
-		en: {
-			title: "Console Page",
-			description:
-				"Comprehensive admin dashboard with built-in auth, payments, role-based permissions, and task tracking.",
-		},
-		zh: {
-			title: "控制台页面",
-			description: "具备登录，支付，角色管理，任务管理功能的控制台。",
+		locale: {
+			en: {
+				title: "Console Page",
+				description:
+					"Comprehensive admin dashboard with built-in auth, payments, role-based permissions, and task tracking.",
+			},
+			zh: {
+				title: "控制台页面",
+				description: "具备登录，支付，角色管理，任务管理功能的控制台。",
+			},
 		},
 	},
 
@@ -66,15 +71,17 @@ const sites: SiteMeta[] = [
 		sourceUrl: "https://github.com/daolanx/work/tree/main/app/flower-shop",
 		isDeveloping: false,
 		keywords: ["Next.js", "Tailwind CSS", "Motion", "Figma", "Claude Code"],
-		en: {
-			title: "E-commerce Page",
-			description:
-				"Responsive and accessible flower shop e-commerce platform, \nachieving high-fidelity design-to-code reproduction via Claude Code and Figma MCP.",
-		},
-		zh: {
-			title: "电商页面",
-			description:
-				"花店电商页面，响应式设计，支持无障碍访问，\n使用 Claude Code + Figma MCP 实现设计稿高精度还原。",
+		locale: {
+			en: {
+				title: "E-commerce Page",
+				description:
+					"Responsive and accessible flower shop e-commerce platform, \nachieving high-fidelity design-to-code reproduction via Claude Code and Figma MCP.",
+			},
+			zh: {
+				title: "电商页面",
+				description:
+					"花店电商页面，响应式设计，支持无障碍访问，\n使用 Claude Code + Figma MCP 实现设计稿高精度还原。",
+			},
 		},
 	},
 
@@ -89,28 +96,29 @@ const sites: SiteMeta[] = [
 			"Stitch",
 			"Claude Code",
 		],
-		en: {
-			title: "AI Chat Page",
+		locale: {
+			en: {
+				title: "AI Chat Page",
 
-			description:
-				"AI chat interface featuring streaming responses, \nbuilt with Stitch UI and powered by Claude Code for intelligent coding assistance.",
-		},
-		zh: {
-			title: "AI 对话页",
-			description:
-				"AI 对话界面，支持流式响应输入,\n使用 Stitch 设计页面和 Claude Code 辅助开发。",
+				description:
+					"AI chat interface featuring streaming responses, \nbuilt with Stitch UI and powered by Claude Code for intelligent coding assistance.",
+			},
+			zh: {
+				title: "AI 对话页",
+				description:
+					"AI 对话界面，支持流式响应输入,\n使用 Stitch 设计页面和 Claude Code 辅助开发。",
+			},
 		},
 	},
 ];
 
 export async function getSites(): Promise<Site[]> {
-	const locale = (await getLocale()) as Locale;
-	return sites.map((site) => ({
-		previewUrl: site.previewUrl,
-		webUrl: site.webUrl,
-		sourceUrl: site.sourceUrl,
-		keywords: site.keywords,
-		isDeveloping: site.isDeveloping,
-		...site[locale],
-	}));
+	const lang = (await getLocale()) as Locale;
+	return sites.map((site) => {
+		const { locale, ...rest } = site;
+		return {
+			...rest,
+			...locale[lang],
+		};
+	});
 }
