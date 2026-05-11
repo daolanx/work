@@ -7,63 +7,104 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { queryConversionRate, queryMRR } from "@/lib/creem";
+import { queryMAU, queryRetentionRate } from "@/lib/session";
+
+interface SummaryCard {
+	id: string;
+	label: string;
+	amount: number;
+	unit?: string;
+	monthlyChange: number;
+}
+
+function computeChange(current: number, previous: number): number {
+	return previous > 0 ? (current - previous) / previous : 0;
+}
 
 export async function SummaryCards() {
-	const { success, data } = await querySummeryCards();
+	const extract = <T,>(result: PromiseSettledResult<T>, fallback: T): T =>
+		result.status === "fulfilled" ? result.value : fallback;
+
+	const [mauResult, retentionResult, conversionResult, mrrResult] =
+		await Promise.allSettled([
+			queryMAU(),
+			queryRetentionRate(),
+			queryConversionRate(),
+			queryMRR(),
+		]);
+
+	const mau = extract(mauResult, { current: 0, previous: 0 });
+	const retention = extract(retentionResult, { current: 0, previous: 0 });
+	const conversion = extract(conversionResult, { current: 0, previous: 0 });
+	const mrr = extract(mrrResult, { current: 0, previous: 0 });
+
+	const data: SummaryCard[] = [
+		{
+			id: "mrr",
+			label: "MRR",
+			amount: mrr.current,
+			unit: "$",
+			monthlyChange: computeChange(mrr.current, mrr.previous),
+		},
+		{
+			id: "retention-rate",
+			label: "Retention",
+			amount: Number.parseFloat(retention.current.toFixed(2)),
+			unit: "%",
+			monthlyChange: computeChange(retention.current, retention.previous),
+		},
+		{
+			id: "conversion-rate",
+			label: "Conversion",
+			amount: Number.parseFloat(conversion.current.toFixed(2)),
+			unit: "%",
+			monthlyChange: computeChange(conversion.current, conversion.previous),
+		},
+		{
+			id: "mau",
+			label: "MAU",
+			amount: mau.current,
+			monthlyChange: computeChange(mau.current, mau.previous),
+		},
+	];
 
 	return (
 		<div className="grid @5xl/main:grid-cols-4 @xl/main:grid-cols-2 grid-cols-1 gap-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs dark:*:data-[slot=card]:bg-card">
-			{success &&
-				data.map((card) => (
-					<Card className="@container/card" key={card.id}>
-						<CardHeader className="flex justify-between">
-							<CardTitle className="font-normal">{card.label}</CardTitle>
-							<CardDescription>
-								<TrendBadge value={card.monthlyChange} />
-							</CardDescription>
-						</CardHeader>
-						<CardContent>
-							<FormattedAmount amount={card.amount} unit={card.unit} />
-						</CardContent>
-					</Card>
-				))}
+			{data.map((card) => (
+				<Card className="@container/card" key={card.id}>
+					<CardHeader className="flex justify-between">
+						<CardTitle className="font-normal">{card.label}</CardTitle>
+						<CardDescription>
+							<TrendBadge value={card.monthlyChange} />
+						</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<FormattedAmount amount={card.amount} unit={card.unit} />
+					</CardContent>
+				</Card>
+			))}
 		</div>
 	);
 }
 
-async function querySummeryCards() {
-	return {
-		success: true,
-		data: [
-			{
-				id: "mrr",
-				label: "MRR",
-				amount: 326.25,
-				unit: "$",
-				monthlyChange: 0.125,
-			},
-			{
-				id: "retention-rate",
-				label: "Retention",
-				amount: 9.27,
-				unit: "%",
-				monthlyChange: -0.2,
-			},
-			{
-				id: "conversion-rate",
-				label: "Conversion",
-				amount: 5.23,
-				unit: "%",
-				monthlyChange: 0.125,
-			},
-			{
-				id: "mau",
-				label: "MAU",
-				amount: 93,
-				monthlyChange: 0.045,
-			},
-		],
-	};
+/** Skeleton placeholder for SummaryCards while data loads via Suspense */
+export function SummaryCardsSkeleton() {
+	return (
+		<div className="grid @5xl/main:grid-cols-4 @xl/main:grid-cols-2 grid-cols-1 gap-4">
+			{Array.from({ length: 4 }).map((_, i) => (
+				<Card className="@container/card animate-pulse" key={i}>
+					<CardHeader>
+						<div className="h-4 w-20 rounded bg-muted" />
+						<div className="mt-2 h-5 w-16 rounded bg-muted" />
+					</CardHeader>
+					<CardContent>
+						<div className="h-8 w-24 rounded bg-muted" />
+					</CardContent>
+				</Card>
+			))}
+		</div>
+	);
 }
 
 function FormattedAmount({
@@ -100,6 +141,8 @@ function FormattedAmount({
 }
 
 function TrendBadge({ value }: { value: number }) {
+	if (value === 0) return null;
+
 	const config = {
 		up: {
 			class: "border-emerald-200 bg-emerald-50/50 text-emerald-600",

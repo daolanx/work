@@ -1,5 +1,9 @@
 import dynamic from "next/dynamic";
-import { SummaryCards } from "./_components/summary-cards";
+import { Suspense } from "react";
+import {
+	SummaryCards,
+	SummaryCardsSkeleton,
+} from "./_components/summary-cards";
 
 const VisitorChart = dynamic(
 	() =>
@@ -24,7 +28,9 @@ const TaskTable = dynamic(
 export default function ConsolePage() {
 	return (
 		<div className="flex flex-col gap-4 px-4 py-4 md:gap-6 md:px-6 md:py-6">
-			<SummaryCards />
+			<Suspense fallback={<SummaryCardsSkeleton />}>
+				<SummaryCards />
+			</Suspense>
 			<VisitorChart />
 			<TaskTable />
 		</div>
