@@ -48,7 +48,7 @@ const sites: SiteMeta[] = [
 		},
 	},
 	{
-		previewUrl: "/images/console-page.webp",
+		previewUrl: "/images/console-page-v2.webp",
 		webUrl: "/console",
 		sourceUrl: "https://github.com/daolanx/work/tree/main/app/console",
 		keywords: ["Shadcn", "Drizzle", "Neon", "SWR", "Better-Auth", "Creem"],

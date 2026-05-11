@@ -2,97 +2,125 @@ import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
 import { Badge } from "@/components/ui/badge";
 import {
 	Card,
-	CardAction,
+	CardContent,
 	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+
+export async function SummaryCards() {
+	const { success, data } = await querySummeryCards();
+
+	return (
+		<div className="grid @5xl/main:grid-cols-4 @xl/main:grid-cols-2 grid-cols-1 gap-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs dark:*:data-[slot=card]:bg-card">
+			{success &&
+				data.map((card) => (
+					<Card className="@container/card" key={card.id}>
+						<CardHeader className="flex justify-between">
+							<CardTitle className="font-normal">{card.label}</CardTitle>
+							<CardDescription>
+								<TrendBadge value={card.monthlyChange} />
+							</CardDescription>
+						</CardHeader>
+						<CardContent>
+							<FormattedAmount amount={card.amount} unit={card.unit} />
+						</CardContent>
+					</Card>
+				))}
+		</div>
+	);
+}
 
 async function querySummeryCards() {
 	return {
 		success: true,
 		data: [
 			{
-				id: "total-revenue",
-				label: "Total Revenue",
-				amount: 1250.0,
-				currency: "USD",
-				changePercentage: 0.125,
-				period: "last 6 months",
+				id: "mrr",
+				label: "MRR",
+				amount: 326.25,
+				unit: "$",
+				monthlyChange: 0.125,
 			},
 			{
-				id: "new-customers",
-				label: "New Customers",
-				amount: 1234,
-				changePercentage: -0.2,
-				period: "this period",
+				id: "retention-rate",
+				label: "Retention",
+				amount: 9.27,
+				unit: "%",
+				monthlyChange: -0.2,
 			},
 			{
-				id: "active-accounts",
-				label: "Active Accounts",
-				amount: 45678,
-				changePercentage: 0.125,
-				period: "engagement targets",
+				id: "conversion-rate",
+				label: "Conversion",
+				amount: 5.23,
+				unit: "%",
+				monthlyChange: 0.125,
 			},
 			{
-				id: "growth-rate",
-				label: "Growth Rate",
-				amount: 0.045,
-				changePercentage: 0.045,
-				period: "growth projections",
+				id: "mau",
+				label: "MAU",
+				amount: 93,
+				monthlyChange: 0.045,
 			},
 		],
 	};
 }
 
-export async function SummaryCards() {
-	const { success, data } = await querySummeryCards();
+function FormattedAmount({
+	amount,
+	unit,
+}: {
+	amount: number;
+	unit: string | undefined;
+}) {
+	const displayValueFormater = {
+		$: {
+			renderDisplay(amount: number) {
+				return `$${amount.toFixed(2)}`;
+			},
+		},
+		"%": {
+			renderDisplay(amount: number) {
+				return `${amount.toFixed(2)}%`;
+			},
+		},
+		default: {
+			renderDisplay(amount: number) {
+				return `${amount}`;
+			},
+		},
+	};
+
+	const renderDisplay = displayValueFormater[unit ?? "default"].renderDisplay;
+	return (
+		<p className="font-semibold @[250px]/card:text-3xl text-2xl">
+			{renderDisplay(amount)}
+		</p>
+	);
+}
+
+function TrendBadge({ value }: { value: number }) {
+	const config = {
+		up: {
+			class: "border-emerald-200 bg-emerald-50/50 text-emerald-600",
+			icon: IconTrendingUp,
+			flag: "+",
+		},
+		down: {
+			icon: IconTrendingDown,
+			class: "border-rose-200 bg-rose-50/50 text-rose-600",
+			flag: "",
+		},
+	};
+
+	const trendConfig = value > 0 ? config.up : config.down;
+	const Icon = trendConfig.icon;
 
 	return (
-		<div className="grid @5xl/main:grid-cols-4 @xl/main:grid-cols-2 grid-cols-1 gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs dark:*:data-[slot=card]:bg-card">
-			{success &&
-				data.map((card) => {
-					const isPositive = card.changePercentage > 0;
-					const TrendIcon = isPositive ? IconTrendingUp : IconTrendingDown;
-
-					return (
-						<Card className="@container/card" key={card.id}>
-							<CardHeader>
-								<CardDescription>{card.label}</CardDescription>
-								<CardTitle className="font-semibold @[250px]/card:text-3xl text-2xl tabular-nums">
-									${card.amount}
-								</CardTitle>
-								<CardAction>
-									{/* Dynamic color and icon based on trend */}
-									<Badge
-										className={
-											isPositive
-												? "border-emerald-200 bg-emerald-50/50 text-emerald-600"
-												: "border-rose-200 bg-rose-50/50 text-rose-600"
-										}
-										variant="outline"
-									>
-										<TrendIcon className="mr-1 size-3.5" />
-										{isPositive ? "+" : ""}
-										{card.changePercentage * 100}%
-									</Badge>
-								</CardAction>
-							</CardHeader>
-							<CardFooter className="flex-col items-start gap-1.5 text-sm">
-								<div
-									className={`line-clamp-1 flex gap-2 font-medium ${isPositive ? "text-emerald-600" : "text-rose-600"}`}
-								>
-									{isPositive ? "Trending up" : "Trending down"} this month
-									<TrendIcon className="size-4" />
-								</div>
-								<div className="text-muted-foreground">
-									Compared to {card.period}
-								</div>
-							</CardFooter>
-						</Card>
-					);
-				})}
-		</div>
+		<Badge className={trendConfig.class}>
+			<Icon className="mr-1 size-3.5" />
+			{trendConfig.flag}
+			{value * 100}%
+		</Badge>
 	);
 }
