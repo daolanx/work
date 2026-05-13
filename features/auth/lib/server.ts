@@ -4,7 +4,10 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { admin } from "better-auth/plugins";
 import { db, schema } from "@/db";
-import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/email";
+import {
+	sendPasswordResetEmail,
+	sendVerificationEmail,
+} from "@/features/email/service";
 
 export const auth = betterAuth({
 	trustedOrigins: [

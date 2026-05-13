@@ -1,6 +1,6 @@
 import { Resend } from "resend";
-import ResetPasswordEmail from "@/emails/reset-password-email";
-import VerificationEmail from "@/emails/verification-email";
+import ResetPasswordEmail from "./components/reset-password-email";
+import VerificationEmail from "./components/verification-email";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
