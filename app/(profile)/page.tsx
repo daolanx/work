@@ -2,11 +2,11 @@ import { Home as HomeIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
-import { DemoCard } from "./_components/demo-card";
-import { FadeIn } from "./_components/fade-in";
-import LocaleSwitch from "./_components/locale-switch";
-import ThemeSwitch from "./_components/theme-switch";
-import { getSites, type Site } from "./config";
+import { DemoCard } from "@/features/profile/components/demo-card";
+import { FadeIn } from "@/features/profile/components/fade-in";
+import LocaleSwitch from "@/features/profile/components/locale-switch";
+import ThemeSwitch from "@/features/profile/components/theme-switch";
+import { getSites, type Site } from "@/features/profile/queries";
 
 const metadataBase = new URL("https://demo.daolanx.com");
 
