@@ -3,9 +3,9 @@
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
-import { OAuthButton } from "@/components/auth/oauth-button";
-import RegisterForm from "@/components/auth/register-form";
 import { Card, CardContent } from "@/components/ui/card";
+import { OAuthButton } from "@/features/auth/components/oauth-button";
+import RegisterForm from "@/features/auth/components/register-form";
 
 export default function RegisterPage() {
 	const [isPending, setIsPending] = useState(false);

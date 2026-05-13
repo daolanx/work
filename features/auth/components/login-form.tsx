@@ -5,7 +5,6 @@ import { Loader2, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { PasswordInput } from "@/components/auth/password-input";
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -15,11 +14,12 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
+import { FormError } from "@/components/ui/form-messages";
 import { Input } from "@/components/ui/input";
-import { AUTH_CONFIG } from "@/lib/auth/paths";
-import { type LoginInput, loginSchema } from "@/lib/auth/schemas";
-import { loginUser } from "../../app/auth/login/action";
-import { FormError } from "../ui/form-messages";
+import { AUTH_CONFIG } from "@/features/auth/lib/paths";
+import { type LoginInput, loginSchema } from "@/features/auth/schemas";
+import { loginUser } from "../actions";
+import { PasswordInput } from "./password-input";
 
 const LOGIN_TYPES = {
 	NORMAL: "NORMAL",

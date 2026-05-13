@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { AUTH_CONFIG, isPublicPath } from "@/lib/auth/paths";
+import { AUTH_CONFIG, isPublicPath } from "@/features/auth/lib/paths";
 
 describe("lib/auth/paths", () => {
 	describe("AUTH_CONFIG", () => {

@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { DELETE, GET, PATCH } from "@/app/api/console/tasks/[taskId]/route";
 import { db } from "@/db";
-import { auth } from "@/lib/auth/server";
+import { auth } from "@/features/auth/lib/server";
 
 vi.mock("@/db", () => ({
 	db: {
@@ -13,7 +13,7 @@ vi.mock("@/db", () => ({
 	},
 }));
 
-vi.mock("@/lib/auth/server", () => ({
+vi.mock("@/features/auth/lib/server", () => ({
 	auth: {
 		api: {
 			getSession: vi.fn(),

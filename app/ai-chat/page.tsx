@@ -4,7 +4,7 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { Menu } from "lucide-react";
 import { useState } from "react";
-import { IconGithub } from "@/components/auth/icon-github";
+import { IconGithub } from "@/components/ui/icon-github";
 import { ChatInput } from "@/features/ai-chat/components/chat-input";
 import { ChatMessages } from "@/features/ai-chat/components/chat-messages";
 import { MobileSidebar } from "@/features/ai-chat/components/mobile-sidebar";

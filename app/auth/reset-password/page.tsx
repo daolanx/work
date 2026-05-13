@@ -4,8 +4,8 @@ import { Loader2, ShieldCheck } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { Suspense, useState } from "react";
-import { ResetPasswordForm } from "@/components/auth/reset-password-form";
 import { Card, CardContent } from "@/components/ui/card";
+import { ResetPasswordForm } from "@/features/auth/components/reset-password-form";
 
 /**
  * Main Page Wrapper

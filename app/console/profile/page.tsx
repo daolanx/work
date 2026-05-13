@@ -19,7 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { UpdateUserSchema } from "@/lib/auth/schemas";
+import { UpdateUserSchema } from "@/features/auth/schemas";
 // Business Logic
 import { useUser } from "../_hooks/useUser";
 

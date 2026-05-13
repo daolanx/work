@@ -4,7 +4,6 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
-import { IconGithub } from "@/components/auth/icon-github";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -13,6 +12,7 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { IconGithub } from "@/components/ui/icon-github";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useTask } from "../../_hooks/use-task";

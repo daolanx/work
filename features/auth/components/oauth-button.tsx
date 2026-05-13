@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { GithubIcon, GoogleIcon } from "@/components/ui/icons";
-import { signInWithGithub, signInWithGoogle } from "@/lib/auth/client";
+import { signInWithGithub, signInWithGoogle } from "@/features/auth/lib/client";
 
 interface OAuthButtonProps {
 	provider: "google" | "github";

@@ -5,8 +5,6 @@ import { Loader2, MailCheck } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-
-import { registerUser } from "@/app/auth/register/action";
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -17,8 +15,9 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { registerUser } from "@/features/auth/actions";
 import { type RegisterSchema, registerSchema } from "@/lib/action-schemas";
-import { FormError } from "../ui/form-messages";
+import { FormError } from "../../../components/ui/form-messages";
 import { PasswordInput } from "./password-input";
 
 interface RegisterFormProps {

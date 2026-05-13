@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 import { getUser, updateUser } from "@/app/console/_actions/user";
-import type { UpdateUserInput } from "@/lib/auth/schemas";
+import type { UpdateUserInput } from "@/features/auth/schemas";
 
 const USER_KEY = "user-profile";
 const DEMO_EMAIL = process.env.NEXT_PUBLIC_DEMO_USER_EMAIL;

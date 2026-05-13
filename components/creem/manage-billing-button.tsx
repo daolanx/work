@@ -4,7 +4,7 @@ import { Loader2, Settings2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner"; // Assuming you use sonner or similar for notifications
 import { Button } from "@/components/ui/button";
-import { authClient } from "@/lib/auth/client";
+import { authClient } from "@/features/auth/lib/client";
 
 export function ManageBillingButton() {
 	const [isLoading, setIsLoading] = useState(false);

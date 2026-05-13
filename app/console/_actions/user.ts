@@ -4,8 +4,11 @@ import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 
 import { db, schema } from "@/db";
-import { type UpdateUserInput, UpdateUserSchema } from "@/lib/auth/schemas";
-import { auth } from "@/lib/auth/server";
+import { auth } from "@/features/auth/lib/server";
+import {
+	type UpdateUserInput,
+	UpdateUserSchema,
+} from "@/features/auth/schemas";
 
 export async function getUser() {
 	const session = await auth.api.getSession({

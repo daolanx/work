@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { FormError, FormSuccess } from "@/components/ui/form-messages";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { authClient } from "@/lib/auth/client";
+import { requestPasswordReset } from "@/features/auth/actions";
 
 export default function ForgetPasswordPage() {
 	const [email, setEmail] = useState("");
@@ -21,22 +21,14 @@ export default function ForgetPasswordPage() {
 		setIsPending(true);
 		setState({});
 
-		await authClient.requestPasswordReset(
-			{
-				email,
-				redirectTo: "/auth/reset-password",
-			},
-			{
-				onSuccess: () => {
-					setIsPending(false);
-					setState({ success: "A recovery link has been sent to your inbox." });
-				},
-				onError: (ctx) => {
-					setIsPending(false);
-					setState({ error: ctx.error.message });
-				},
-			},
-		);
+		const result = await requestPasswordReset(email);
+		setIsPending(false);
+
+		if (result.success) {
+			setState({ success: result.success.reason });
+		} else if (result.error) {
+			setState({ error: result.error.reason });
+		}
 	};
 
 	return (

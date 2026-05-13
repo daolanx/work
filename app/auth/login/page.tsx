@@ -3,10 +3,9 @@
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
-
-import LoginForm from "@/components/auth/login-form";
-import { OAuthButton } from "@/components/auth/oauth-button";
 import { Card, CardContent } from "@/components/ui/card";
+import LoginForm from "@/features/auth/components/login-form";
+import { OAuthButton } from "@/features/auth/components/oauth-button";
 
 export default function LoginPage() {
 	const [isPending, setIsPending] = useState(false);

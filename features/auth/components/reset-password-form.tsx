@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { PasswordInput } from "@/components/auth/password-input";
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -17,11 +16,12 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { FormError, FormSuccess } from "@/components/ui/form-messages";
-import { authClient } from "@/lib/auth/client";
+import { PasswordInput } from "@/features/auth/components/password-input";
+import { authClient } from "@/features/auth/lib/client";
 import {
 	type ResetPasswordInput,
 	resetPasswordSchema,
-} from "@/lib/auth/schemas";
+} from "@/features/auth/schemas";
 
 export function ResetPasswordForm({
 	onLoading = () => {},

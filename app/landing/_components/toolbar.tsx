@@ -1,6 +1,5 @@
 import { Menu } from "lucide-react";
 import { useState } from "react";
-import { IconGithub } from "@/components/auth/icon-github";
 import {
 	Accordion,
 	AccordionContent,
@@ -8,6 +7,7 @@ import {
 	AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { IconGithub } from "@/components/ui/icon-github";
 import {
 	Sheet,
 	SheetContent,

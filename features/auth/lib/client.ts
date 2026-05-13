@@ -1,7 +1,7 @@
 import { creemClient } from "@creem_io/better-auth/client";
 import { adminClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
-import { AUTH_CONFIG } from "@/lib/auth/paths";
+import { AUTH_CONFIG } from "@/features/auth/lib/paths";
 
 export const authClient = createAuthClient({
 	// baseURL: "http://localhost:3000",
