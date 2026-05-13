@@ -14,6 +14,7 @@ export default defineConfig({
 			"tests/api/**/*.{test,spec}.ts",
 			"tests/components/**/*.{test,spec}.tsx",
 			"tests/unit/**/*.{test,spec}.ts",
+			"features/**/__tests__/**/*.{test,spec}.ts",
 		],
 		exclude: ["**/node_modules/**", "**/tests/e2e/**", "**/workers/**"],
 		coverage: {
@@ -24,6 +25,7 @@ export default defineConfig({
 				"app/api/**/*",
 				"app/console/_hooks/**/*.ts",
 				"components/**/*",
+				"features/**/*.ts",
 				"lib/**/*.ts",
 			],
 			exclude: [

@@ -30,8 +30,8 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
+import { AUTH_CONFIG } from "@/features/auth/constants";
 import { authClient } from "@/features/auth/lib/client";
-import { AUTH_CONFIG } from "@/features/auth/lib/paths";
 import { useUser } from "../../_hooks/useUser";
 
 /**

@@ -2,8 +2,7 @@ import { Epilogue, Manrope } from "next/font/google";
 import Script from "next/script";
 import { getLocale } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
-
-import "@/app/globals.css";
+import "@/styles/globals.css";
 
 const epilogue = Epilogue({
 	subsets: ["latin"],
