@@ -5,13 +5,13 @@ import { DefaultChatTransport } from "ai";
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import { IconGithub } from "@/components/auth/icon-github";
-import { getSystemPrompt } from "@/lib/chat/prompts";
-import { ChatInput } from "./_components/chat-input";
-import { ChatMessages } from "./_components/chat-messages";
-import { MobileSidebar } from "./_components/mobile-sidebar";
-import { Sidebar } from "./_components/sidebar";
-import { ThemeSwitch } from "./_components/theme-switch";
-import "./global.css";
+import { ChatInput } from "@/features/ai-chat/components/chat-input";
+import { ChatMessages } from "@/features/ai-chat/components/chat-messages";
+import { MobileSidebar } from "@/features/ai-chat/components/mobile-sidebar";
+import { Sidebar } from "@/features/ai-chat/components/sidebar";
+import { ThemeSwitch } from "@/features/ai-chat/components/theme-switch";
+import { getSystemPrompt } from "@/features/ai-chat/lib/prompts";
+import "@/features/ai-chat/global.css";
 
 export default function AIPage() {
 	const [sidebarOpen, setSidebarOpen] = useState(false);

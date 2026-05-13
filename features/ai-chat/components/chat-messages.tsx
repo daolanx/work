@@ -3,12 +3,12 @@
 import type { ChatStatus, UIMessage } from "ai";
 import { Bird } from "lucide-react";
 import { useEffect, useRef } from "react";
-import { useConversationsStore } from "@/hooks/use-conversations";
 import {
 	extractText,
 	messageToUiMessage,
 	uiMessageToMessage,
-} from "@/lib/chat/transformers";
+} from "@/features/ai-chat/lib/transformers";
+import { useConversationsStore } from "@/hooks/use-conversations";
 import { AIMessage } from "./ai-message";
 import { styles } from "./styles";
 import { TypingIndicator } from "./typing-indicator";
