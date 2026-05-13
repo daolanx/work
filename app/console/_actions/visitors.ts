@@ -1,10 +1,10 @@
+"use server";
+
 import { asc } from "drizzle-orm";
-import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { visitStats } from "@/db/biz.schema";
-import { api } from "@/lib/api-handler";
 
-export const GET = api(async () => {
+export async function getVisitors() {
 	const data = await db
 		.select({
 			date: visitStats.date,
@@ -14,5 +14,5 @@ export const GET = api(async () => {
 		.from(visitStats)
 		.orderBy(asc(visitStats.date));
 
-	return NextResponse.json(data);
-});
+	return data;
+}

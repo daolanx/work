@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { getVisitors } from "../_actions/visitors";
 
 const chartConfig = {
 	visitors: { label: "Visitors" },
@@ -33,10 +34,18 @@ const chartConfig = {
 	mobile: { label: "Mobile", color: "var(--primary)" },
 } satisfies ChartConfig;
 
+const TIME_RANGES = [
+	{ value: "90d", label: "Last 3 months", days: 90 },
+	{ value: "30d", label: "Last 30 days", days: 30 },
+	{ value: "7d", label: "Last 7 days", days: 7 },
+] as const;
+
+const VISITOR_KEY = "visitors-profile";
+
 export function VisitorChart() {
 	const isMobile = useIsMobile();
 	const [timeRange, setTimeRange] = useState("90d");
-	const { data, isLoading } = useSWR(`/api/console/visitors`);
+	const { data, isLoading } = useSWR(VISITOR_KEY, getVisitors);
 
 	useEffect(() => {
 		if (isMobile) setTimeRange("7d");
@@ -45,9 +54,9 @@ export function VisitorChart() {
 	const filteredData = useMemo(() => {
 		if (!data) return [];
 		const referenceDate = new Date("2024-06-30");
-		const daysMap: Record<string, number> = { "90d": 90, "30d": 30, "7d": 7 };
+		const range = TIME_RANGES.find((r) => r.value === timeRange);
 		const startDate = new Date(referenceDate);
-		startDate.setDate(startDate.getDate() - (daysMap[timeRange] || 90));
+		startDate.setDate(startDate.getDate() - (range?.days || 90));
 
 		return data.filter(
 			(item: { date: string }) => new Date(item.date) >= startDate,
@@ -72,9 +81,11 @@ export function VisitorChart() {
 						value={timeRange}
 						variant="outline"
 					>
-						<ToggleGroupItem value="90d">Last 3 months</ToggleGroupItem>
-						<ToggleGroupItem value="30d">Last 30 days</ToggleGroupItem>
-						<ToggleGroupItem value="7d">Last 7 days</ToggleGroupItem>
+						{TIME_RANGES.map((range) => (
+							<ToggleGroupItem key={range.value} value={range.value}>
+								{range.label}
+							</ToggleGroupItem>
+						))}
 					</ToggleGroup>
 					<Select onValueChange={setTimeRange} value={timeRange}>
 						<SelectTrigger
@@ -84,15 +95,15 @@ export function VisitorChart() {
 							<SelectValue placeholder="Last 3 months" />
 						</SelectTrigger>
 						<SelectContent className="rounded-xl">
-							<SelectItem className="rounded-lg" value="90d">
-								Last 3 months
-							</SelectItem>
-							<SelectItem className="rounded-lg" value="30d">
-								Last 30 days
-							</SelectItem>
-							<SelectItem className="rounded-lg" value="7d">
-								Last 7 days
-							</SelectItem>
+							{TIME_RANGES.map((range) => (
+								<SelectItem
+									className="rounded-lg"
+									key={range.value}
+									value={range.value}
+								>
+									{range.label}
+								</SelectItem>
+							))}
 						</SelectContent>
 					</Select>
 				</CardAction>
