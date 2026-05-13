@@ -63,7 +63,9 @@ export default function AdminDashboard() {
 	 * 2. UNAUTHORIZED STATE
 	 * Renders a destructive alert if the user is not an admin or not logged in.
 	 */
-	if (user && user.role !== "admin") {
+	if (!user) return null;
+
+	if (user.role !== "admin") {
 		return (
 			<div className="flex h-[400px] items-center justify-center p-6 text-center">
 				<Alert className="max-w-md" variant="destructive">

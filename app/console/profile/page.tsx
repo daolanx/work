@@ -36,6 +36,8 @@ export default function AccountPage() {
 
 	if (isLoading) return <AccountSkeleton />;
 
+	if (!user) return null;
+
 	return (
 		<div className="flex max-w-5xl flex-col gap-8 px-4 py-8 lg:px-12">
 			{/* Header */}
