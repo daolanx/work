@@ -1,6 +1,6 @@
-import Footer from "./_components/footer";
-import Header from "./_components/header";
-import MotionProvider from "./_components/motion-provider";
+import Footer from "@/features/landing/components/footer";
+import Header from "@/features/landing/components/header";
+import MotionProvider from "@/features/landing/components/motion-provider";
 
 export default function LandingLayout({
 	children,

@@ -1,21 +1,25 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
-import HeroSection from "./_components/hero-section";
+import HeroSection from "@/features/landing/components/hero-section";
 
 const LazyCompanySection = dynamic(
-	() => import("./_components/company-section"),
+	() => import("@/features/landing/components/company-section"),
 );
 const LazyFeatureSection = dynamic(
-	() => import("./_components/feature-section"),
+	() => import("@/features/landing/components/feature-section"),
 );
 const LazyProcessSection = dynamic(
-	() => import("./_components/process-section"),
+	() => import("@/features/landing/components/process-section"),
 );
 const LazyFeedBackSection = dynamic(
-	() => import("./_components/feedback-section"),
+	() => import("@/features/landing/components/feedback-section"),
 );
-const LazyPriceSection = dynamic(() => import("./_components/price-section"));
-const LazyCTASection = dynamic(() => import("./_components/cta-section"));
+const LazyPriceSection = dynamic(
+	() => import("@/features/landing/components/price-section"),
+);
+const LazyCTASection = dynamic(
+	() => import("@/features/landing/components/cta-section"),
+);
 
 export const metadata: Metadata = {
 	title: "Midaland",
