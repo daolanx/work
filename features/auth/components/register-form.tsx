@@ -14,10 +14,10 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
+import { FormError } from "@/components/ui/form-messages";
 import { Input } from "@/components/ui/input";
 import { registerUser } from "@/features/auth/actions";
-import { type RegisterSchema, registerSchema } from "@/lib/action-schemas";
-import { FormError } from "../../../components/ui/form-messages";
+import { type RegisterSchema, registerSchema } from "../schemas";
 import { PasswordInput } from "./password-input";
 
 interface RegisterFormProps {

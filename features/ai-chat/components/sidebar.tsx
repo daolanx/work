@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { useCallback, useState } from "react";
 
-import { useConversationsStore } from "@/hooks/use-conversations";
+import { useConversationsStore } from "@/features/ai-chat/hooks/use-conversations";
 import { styles } from "./styles";
 
 interface SidebarProps {
@@ -179,7 +179,7 @@ export function Sidebar({ onClose }: SidebarProps) {
 										className="flex-1 truncate transition-colors"
 										style={
 											hoveredId === item.id ||
-											item.id === currentConversation?.id
+												item.id === currentConversation?.id
 												? { color: styles.primary }
 												: undefined
 										}

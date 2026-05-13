@@ -1,5 +1,5 @@
 import type { UIMessage } from "ai";
-import type { Message } from "@/types/conversation";
+import type { Message } from "../types";
 
 /**
  * Extract text content from UIMessage parts

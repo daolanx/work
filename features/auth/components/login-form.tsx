@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { FormError } from "@/components/ui/form-messages";
 import { Input } from "@/components/ui/input";
-import { AUTH_CONFIG } from "@/features/auth/lib/paths";
+import { AUTH_CONFIG } from "@/features/auth/constants";
 import { type LoginInput, loginSchema } from "@/features/auth/schemas";
 import { loginUser } from "../actions";
 import { PasswordInput } from "./password-input";

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { ChatSession, Message } from "@/types/conversation";
+import type { ChatSession, Message } from "@/features/ai-chat/types";
 
 interface ConversationsState {
 	conversations: ChatSession[];

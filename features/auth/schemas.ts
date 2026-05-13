@@ -61,6 +61,7 @@ export type LoginInput = z.infer<typeof loginSchema>;
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 export type UpdateUserInput = z.infer<typeof UpdateUserSchema>;
+export type RegisterSchema = z.infer<typeof registerSchema>;
 
 export type ActionResult<T = unknown> = {
 	success: { reason: string } | null;
