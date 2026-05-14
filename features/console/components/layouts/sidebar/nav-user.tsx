@@ -13,7 +13,6 @@ import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
 	DropdownMenu,
@@ -32,7 +31,7 @@ import {
 } from "@/components/ui/sidebar";
 import { AUTH_CONFIG } from "@/features/auth/constants";
 import { authClient } from "@/features/auth/lib/client";
-import { useUser } from "../../_hooks/useUser";
+import { useUser } from "@/features/console/hooks/use-user";
 
 /**
  * Configuration for individual menu items

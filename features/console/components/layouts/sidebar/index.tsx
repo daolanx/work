@@ -1,21 +1,10 @@
 "use client";
 
-import {
-	IconChartBar,
-	IconChevronRight,
-	IconHelp,
-	IconLayoutDashboard,
-	IconList,
-	IconPackage,
-	IconRocket,
-	IconSettings,
-	IconShieldLock,
-} from "@tabler/icons-react";
+import { IconChevronRight, IconRocket } from "@tabler/icons-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type * as React from "react";
 import { useMemo } from "react";
-
 import {
 	Collapsible,
 	CollapsibleContent,
@@ -35,95 +24,10 @@ import {
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { NAVIGATION_CONFIG, type NavItem } from "@/features/console/constants";
+import { useUser } from "@/features/console/hooks/use-user";
 import { cn } from "@/lib/utils";
-import { useUser } from "../../_hooks/useUser";
 import { NavUser } from "./nav-user";
-
-// --- Types ---
-
-type NavSubItem = {
-	label: string; // Unified from title
-	url: string;
-	disabled?: boolean;
-	roles?: string[];
-};
-
-type NavItem = {
-	label: string; // Unified from title
-	url?: string;
-	icon?: React.ElementType;
-	disabled?: boolean;
-	roles?: string[];
-	items?: NavSubItem[];
-};
-
-type NavGroup = {
-	label?: string; // Optional group header
-	items: NavItem[];
-	className?: string;
-};
-
-// --- Configuration ---
-
-const NAVIGATION_CONFIG: NavGroup[] = [
-	{
-		label: "Platform",
-		items: [
-			{ label: "Console", url: "/console", icon: IconLayoutDashboard },
-			{
-				label: "Projects",
-				url: "/projects",
-				icon: IconPackage,
-				disabled: true,
-				items: [
-					{ label: "Ship Log", url: "/projects/changelog" },
-					{ label: "Issues", url: "/projects/issues" },
-					{ label: "Status", url: "/projects/status" },
-				],
-			},
-			{ label: "Tasks", url: "/console/tasks", icon: IconList },
-			{
-				label: "Growth",
-				icon: IconChartBar,
-				disabled: true,
-				items: [
-					{ label: "Audience", url: "/growth/users" },
-					{ label: "Revenue", url: "/growth/revenue" },
-				],
-			},
-		],
-	},
-	{
-		label: "Admin ",
-		items: [
-			{
-				label: "User Management",
-				url: "/console/admin",
-				icon: IconShieldLock,
-				roles: ["admin"],
-			},
-		],
-	},
-	{
-		className: "mt-auto",
-		items: [
-			{
-				label: "Settings",
-				url: "/settings",
-				icon: IconSettings,
-				disabled: true,
-			},
-			{ label: "Help", url: "/help", icon: IconHelp, disabled: true },
-			{
-				label: "My Profile",
-				url: "/",
-				icon: () => (
-					<IconRocket className="hover:animate-bounce hover:text-orange-600" />
-				),
-			},
-		],
-	},
-];
 
 // --- Component ---
 

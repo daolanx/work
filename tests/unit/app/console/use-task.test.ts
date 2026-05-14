@@ -4,7 +4,7 @@
 import { renderHook } from "@testing-library/react";
 import useSWR from "swr";
 import { describe, expect, it, vi } from "vitest";
-import { useTask, useTasks } from "@/app/console/_hooks/use-task";
+import { useTask, useTasks } from "@/features/console/hooks/use-task";
 
 const mockMutate = vi.fn();
 vi.mock("swr", () => ({

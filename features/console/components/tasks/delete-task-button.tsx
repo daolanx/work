@@ -3,9 +3,9 @@
 import { Trash2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { useDeleteTask } from "@/features/console/hooks/use-task";
 import { cn } from "@/lib/utils";
-import { DeleteButton } from "../../_components/delete-button";
-import { useDeleteTask } from "../../_hooks/use-task";
+import { DeleteButton } from "./delete-button";
 
 interface DeleteTaskButtonProps {
 	taskId: string;

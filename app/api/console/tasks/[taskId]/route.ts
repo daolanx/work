@@ -2,8 +2,11 @@ import { and, eq } from "drizzle-orm"; // Added 'and'
 import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { tasks } from "@/db/biz.schema";
+import {
+	taskResourceIdSchema,
+	updateTaskSchema,
+} from "@/features/console/schemas/task";
 import { authApi } from "@/lib/api-handler"; // Switched to authApi only
-import { taskResourceIdSchema, updateTaskSchema } from "@/lib/validations/task";
 
 export const GET = authApi(async (_req: NextRequest, { params, user }) => {
 	const result = taskResourceIdSchema.safeParse(await params);

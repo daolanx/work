@@ -179,7 +179,7 @@ export function Sidebar({ onClose }: SidebarProps) {
 										className="flex-1 truncate transition-colors"
 										style={
 											hoveredId === item.id ||
-												item.id === currentConversation?.id
+											item.id === currentConversation?.id
 												? { color: styles.primary }
 												: undefined
 										}

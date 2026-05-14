@@ -21,13 +21,15 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { UpdateUserSchema } from "@/features/auth/schemas";
 // Business Logic
-import { useUser } from "../_hooks/useUser";
+import { useUser } from "@/features/console/hooks/use-user";
 
 const AvatarUploader = dynamic(
 	() =>
-		import("./_components/avatar-uploader").then((mod) => ({
-			default: mod.AvatarUploader,
-		})),
+		import("@/features/console/components/profile/avatar-uploader").then(
+			(mod) => ({
+				default: mod.AvatarUploader,
+			}),
+		),
 	{ ssr: false },
 );
 

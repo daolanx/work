@@ -7,10 +7,10 @@ import {
 	TASK_PRIORITY_ENUMS,
 	TASK_STATUS_ENUMS,
 } from "@/constants/task-enums";
+import { useTasks } from "@/features/console/hooks/use-task";
 import { getRelativeTimeString } from "@/lib/date";
-import { CardTable } from "../../_components/card-table";
-import type { CardTableHandle } from "../../_components/card-table/types";
-import { useTasks } from "../../_hooks/use-task";
+import { CardTable } from "../card-table";
+import type { CardTableHandle } from "../card-table/types";
 import { CellCategory } from "./cell-category";
 import { CellPriority } from "./cell-priority";
 import { CellStatus } from "./cell-status";

@@ -10,7 +10,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import type { AdminActions, AdminUser } from "../_hooks/use-admin-users";
+import type { AdminActions, AdminUser } from "../../hooks/use-admin";
 import { UserActions } from "./user-actions";
 
 interface UsersTableProps {

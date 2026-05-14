@@ -14,7 +14,6 @@ import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import type * as z from "zod";
-import { MarkdownWrapper } from "@/components/markdown-wrapper";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -38,12 +37,13 @@ import {
 	TASK_PRIORITY_ENUMS,
 	TASK_STATUS_ENUMS,
 } from "@/constants/task-enums";
-import { createTaskSchema } from "@/lib/validations/task";
-import { useTask, useUpdateTask } from "../../_hooks/use-task";
-import { CellCategory } from "../_components/cell-category";
-import { CellPriority } from "../_components/cell-priority";
-import { CellStatus } from "../_components/cell-status";
-import { DeleteTaskButton } from "../_components/delete-task-button";
+import { CellCategory } from "@/features/console/components/tasks/cell-category";
+import { CellPriority } from "@/features/console/components/tasks/cell-priority";
+import { CellStatus } from "@/features/console/components/tasks/cell-status";
+import { DeleteTaskButton } from "@/features/console/components/tasks/delete-task-button";
+import { MarkdownWrapper } from "@/features/console/components/ui/markdown-wrapper";
+import { useTask, useUpdateTask } from "@/features/console/hooks/use-task";
+import { createTaskSchema } from "@/features/console/schemas/task";
 
 type TaskFormValues = z.infer<typeof createTaskSchema>;
 

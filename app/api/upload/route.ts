@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 import { auth } from "@/features/auth/lib/server";
-import { r2 } from "@/lib/r2";
+import { r2 } from "@/features/console/lib/r2";
 
 export async function POST(request: Request) {
 	try {

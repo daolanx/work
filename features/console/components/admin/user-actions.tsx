@@ -25,7 +25,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import type { AdminActions, AdminUser } from "../_hooks/use-admin-users";
+import type { AdminActions, AdminUser } from "../../hooks/use-admin";
 
 interface UserActionsProps extends AdminActions {
 	user: AdminUser;

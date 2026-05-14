@@ -13,10 +13,10 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useUser } from "../_hooks/useUser";
 // Custom hooks and components
-import { UsersTable } from "./_components/users-table";
-import { useAdminUsers } from "./_hooks/use-admin-users";
+import { UsersTable } from "@/features/console/components/admin/users-table";
+import { useAdminUsers } from "@/features/console/hooks/use-admin";
+import { useUser } from "@/features/console/hooks/use-user";
 
 /**
  * AdminDashboard Component

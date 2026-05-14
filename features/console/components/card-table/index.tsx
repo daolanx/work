@@ -11,7 +11,6 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import { forwardRef, useImperativeHandle } from "react";
-import { SearchInput } from "@/components/search-input";
 import { Button } from "@/components/ui/button";
 // UI Components
 import {
@@ -35,6 +34,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { SearchInput } from "@/features/console/components/ui/search-input";
 import { cn } from "@/lib/utils";
 
 // Internal Logic & Components

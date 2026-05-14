@@ -1,8 +1,8 @@
 import { Toaster } from "sonner";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "./_components/app-sidebar";
-import { SiteHeader } from "./_components/app-sidebar/site-header";
-import { SWRProvider } from "./_components/swr-provider";
+import { Header } from "@/features/console/components/layouts/header";
+import { AppSidebar } from "@/features/console/components/layouts/sidebar";
+import { SWRProvider } from "@/features/console/components/swr-provider";
 
 export default function ConsoleLayout({
 	children,
@@ -22,8 +22,7 @@ export default function ConsoleLayout({
 			>
 				<AppSidebar variant="inset" />
 				<SidebarInset>
-					<SiteHeader />
-
+					<Header />
 					{/* Main content wrapper */}
 					<div className="flex flex-1 flex-col">
 						<div className="@container/main flex flex-1 flex-col gap-2">

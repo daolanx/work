@@ -7,8 +7,8 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { queryConversionRate, queryMRR } from "@/lib/creem";
-import { queryMAU, queryRetentionRate } from "@/lib/session";
+import { queryConversionRate, queryMRR } from "@/features/console/lib/creem";
+import { queryMAU, queryRetentionRate } from "@/features/console/lib/session";
 
 interface SummaryCard {
 	id: string;

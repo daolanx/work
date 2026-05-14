@@ -2,9 +2,9 @@
 "use client";
 
 import { useState } from "react";
-import { useUser } from "@/app/console/_hooks/useUser";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/features/auth/lib/client";
+import { useUser } from "@/features/console/hooks/use-user";
 
 export function CheckoutButton({
 	productId,

@@ -12,8 +12,11 @@ import {
 import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { tasks } from "@/db/biz.schema";
+import {
+	createTaskSchema,
+	taskPaginationSchema,
+} from "@/features/console/schemas/task";
 import { authApi } from "@/lib/api-handler";
-import { createTaskSchema, taskPaginationSchema } from "@/lib/validations/task";
 
 export const GET = authApi(async (req: NextRequest, { params, user }) => {
 	void params;

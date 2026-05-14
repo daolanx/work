@@ -4,7 +4,7 @@ import {
 	taskPaginationSchema,
 	taskResourceIdSchema,
 	updateTaskSchema,
-} from "@/lib/validations/task";
+} from "@/features/console/schemas/task";
 
 describe("lib/validations/task", () => {
 	describe("taskResourceIdSchema", () => {

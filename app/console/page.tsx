@@ -3,13 +3,15 @@ import { Suspense } from "react";
 import {
 	SummaryCards,
 	SummaryCardsSkeleton,
-} from "./_components/summary-cards";
+} from "@/features/console/components/dashboard/summary-cards";
 
 const VisitorChart = dynamic(
 	() =>
-		import("./_components/vistior-chart").then((mod) => ({
-			default: mod.VisitorChart,
-		})),
+		import("@/features/console/components/dashboard/vistior-chart").then(
+			(mod) => ({
+				default: mod.VisitorChart,
+			}),
+		),
 	{
 		loading: () => <div className="h-87.5 animate-pulse rounded-xl bg-muted" />,
 	},
@@ -17,7 +19,7 @@ const VisitorChart = dynamic(
 
 const TaskTable = dynamic(
 	() =>
-		import("./tasks/_components/task-table").then((mod) => ({
+		import("@/features/console/components/tasks/task-table").then((mod) => ({
 			default: mod.default,
 		})),
 	{

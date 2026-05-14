@@ -4,7 +4,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { SearchInput } from "@/components/search-input";
+import { SearchInput } from "@/features/console/components/ui/search-input";
 
 describe("SearchInput Component", () => {
 	it("should render with the provided placeholder and default value", () => {

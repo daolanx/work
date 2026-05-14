@@ -5,13 +5,13 @@ import { useMemo } from "react";
 import { toast } from "sonner";
 import useSWR, { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
-import { deleter, patcher, poster } from "@/lib/fetcher";
 import type {
 	CreateTaskInput,
 	Task,
 	TaskPagination,
 	UpdateTaskInput,
-} from "@/lib/validations/task";
+} from "@/features/console/schemas/task";
+import { deleter, patcher, poster } from "@/lib/fetcher";
 
 /**
  * Base API endpoint for task operations

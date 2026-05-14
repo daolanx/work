@@ -25,8 +25,8 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { getVisitors } from "@/features/console/actions/visitors";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { getVisitors } from "../_actions/visitors";
 
 const chartConfig = {
 	visitors: { label: "Visitors" },
