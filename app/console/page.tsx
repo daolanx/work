@@ -3,11 +3,11 @@ import { Suspense } from "react";
 import {
 	SummaryCards,
 	SummaryCardsSkeleton,
-} from "@/features/console/components/dashboard/summary-cards";
+} from "@/features/console/dashboard/components/summary-cards";
 
 const VisitorChart = dynamic(
 	() =>
-		import("@/features/console/components/dashboard/vistior-chart").then(
+		import("@/features/console/dashboard/components/vistior-chart").then(
 			(mod) => ({
 				default: mod.VisitorChart,
 			}),
@@ -19,7 +19,7 @@ const VisitorChart = dynamic(
 
 const TaskTable = dynamic(
 	() =>
-		import("@/features/console/components/tasks/task-table").then((mod) => ({
+		import("@/features/console/task/components/task-table").then((mod) => ({
 			default: mod.default,
 		})),
 	{

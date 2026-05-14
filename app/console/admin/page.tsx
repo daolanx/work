@@ -14,9 +14,9 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 // Custom hooks and components
-import { UsersTable } from "@/features/console/components/admin/users-table";
-import { useAdminUsers } from "@/features/console/hooks/use-admin";
-import { useUser } from "@/features/console/hooks/use-user";
+import { UsersTable } from "@/features/console/user/components/users-table";
+import { useAdminUsers } from "@/features/console/user/hooks/use-admin";
+import { useUser } from "@/features/console/user/hooks/use-user";
 
 /**
  * AdminDashboard Component

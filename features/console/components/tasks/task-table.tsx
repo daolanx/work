@@ -6,15 +6,15 @@ import {
 	TASK_CATEGORY_ENUMS,
 	TASK_PRIORITY_ENUMS,
 	TASK_STATUS_ENUMS,
-} from "@/constants/task-enums";
-import { useTasks } from "@/features/console/hooks/use-task";
+} from "@/features/console/task/constants";
+import { useTasks } from "@/features/console/task/hooks/use-task";
 import { getRelativeTimeString } from "@/lib/date";
-import { CardTable } from "../card-table";
-import type { CardTableHandle } from "../card-table/types";
-import { CellCategory } from "./cell-category";
-import { CellPriority } from "./cell-priority";
-import { CellStatus } from "./cell-status";
-import { CreateTaskButton } from "./create-task-button";
+import { CardTable } from "../../task/components/card-table";
+import type { CardTableHandle } from "../../task/components/card-table/types";
+import { CellCategory } from "../../task/components/cell-category";
+import { CellPriority } from "../../task/components/cell-priority";
+import { CellStatus } from "../../task/components/cell-status";
+import { CreateTaskButton } from "../../task/components/create-task-button";
 
 export default function TaskTable({
 	variant,

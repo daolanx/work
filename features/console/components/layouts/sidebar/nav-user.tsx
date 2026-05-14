@@ -29,9 +29,9 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
-import { AUTH_CONFIG } from "@/features/auth/constants";
-import { authClient } from "@/features/auth/lib/client";
-import { useUser } from "@/features/console/hooks/use-user";
+import { authClient } from "@/features/console/auth/lib/client";
+import { AUTH_CONFIG } from "@/features/console/constants";
+import { useUser } from "@/features/console/user/hooks/use-user";
 
 /**
  * Configuration for individual menu items

@@ -1,29 +1,21 @@
-import {
-	ConversationRequestSchema,
-	streamChatCompletion,
-} from "@/features/ai-chat/queries";
+import { streamChatCompletion } from "@/features/ai-chat/service";
+import { ValidationError } from "@/lib/errors";
 
 export async function POST(req: Request) {
 	try {
 		const json = await req.json();
-		const parsed = ConversationRequestSchema.safeParse(json);
-
-		if (!parsed.success) {
+		const result = streamChatCompletion(json);
+		return result.toUIMessageStreamResponse();
+	} catch (e) {
+		if (e instanceof ValidationError) {
 			return new Response(
 				JSON.stringify({
 					error: "Invalid request parameters",
-					details: parsed.error,
+					details: e.message,
 				}),
-				{
-					status: 400,
-					headers: { "Content-Type": "application/json" },
-				},
+				{ status: 400, headers: { "Content-Type": "application/json" } },
 			);
 		}
-
-		const result = streamChatCompletion(parsed.data);
-		return result.toUIMessageStreamResponse();
-	} catch (e) {
 		console.error("API Error:", e);
 		return new Response(JSON.stringify({ error: "Internal Server Error" }), {
 			status: 500,

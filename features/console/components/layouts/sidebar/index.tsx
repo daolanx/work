@@ -25,7 +25,7 @@ import {
 	SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { NAVIGATION_CONFIG, type NavItem } from "@/features/console/constants";
-import { useUser } from "@/features/console/hooks/use-user";
+import { useUser } from "@/features/console/user/hooks/use-user";
 import { cn } from "@/lib/utils";
 import { NavUser } from "./nav-user";
 

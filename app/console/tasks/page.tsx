@@ -1,5 +1,5 @@
 "use client";
-import TaskTable from "@/features/console/components/tasks/task-table";
+import TaskTable from "@/features/console/task/components/task-table";
 
 export default function ConsolePage() {
 	return (

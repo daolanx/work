@@ -10,7 +10,7 @@ import {
 import {
 	TASK_CATEGORY_ENUM_KEYS,
 	TASK_PRIORITY_ENUM_KEYS,
-} from "@/constants/task-enums";
+} from "@/features/console/task/constants";
 import { user } from "./auth.schema";
 
 export const tasks = pgTable("tasks", {

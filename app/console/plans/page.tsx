@@ -1,8 +1,8 @@
 import { BarChart3, Check, Crown, Rocket, Shield, Zap } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { CheckoutButton } from "@/features/console/components/creem/checkout-button";
-import { ManageBillingButton } from "@/features/console/components/creem/manage-billing-button";
+import { CheckoutButton } from "@/features/console/payments/components/checkout-button";
+import { ManageBillingButton } from "@/features/console/payments/components/manage-billing-button";
 
 const TIER_STRATEGIES = {
 	entry: {

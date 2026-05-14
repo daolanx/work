@@ -15,7 +15,7 @@ import {
 import { IconGithub } from "@/components/ui/icon-github";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { useTask } from "@/features/console/hooks/use-task";
+import { useTask } from "@/features/console/task/hooks/use-task";
 import { NotifyBell } from "./notify-bell";
 
 // ==================== 1. Resource Configuration ====================

@@ -32,18 +32,18 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { CellCategory } from "@/features/console/task/components/cell-category";
+import { CellPriority } from "@/features/console/task/components/cell-priority";
+import { CellStatus } from "@/features/console/task/components/cell-status";
+import { DeleteTaskButton } from "@/features/console/task/components/delete-task-button";
+import { MarkdownWrapper } from "@/features/console/task/components/markdown-wrapper";
 import {
 	TASK_CATEGORY_ENUMS,
 	TASK_PRIORITY_ENUMS,
 	TASK_STATUS_ENUMS,
-} from "@/constants/task-enums";
-import { CellCategory } from "@/features/console/components/tasks/cell-category";
-import { CellPriority } from "@/features/console/components/tasks/cell-priority";
-import { CellStatus } from "@/features/console/components/tasks/cell-status";
-import { DeleteTaskButton } from "@/features/console/components/tasks/delete-task-button";
-import { MarkdownWrapper } from "@/features/console/components/ui/markdown-wrapper";
-import { useTask, useUpdateTask } from "@/features/console/hooks/use-task";
-import { createTaskSchema } from "@/features/console/schemas/task";
+} from "@/features/console/task/constants";
+import { useTask, useUpdateTask } from "@/features/console/task/hooks/use-task";
+import { createTaskSchema } from "@/features/console/task/schemas";
 
 type TaskFormValues = z.infer<typeof createTaskSchema>;
 

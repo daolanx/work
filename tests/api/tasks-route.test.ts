@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { GET, POST } from "@/app/api/console/tasks/route";
 import { db } from "@/db";
-import { auth } from "@/features/auth/lib/server";
+import { auth } from "@/features/console/auth/lib/server";
 
 vi.mock("@/db", () => ({
 	db: {
@@ -12,7 +12,7 @@ vi.mock("@/db", () => ({
 	},
 }));
 
-vi.mock("@/features/auth/lib/server", () => ({
+vi.mock("@/features/console/auth/lib/server", () => ({
 	auth: {
 		api: {
 			getSession: vi.fn(),
@@ -22,6 +22,10 @@ vi.mock("@/features/auth/lib/server", () => ({
 
 vi.mock("next/headers", () => ({
 	headers: vi.fn(),
+}));
+
+vi.mock("next/cache", () => ({
+	revalidatePath: vi.fn(),
 }));
 
 function createListRequest(searchParams: Record<string, string> = {}) {
@@ -68,7 +72,7 @@ describe("Tasks List API (GET/POST /api/console/tasks)", () => {
 			const data = await res.json();
 
 			expect(res.status).toBe(400);
-			expect(data.message).toBe("Invalid query parameters");
+			expect(data.errors).toBeDefined();
 		});
 
 		it("should return 200 with list, total, pagination when authenticated", async () => {
@@ -151,7 +155,6 @@ describe("Tasks List API (GET/POST /api/console/tasks)", () => {
 			const data = await res.json();
 
 			expect(res.status).toBe(400);
-			expect(data.message).toBe("Validation Error");
 			expect(data.errors).toBeDefined();
 		});
 

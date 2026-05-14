@@ -19,13 +19,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { UpdateUserSchema } from "@/features/auth/schemas";
+import { UpdateUserSchema } from "@/features/console/auth/schemas";
 // Business Logic
-import { useUser } from "@/features/console/hooks/use-user";
+import { useUser } from "@/features/console/user/hooks/use-user";
 
 const AvatarUploader = dynamic(
 	() =>
-		import("@/features/console/components/profile/avatar-uploader").then(
+		import("@/features/console/user/components/avatar-uploader").then(
 			(mod) => ({
 				default: mod.AvatarUploader,
 			}),

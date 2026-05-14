@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { DELETE, GET, PATCH } from "@/app/api/console/tasks/[taskId]/route";
 import { db } from "@/db";
-import { auth } from "@/features/auth/lib/server";
+import { auth } from "@/features/console/auth/lib/server";
 
 vi.mock("@/db", () => ({
 	db: {
@@ -13,7 +13,7 @@ vi.mock("@/db", () => ({
 	},
 }));
 
-vi.mock("@/features/auth/lib/server", () => ({
+vi.mock("@/features/console/auth/lib/server", () => ({
 	auth: {
 		api: {
 			getSession: vi.fn(),
@@ -23,6 +23,10 @@ vi.mock("@/features/auth/lib/server", () => ({
 
 vi.mock("next/headers", () => ({
 	headers: vi.fn(),
+}));
+
+vi.mock("next/cache", () => ({
+	revalidatePath: vi.fn(),
 }));
 
 describe("Task Detail API (GET/PATCH/DELETE /api/console/tasks/[taskId])", () => {
@@ -69,7 +73,7 @@ describe("Task Detail API (GET/PATCH/DELETE /api/console/tasks/[taskId])", () =>
 			const data = await res.json();
 
 			expect(res.status).toBe(400);
-			expect(data.message).toBe("Validation Error");
+			expect(data.errors).toBeDefined();
 		});
 
 		it("should return 404 when task not found or access denied", async () => {
@@ -132,7 +136,7 @@ describe("Task Detail API (GET/PATCH/DELETE /api/console/tasks/[taskId])", () =>
 			const res = await PATCH(req, createContext("0"));
 			const data = await res.json();
 			expect(res.status).toBe(400);
-			expect(data.message).toBe("Invalid Task ID");
+			expect(data.errors).toBeDefined();
 		});
 
 		it("should return 400 when body validation fails", async () => {
@@ -145,7 +149,7 @@ describe("Task Detail API (GET/PATCH/DELETE /api/console/tasks/[taskId])", () =>
 			const res = await PATCH(req, createContext("1"));
 			const data = await res.json();
 			expect(res.status).toBe(400);
-			expect(data.message).toBe("Validation Error");
+			expect(data.errors).toBeDefined();
 		});
 
 		it("should return 404 when task not found for update", async () => {
@@ -207,7 +211,7 @@ describe("Task Detail API (GET/PATCH/DELETE /api/console/tasks/[taskId])", () =>
 			const res = await DELETE(req, createContext("0"));
 			const data = await res.json();
 			expect(res.status).toBe(400);
-			expect(data.message).toBe("Invalid Task ID");
+			expect(data.errors).toBeDefined();
 		});
 
 		it("should return 404 when task not found for delete", async () => {

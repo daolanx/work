@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "@/features/auth/lib/server";
+import { auth } from "@/features/console/auth/lib/server";
 
 /**
  * Infer the Session type from better-auth configuration
