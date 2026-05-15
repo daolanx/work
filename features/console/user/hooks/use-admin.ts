@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
-import { authClient } from "@/features/auth/lib/client";
+import { authClient } from "@/features/console/auth/lib/client";
 
 export type AdminUser = {
 	id: string;

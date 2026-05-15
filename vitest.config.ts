@@ -10,6 +10,7 @@ export default defineConfig({
 	test: {
 		globals: true,
 		environment: "node",
+		passWithNoTests: true,
 		include: [
 			"tests/api/**/*.{test,spec}.ts",
 			"tests/components/**/*.{test,spec}.tsx",

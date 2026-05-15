@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { authClient } from "@/features/auth/lib/client";
+import { authClient } from "@/features/console/auth/lib/client";
 import { useUser } from "@/features/console/user/hooks/use-user";
 
 export function CheckoutButton({

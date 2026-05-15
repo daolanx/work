@@ -1,19 +1,16 @@
 "use server";
 
 import { asc, eq } from "drizzle-orm";
-import { headers } from "next/headers";
 import { db, schema } from "@/db";
 import { visitStats } from "@/db/biz.schema";
-import { auth } from "@/features/console/auth/lib/server";
 import {
 	type UpdateUserInput,
 	UpdateUserSchema,
 } from "@/features/console/auth/schemas";
+import { getSession } from "@/lib/session";
 
 export async function getUser() {
-	const session = await auth.api.getSession({
-		headers: await headers(),
-	});
+	const session = await getSession();
 
 	if (!session?.user) {
 		return null;
@@ -37,9 +34,7 @@ export async function getUser() {
 }
 
 export async function updateUser(input: UpdateUserInput) {
-	const session = await auth.api.getSession({
-		headers: await headers(),
-	});
+	const session = await getSession();
 
 	if (!session?.user) {
 		return { success: null, error: { reason: "Unauthorized" } };

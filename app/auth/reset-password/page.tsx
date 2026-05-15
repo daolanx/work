@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { Suspense, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { ResetPasswordForm } from "@/features/auth/components/reset-password-form";
+import { ResetPasswordForm } from "@/features/console/auth/components/reset-password-form";
 
 /**
  * Main Page Wrapper

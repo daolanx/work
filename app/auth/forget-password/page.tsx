@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { FormError, FormSuccess } from "@/components/ui/form-messages";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { requestPasswordReset } from "@/features/auth/service";
+import { requestPasswordReset } from "@/features/console/auth/service";
 
 export default function ForgetPasswordPage() {
 	const [email, setEmail] = useState("");

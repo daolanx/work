@@ -20,8 +20,8 @@ import {
 	taskResourceIdSchema,
 	updateTaskSchema,
 } from "@/features/console/task/schemas";
-
 import { ValidationError } from "@/lib/errors";
+import { getSession } from "@/lib/session";
 
 function validate<T>(
 	schema: {
@@ -38,7 +38,14 @@ function validate<T>(
 	return result.data;
 }
 
-export async function getTasks(userId: string, rawParams: unknown) {
+async function requireUserId() {
+	const session = await getSession();
+	if (!session?.user) throw new Error("Unauthorized");
+	return session.user.id;
+}
+
+export async function getTasks(rawParams: unknown) {
+	const userId = await requireUserId();
 	const {
 		pageIndex,
 		pageSize,
@@ -86,7 +93,8 @@ export async function getTasks(userId: string, rawParams: unknown) {
 	};
 }
 
-export async function getTask(userId: string, rawParams: unknown) {
+export async function getTask(rawParams: unknown) {
+	const userId = await requireUserId();
 	const { taskId } = validate(taskResourceIdSchema, rawParams);
 	const [task] = await db
 		.select()
@@ -96,7 +104,8 @@ export async function getTask(userId: string, rawParams: unknown) {
 	return task ?? null;
 }
 
-export async function createTask(userId: string, input: unknown) {
+export async function createTask(input: unknown) {
+	const userId = await requireUserId();
 	const data = validate(createTaskSchema, input);
 	const [newTask] = await db
 		.insert(tasks)
@@ -106,11 +115,8 @@ export async function createTask(userId: string, input: unknown) {
 	return newTask;
 }
 
-export async function updateTask(
-	userId: string,
-	rawParams: unknown,
-	body: unknown,
-) {
+export async function updateTask(rawParams: unknown, body: unknown) {
+	const userId = await requireUserId();
 	const { taskId } = validate(taskResourceIdSchema, rawParams);
 	const data = validate(updateTaskSchema, body);
 	const [updatedTask] = await db
@@ -122,7 +128,8 @@ export async function updateTask(
 	return updatedTask ?? null;
 }
 
-export async function deleteTask(userId: string, rawParams: unknown) {
+export async function deleteTask(rawParams: unknown) {
+	const userId = await requireUserId();
 	const { taskId } = validate(taskResourceIdSchema, rawParams);
 	const [deletedTask] = await db
 		.delete(tasks)

@@ -1,11 +1,5 @@
-import { headers } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "@/features/console/auth/lib/server";
-
-/**
- * Infer the Session type from better-auth configuration
- */
-type Session = typeof auth.$Infer.Session;
+import { getSession, type Session } from "@/lib/session";
 
 /**
  * Type definition for a handler that requires authentication
@@ -54,9 +48,7 @@ export const authApi = (handler: AuthHandler) => {
 	return withErrorHandler(
 		async (req: NextRequest, context: { params: any }) => {
 			// Better-auth requires current headers (cookies) to identify the session
-			const sessionData = await auth.api.getSession({
-				headers: await headers(),
-			});
+			const sessionData = await getSession();
 
 			// If no active session exists, block the request early
 			if (!sessionData) {

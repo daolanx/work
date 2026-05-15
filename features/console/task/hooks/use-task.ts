@@ -8,30 +8,24 @@ import useSWRMutation from "swr/mutation";
 import type {
 	CreateTaskInput,
 	Task,
-	TaskPagination,
 	UpdateTaskInput,
 } from "@/features/console/task/schemas";
-import { deleter, patcher, poster } from "@/lib/fetcher";
+import {
+	createTask,
+	deleteTask,
+	getTask,
+	getTasks,
+	updateTask,
+} from "@/features/console/task/service";
 
-/**
- * Base API endpoint for task operations
- */
-const TASK_KEY = "/api/console/tasks";
-
-/**
- * Extends pagination schema with TanStack Table's internal filter state
- */
-interface UseTasksProps extends TaskPagination {
+interface UseTasksProps {
+	pageIndex: number;
+	pageSize: number;
+	searchKey?: string;
 	columnFilters?: ColumnFiltersState;
 	sorting?: SortingState;
 }
 
-// --- Queries (Read) ---
-
-/**
- * Fetches a paginated and optionally filtered list of tasks.
- * Uses 'keepPreviousData' to prevent UI flickering during pagination.
- */
 export function useTasks({
 	pageIndex,
 	pageSize,
@@ -39,44 +33,39 @@ export function useTasks({
 	columnFilters,
 	sorting,
 }: UseTasksProps) {
-	const query = useMemo(() => {
-		const params = new URLSearchParams({
-			pageIndex: pageIndex.toString(),
-			pageSize: pageSize.toString(),
+	const params = useMemo(() => {
+		const result: Record<string, unknown> = {
+			pageIndex,
+			pageSize,
 			...(searchKey ? { searchKey } : {}),
-		});
+		};
 
-		// Map columnFilters state to URL query parameters
 		columnFilters?.forEach((filter) => {
 			if (Array.isArray(filter.value)) {
-				// Handle multi-select arrays: ?status=todo&status=done
-				filter.value.forEach((val) => {
-					if (val !== undefined && val !== null) {
-						params.append(filter.id, val.toString());
-					}
-				});
+				const valid = filter.value.filter((v) => v !== undefined && v !== null);
+				if (valid.length > 0) result[filter.id] = valid;
 			} else if (filter.value !== undefined && filter.value !== null) {
-				// Handle single-select values: ?category=work
-				params.append(filter.id, filter.value as string);
+				result[filter.id] = filter.value;
 			}
 		});
 
 		if (sorting && sorting.length > 0) {
 			const sort = sorting[0];
-			params.append("orderBy", sort.id);
-			params.append("order", sort.desc ? "desc" : "asc");
+			result.orderBy = sort.id;
+			result.order = sort.desc ? "desc" : "asc";
 		} else {
-			params.append("orderBy", "createdAt");
-			params.append("order", "desc");
+			result.orderBy = "createdAt";
+			result.order = "desc";
 		}
 
-		return params.toString();
+		return result;
 	}, [pageIndex, pageSize, searchKey, columnFilters, sorting]);
 
-	// SWR automatically re-fetches when the key (query string) changes
-	const { data, error, isLoading, mutate } = useSWR(`${TASK_KEY}?${query}`, {
-		keepPreviousData: true,
-	});
+	const { data, error, isLoading, mutate } = useSWR(
+		["tasks-list", params],
+		([, p]) => getTasks(p),
+		{ keepPreviousData: true },
+	);
 
 	return {
 		res: data,
@@ -86,13 +75,11 @@ export function useTasks({
 	};
 }
 
-/**
- * Fetches details for a specific task.
- * @param taskId - The ID of the task to fetch.
- */
-export function useTask(taskId?: string) {
-	const url = taskId ? `${TASK_KEY}/${taskId}` : null;
-	const { data, error, isLoading, mutate } = useSWR<Task>(url);
+export function useTask(taskId?: string | number) {
+	const { data, error, isLoading, mutate } = useSWR<Task>(
+		taskId != null ? ["task-detail", String(taskId)] : null,
+		([, id]) => getTask({ taskId: id }),
+	);
 
 	return {
 		task: data,
@@ -102,18 +89,12 @@ export function useTask(taskId?: string) {
 	};
 }
 
-// --- Mutations (Write) ---
-
-/**
- * Hook to create a new task.
- * Revalidates the task list cache upon success.
- */
 export function useCreateTask() {
 	const { mutate: globalMutate } = useSWRConfig();
 
-	return useSWRMutation<Task, Error, string, CreateTaskInput>(
-		TASK_KEY,
-		poster,
+	return useSWRMutation<Task, Error, "tasks-list", CreateTaskInput>(
+		"tasks-list",
+		(_, { arg }) => createTask(arg),
 		{
 			onSuccess: async () => {
 				await revalidateTasks(globalMutate);
@@ -126,24 +107,17 @@ export function useCreateTask() {
 	);
 }
 
-/**
- * Hook to update an existing task's properties.
- * @param taskId - The ID of the task to update.
- */
-export function useUpdateTask(taskId?: string) {
+export function useUpdateTask(taskId?: string | number) {
 	const { mutate: globalMutate } = useSWRConfig();
-	return useSWRMutation<Task, Error, string | null, UpdateTaskInput>(
-		taskId ? `${TASK_KEY}/${taskId}` : null,
-		patcher,
+	const key = taskId != null ? ["task-detail", String(taskId)] : null;
+
+	return useSWRMutation<Task, Error, typeof key, UpdateTaskInput>(
+		key,
+		(_, { arg }) => updateTask({ taskId }, arg),
 		{
-			/**
-			 * Automatically updates the local cache for the specific task
-			 * using the response data to avoid extra GET requests.
-			 */
 			populateCache: true,
 			revalidate: false,
 			onSuccess: async () => {
-				// List view needs revalidation to reflect changes (e.g., status updates)
 				await revalidateTasks(globalMutate);
 				toast.success("Task updated!");
 			},
@@ -154,35 +128,33 @@ export function useUpdateTask(taskId?: string) {
 	);
 }
 
-/**
- * Hook to delete a task.
- * @param taskId - The ID of the task to delete.
- */
-export function useDeleteTask(taskId?: string) {
+export function useDeleteTask(taskId?: string | number) {
 	const { mutate: globalMutate } = useSWRConfig();
-	const url = taskId ? `${TASK_KEY}/${taskId}` : null;
+	const key = taskId != null ? ["task-detail", String(taskId)] : null;
 
-	return useSWRMutation<void, Error, string | null, void>(url, deleter, {
-		populateCache: false,
-		revalidate: false,
-		onSuccess: async () => {
-			await revalidateTasks(globalMutate);
-			toast.success("Task deleted successfully");
+	return useSWRMutation<void, Error, typeof key, void>(
+		key,
+		async () => {
+			await deleteTask({ taskId });
 		},
-		onError: (err) => {
-			toast.error(err.message || "Delete failed");
+		{
+			populateCache: false,
+			revalidate: false,
+			onSuccess: async () => {
+				await revalidateTasks(globalMutate);
+				toast.success("Task deleted successfully");
+			},
+			onError: (err) => {
+				toast.error(err.message || "Delete failed");
+			},
 		},
-	});
+	);
 }
 
-/**
- * Revalidates all SWR keys associated with the task list.
- * @param mutate - Global SWR mutate function.
- */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function revalidateTasks(mutate: any) {
-	return await mutate((key: string) => {
-		// Matches the base key or keys with query strings (e.g., pagination/filters)
-		return key === TASK_KEY || key.startsWith(`${TASK_KEY}?`);
+	return await mutate((key: unknown) => {
+		if (Array.isArray(key)) return key[0] === "tasks-list";
+		return false;
 	});
 }
