@@ -34,8 +34,8 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { SearchInput } from "@/features/console/task/components/search-input";
 import { cn } from "@/lib/utils";
+import { SearchInput } from "../search-input";
 
 // Internal Logic & Components
 import { useTableFilter } from "./hooks/use-table-filter";

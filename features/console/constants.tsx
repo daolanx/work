@@ -124,4 +124,3 @@ export function isPublicPath(pathname: string): boolean {
 		PUBLIC_PATHS.prefixes.some((prefix) => pathname.startsWith(prefix))
 	);
 }
-

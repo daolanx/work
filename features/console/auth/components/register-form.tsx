@@ -16,8 +16,8 @@ import {
 } from "@/components/ui/form";
 import { FormError } from "@/components/ui/form-messages";
 import { Input } from "@/components/ui/input";
-import { registerUser } from "@/features/console/auth/service";
 import { type RegisterSchema, registerSchema } from "../schemas";
+import { registerUser } from "../service";
 import { PasswordInput } from "./password-input";
 
 interface RegisterFormProps {

@@ -2,6 +2,12 @@
 
 import Link from "next/link";
 import { useRef } from "react";
+import { CardTable } from "@/features/console/task/components/card-table";
+import type { CardTableHandle } from "@/features/console/task/components/card-table/types";
+import { CellCategory } from "@/features/console/task/components/cell-category";
+import { CellPriority } from "@/features/console/task/components/cell-priority";
+import { CellStatus } from "@/features/console/task/components/cell-status";
+import { CreateTaskButton } from "@/features/console/task/components/create-task-button";
 import {
 	TASK_CATEGORY_ENUMS,
 	TASK_PRIORITY_ENUMS,
@@ -9,12 +15,6 @@ import {
 } from "@/features/console/task/constants";
 import { useTasks } from "@/features/console/task/hooks/use-task";
 import { getRelativeTimeString } from "@/lib/date";
-import { CardTable } from "../../task/components/card-table";
-import type { CardTableHandle } from "../../task/components/card-table/types";
-import { CellCategory } from "../../task/components/cell-category";
-import { CellPriority } from "../../task/components/cell-priority";
-import { CellStatus } from "../../task/components/cell-status";
-import { CreateTaskButton } from "../../task/components/create-task-button";
 
 export default function TaskTable({
 	variant,

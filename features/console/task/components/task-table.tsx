@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { useRef } from "react";
+import { getRelativeTimeString } from "@/lib/date";
 import {
 	TASK_CATEGORY_ENUMS,
 	TASK_PRIORITY_ENUMS,
 	TASK_STATUS_ENUMS,
-} from "@/features/console/task/constants";
-import { useTasks } from "@/features/console/task/hooks/use-task";
-import { getRelativeTimeString } from "@/lib/date";
+} from "../constants";
+import { useTasks } from "../hooks/use-task";
 import { CardTable } from "./card-table";
 import type { CardTableHandle } from "./card-table/types";
 import { CellCategory } from "./cell-category";

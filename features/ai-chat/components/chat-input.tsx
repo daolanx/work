@@ -4,7 +4,7 @@ import type { ChatStatus } from "ai";
 import { Send, Square } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import { useConversationsStore } from "@/features/ai-chat/hooks/use-conversations";
+import { useConversationsStore } from "../hooks/use-conversations";
 
 interface ChatInputProps {
 	status: ChatStatus;

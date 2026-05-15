@@ -1,15 +1,15 @@
 "use server";
 
 import { APIError } from "better-auth/api";
-import { auth } from "@/features/console/auth/lib/server";
+import { AUTH_CONFIG } from "@/features/console/constants";
+import { auth } from "./lib/server";
 import {
 	type ActionResult,
 	type LoginInput,
 	loginSchema,
 	type RegisterInput,
 	registerSchema,
-} from "@/features/console/auth/schemas";
-import { AUTH_CONFIG } from "../constants";
+} from "./schemas";
 
 export async function loginUser(values: LoginInput): Promise<ActionResult> {
 	const validatedFields = loginSchema.safeParse(values);

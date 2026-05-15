@@ -16,12 +16,12 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { FormError, FormSuccess } from "@/components/ui/form-messages";
-import { authClient } from "@/features/console/auth/lib/client";
 import { PasswordInput } from "../components/password-input";
+import { authClient } from "../lib/client";
 import { type ResetPasswordInput, resetPasswordSchema } from "../schemas";
 
 export function ResetPasswordForm({
-	onLoading = () => { },
+	onLoading = () => {},
 }: {
 	onLoading?: (loading: boolean) => void;
 }) {

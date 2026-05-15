@@ -3,7 +3,7 @@
 import { CheckIcon, EyeIcon, EyeOffIcon, XIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { PASSWORD_RULES } from "@/features/console/auth/schemas";
+import { PASSWORD_RULES } from "../schemas";
 
 // Enhanced Props to support shadcn/react-hook-form "field"
 export type PasswordInputProps = {

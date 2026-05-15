@@ -30,12 +30,9 @@ import {
 	TASK_CATEGORY_ENUMS,
 	TASK_PRIORITY_ENUMS,
 	TASK_STATUS_ENUMS,
-} from "@/features/console/task/constants";
-import { useCreateTask } from "@/features/console/task/hooks/use-task";
-import {
-	type CreateTaskInput,
-	createTaskSchema,
-} from "@/features/console/task/schemas";
+} from "../constants";
+import { useCreateTask } from "../hooks/use-task";
+import { type CreateTaskInput, createTaskSchema } from "../schemas";
 
 const TASK_FORM_CONFIG: FormFieldConfig<CreateTaskInput>[] = [
 	{

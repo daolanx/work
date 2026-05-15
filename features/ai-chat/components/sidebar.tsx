@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { useCallback, useState } from "react";
 
-import { useConversationsStore } from "@/features/ai-chat/hooks/use-conversations";
+import { useConversationsStore } from "../hooks/use-conversations";
 import { styles } from "./styles";
 
 interface SidebarProps {
