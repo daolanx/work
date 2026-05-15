@@ -25,8 +25,8 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { getVisitors } from "@/features/console/user/service";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { fetcher } from "@/lib/fetcher";
 
 const chartConfig = {
 	visitors: { label: "Visitors" },
@@ -42,10 +42,14 @@ const TIME_RANGES = [
 
 const VISITOR_KEY = "visitors-profile";
 
+type VisitorStat = { date: string; desktop: number; mobile: number };
+
 export function VisitorChart() {
 	const isMobile = useIsMobile();
 	const [timeRange, setTimeRange] = useState("90d");
-	const { data, isLoading } = useSWR(VISITOR_KEY, getVisitors);
+	const { data, isLoading } = useSWR<VisitorStat[]>(VISITOR_KEY, () =>
+		fetcher<VisitorStat[]>("/api/console/user/visitors"),
+	);
 
 	useEffect(() => {
 		if (isMobile) setTimeRange("7d");

@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import { toast } from "sonner";
 import useSWR, { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
+import type { PaginatedResponse } from "@/features/console/task/components/card-table/types";
 import type {
 	CreateTaskInput,
 	Task,
@@ -13,10 +14,9 @@ import type {
 import {
 	createTask,
 	deleteTask,
-	getTask,
-	getTasks,
 	updateTask,
 } from "@/features/console/task/service";
+import { fetcher } from "@/lib/fetcher";
 
 interface UseTasksProps {
 	pageIndex: number;
@@ -24,6 +24,20 @@ interface UseTasksProps {
 	searchKey?: string;
 	columnFilters?: ColumnFiltersState;
 	sorting?: SortingState;
+}
+
+function buildTasksUrl(params: Record<string, unknown>): string {
+	const sp = new URLSearchParams();
+	for (const [key, value] of Object.entries(params)) {
+		if (Array.isArray(value)) {
+			for (const v of value) {
+				if (v !== undefined && v !== null) sp.append(key, String(v));
+			}
+		} else if (value !== undefined && value !== null) {
+			sp.set(key, String(value));
+		}
+	}
+	return `/api/console/tasks?${sp.toString()}`;
 }
 
 export function useTasks({
@@ -63,7 +77,7 @@ export function useTasks({
 
 	const { data, error, isLoading, mutate } = useSWR(
 		["tasks-list", params],
-		([, p]) => getTasks(p),
+		([, p]) => fetcher<PaginatedResponse<Task>>(buildTasksUrl(p)),
 		{ keepPreviousData: true },
 	);
 
@@ -78,7 +92,7 @@ export function useTasks({
 export function useTask(taskId?: string | number) {
 	const { data, error, isLoading, mutate } = useSWR<Task>(
 		taskId != null ? ["task-detail", String(taskId)] : null,
-		([, id]) => getTask({ taskId: id }),
+		([, id]) => fetcher(`/api/console/tasks/${id}`),
 	);
 
 	return {
