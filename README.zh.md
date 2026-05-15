@@ -1,10 +1,10 @@
 # My Work - 个人作品集与管理后台
 
-**中文版本** | [English Version](README.en.md)
+**中文版本** | [English Version](README.md)
 
 一个基于 Next.js 16 构建的现代化全栈作品集和管理后台，集成了 AI 聊天、任务管理和数据分析功能。
 
-**在线演示**: [https://work.daolanx.me/](https://work.daolanx.me/)
+**在线演示**: [https://demo.daolanx.com/](https://demo.daolanx.com/)
 
 [![单元测试](https://github.com/daolanx/work/actions/workflows/unit-tests.yml/badge.svg?branch=main)](https://github.com/daolanx/work/actions/workflows/unit-tests.yml)
 [![端到端测试](https://github.com/daolanx/work/actions/workflows/e2e-tests.yml/badge.svg?branch=main)](https://github.com/daolanx/work/actions/workflows/e2e-tests.yml)
@@ -12,49 +12,52 @@
 
 ---
 
-## 🛠️ 技术栈
+## 技术栈
 
 ### 核心框架
-- **Next.js 16** (App Router) - 服务器组件
-- **React 19** - 最新 React 与 Hooks
-- **TypeScript** - 类型安全开发
+- **Next.js 16.1.1** (App Router) - 服务器组件，React Compiler
+- **React 19.2.3** - 最新 React 与 Hooks
+- **TypeScript** - 严格模式，bundler 模块解析
 
 ### UI 与样式
-- **Tailwind CSS** - 实用优先的 CSS
-- **shadcn/ui** - 可访问的 UI 组件
+- **Tailwind CSS v4** - CSS 配置（无 tailwind.config.ts）
+- **shadcn/ui** - 40+ 可访问 UI 组件
 - **Radix UI** - 无头 UI 原语
-- **Lucide React** - 图标库
+- **Lucide React / Tabler Icons** - 图标库
 
 ### 数据库与 ORM
-- **PostgreSQL** - 关系型数据库
+- **PostgreSQL** (Neon Serverless) - 关系型数据库
 - **Drizzle ORM** - 类型安全的 SQL ORM
 - **Drizzle Kit** - 迁移与工具
 
-### 认证
-- **Better Auth** - 现代化认证方案
-- **会话管理** - 安全会话与 IP 追踪
-- **OAuth** - GitHub 等第三方登录
+### 认证与支付
+- **Better Auth** - 现代化认证方案，支持 Admin 插件
+- **OAuth** - GitHub & Google 第三方登录
+- **Creem.io** - 订阅付费（Hobby/Pro/Studio 三档）
 
 ### AI 集成
 - **Vercel AI SDK** - AI 模型集成
-- **OpenRouter** - AI 提供商
+- **OpenRouter** - 多模型提供商
 - **流式响应** - 实时 AI 聊天
+
+### 状态与数据
+- **SWR** - 客户端数据获取与缓存
+- **Zustand** - 全局客户端状态
+- **Zod** - Schema 校验（前后端统一）
 
 ### 国际化
 - **next-intl** - Next.js i18n
 - **多语言** - 英文与中文支持
 
-### 测试
-- **Vitest** - 单元测试
+### 测试与质量
+- **Vitest** - 单元测试与组件测试
 - **Playwright** - 端到端测试
-- **Testing Library** - 组件测试
-
-### 开发工具
 - **Biome** - 代码检查与格式化
-- **Husky** - Git Hooks
-- **TypeScript** - 类型检查
+- **Husky** - Git Hooks + lint-staged
 
-## 🚀 快速开始
+---
+
+## 快速开始
 
 ### 安装
 ```bash
@@ -80,159 +83,177 @@ pnpm db:mi     # 运行迁移
 
 ### 开发
 ```bash
-pnpm dev       # 启动开发服务器
+pnpm dev       # 启动开发服务器 (http://localhost:3000)
 ```
 
-在浏览器中打开 [http://localhost:3000](http://localhost:3000)
+---
 
-### 构建与生产
-```bash
-pnpm build     # 构建生产版本
-pnpm start     # 启动生产服务器
+## 项目结构
+
+```
+app/                          # Next.js App Router
+├── (profile)/                # 路由组：Demo Gallery 首页
+├── ai-chat/                  # AI 聊天界面
+├── api/                      # API 路由
+│   ├── ai-chat/              #   AI 流式端点
+│   ├── auth/[...all]/        #   Better Auth 全捕获
+│   ├── console/tasks/        #   任务 CRUD API
+│   └── console/user/         #   用户资料、上传、访客统计
+├── auth/                     # 认证页面（登录、注册、重置密码）
+├── console/                  # 管理后台
+│   ├── admin/                #   用户管理（仅管理员）
+│   ├── plans/                #   订阅与定价
+│   ├── profile/              #   用户资料编辑
+│   └── tasks/                #   任务列表与详情
+├── flower-shop/              # Demo：花卉电商
+├── landing/                  # 营销落地页
+└── legal/                    # 法律页面（隐私、退款、条款）
+
+features/                     # 基于功能模块的架构
+├── console/                  # 核心控制台功能
+│   ├── auth/                 #   认证 schemas、service、组件
+│   ├── components/           #   布局（header、sidebar）、providers
+│   ├── dashboard/            #   数据分析（MAU、留存、图表）
+│   ├── email/                #   邮件模板（Resend + React Email）
+│   ├── payments/             #   Creem.io 支付集成
+│   ├── profile/              #   作品集展示组件
+│   ├── task/                 #   任务 CRUD、CardTable、hooks
+│   └── user/                 #   用户管理、R2 上传、hooks
+├── ai-chat/                  # AI 聊天功能
+├── landing/                  # 落地页组件
+└── flower-shop/              # 花卉电商组件
+
+components/
+├── ui/                       # shadcn/ui 组件（40+）
+├── ai-elements/              # AI 聊天 UI 原语
+└── forms/                    # 基于 Schema 的表单组件
+
+db/
+├── auth.schema.ts            # 用户、会话、账户、验证码
+├── biz.schema.ts             # 任务、访问统计、订阅
+└── index.ts                  # 数据库连接（Neon + Drizzle）
+
+lib/
+├── api-handler.ts            # 类型化 API 处理器（含认证与错误包装）
+├── errors.ts                 # 自定义 ValidationError 类
+├── session.ts                # 会话工具
+└── utils.ts                  # cn() className 合并工具
 ```
 
-## 📊 核心功能
+---
 
-### 个人作品集
-- 个人资料与技能展示
-- 项目展示
-- 联系方式
-- 主题切换（浅色/深色）
-- 语言切换（中/英）
+## 核心功能
 
 ### 管理后台
-- **摘要卡片** - 关键指标概览
-- **访问者分析** - 交互式图表（Recharts）
-- **任务管理** - 完整 CRUD 操作
-- **实时更新** - SWR 数据获取
+- **摘要卡片** - MRR、留存率、转化率、MAU（Server Component）
+- **访问者分析** - Recharts 交互式图表
+- **用户管理** - 封禁/解封、角色切换（仅管理员）
+- **任务管理** - 完整 CRUD，支持分页、筛选、排序
 
 ### AI 聊天界面
-- **流式响应** - 实时对话
+- **流式响应** - 通过 OpenRouter 实时对话
 - **消息历史** - 持久化会话
-- **文件支持** - 上传附件
-- **多模型** - 通过 OpenRouter
+- **多模型** - 切换不同 AI 模型
 
 ### 认证系统
 - **登录/注册** - 邮箱密码认证
-- **OAuth** - GitHub 集成
+- **OAuth** - GitHub & Google 第三方登录
+- **密码重置** - 通过 Resend 发送验证邮件
 - **会话追踪** - IP 和设备信息
-- **密码重置** - 邮件验证流程
 
-## 📁 项目结构
+### 支付系统
+- **订阅套餐** - Hobby / Pro / Studio
+- **结账流程** - Creem.io 集成
+- **账单管理** - 客户门户
 
-```
-app/
-├── api/           # API 路由 (ai-chat, auth, console)
-├── auth/          # 认证页面
-├── console/       # 管理后台
-├── landing/       # 营销页面
-├── ai-chat/       # AI 聊天界面
-├── (profile)/     # 个人资料
-└── layout.tsx     # 根布局
+---
 
-components/
-├── ui/            # shadcn/ui 组件
-├── auth/          # 认证组件
-├── ai-elements/   # AI 聊天组件
-└── forms/         # 表单组件
+## 架构模式
 
-db/
-├── auth.schema.ts # 用户、会话、账户
-├── biz.schema.ts  # 任务、访问统计
-└── index.ts       # 数据库连接
+### 基于功能模块的目录结构
+每个功能模块（`features/console/task/` 等）包含：
+- `service.ts` - Server Actions 处理写操作
+- `hooks/` - SWR hooks 处理客户端数据获取
+- `components/` - 功能特定的 UI 组件
+- `schemas.ts` - Zod 校验 schemas
+- `constants.ts` - 枚举映射与配置
 
-lib/
-├── auth/          # 认证工具
-├── validations/   # Zod 模式
-└── utils.ts       # 通用工具
+### 数据流
+- **读取**: Client Component → SWR Hook → API Route → Service → DB
+- **写入**: Client Component → SWR Mutation → Server Action → DB → revalidatePath
 
-i18n/
-├── config.ts      # 语言配置
-├── locale.ts      # 语言工具
-└── request.ts     # i18n 处理
+### 错误处理
+- `api-handler.ts` 包装所有 API 路由，提供 `withErrorHandler`
+- `authApi` 注入 session 校验用于受保护路由
+- 自定义 `ValidationError` 用于业务逻辑错误
 
-messages/
-├── en.json        # 英文翻译
-└── zh.json        # 中文翻译
-```
+---
 
-## 🧪 测试
+## 命令
 
+### 开发
 ```bash
-pnpm test        # 所有测试
-pnpm test:unit   # 单元测试
-pnpm test:e2e    # 端到端测试
-pnpm test:api    # API 测试
+pnpm dev          # 启动开发服务器
+pnpm build        # 构建生产版本
+pnpm start        # 启动生产服务器
+pnpm type-check   # TypeScript 检查
 ```
 
-## 📦 数据库模式
+### 代码质量
+```bash
+pnpm lint         # Biome 检查
+pnpm format       # Biome 格式化
+pnpm lint:fix     # 自动修复问题
+```
 
-### 用户与认证
-- **user** - 用户账户 (id, email, name, OAuth)
-- **session** - 活动会话 (IP 追踪)
-- **account** - OAuth 提供商连接
+### 测试
+```bash
+pnpm test         # 所有测试（vitest + playwright）
+pnpm test:unit    # 仅单元测试
+pnpm test:e2e     # 仅端到端测试
+pnpm test:api     # API 测试
+pnpm test:ui      # 组件测试
+```
 
-### 业务逻辑
-- **tasks** - 任务管理
-  - 分类: PERSONAL, WORK, STUDY, OTHER
-  - 优先级: URGENT, HIGH, MEDIUM, LOW
-  - 状态: To Do, In Process, Done, Canceled
-- **visit_stats** - 流量分析 (桌面/移动)
+### 数据库
+```bash
+pnpm db:gen       # 生成迁移
+pnpm db:mi        # 运行迁移
+pnpm db:push      # 推送 schema 到数据库
+pnpm db:studio    # 打开 Drizzle Studio
+```
 
-## 🚀 部署
+---
 
-### Vercel (推荐)
-1. 推送到 GitHub
-2. 将仓库连接到 Vercel
-3. 添加环境变量
-4. 自动部署
+## 环境变量
 
-### 环境变量
 ```env
-# 数据库
+# 数据库（必需）
 DATABASE_URL=postgresql://...
 
-# 认证
+# 认证（必需）
 BETTER_AUTH_SECRET=your-secret
 BETTER_AUTH_URL=https://your-app.com
 
-# AI
+# AI（聊天功能必需）
 OPENROUTER_API_KEY=your-key
 OPENROUTER_MODEL=anthropic/claude-3-5-sonnet
 
-# 邮件 (可选)
+# 邮件（可选）
 RESEND_API_KEY=your-key
 RESEND_FROM_EMAIL=noreply@yourdomain.com
 
-# 分析 (可选)
-UMAMI_WEBSITE_ID=your-id
+# 存储（可选，头像上传）
+R2_ACCOUNT_ID=your-cloudflare-account-id
+R2_ACCESS_KEY_ID=your-r2-access-key
+R2_SECRET_ACCESS_KEY=your-r2-secret-key
+R2_BUCKET_NAME=your-bucket-name
+R2_PUBLIC_URL=https://your-bucket.r2.dev
 ```
 
-## 📝 脚本
+---
 
-### 开发
-- `pnpm dev` - 启动开发服务器
-- `pnpm lint` - 检查代码质量
-- `pnpm lint:fix` - 自动修复问题
-- `pnpm format` - 格式化代码
-- `pnpm type-check` - TypeScript 检查
-
-### 数据库
-- `pnpm db:gen` - 生成迁移
-- `pnpm db:mi` - 运行迁移
-- `pnpm db:push` - 推送模式
-- `pnpm db:studio` - 打开 Drizzle Studio
-
-### 测试
-- `pnpm test` - 运行所有测试
-- `pnpm test:unit` - 单元测试
-- `pnpm test:e2e` - 端到端测试
-
-### Git Hooks
-- `pnpm prepare` - 设置 Husky
-- `pnpm pre-commit` - 提交前检查
-
-## 🙏 致谢
+## 致谢
 
 - [shadcn/ui](https://ui.shadcn.com/) - UI 组件
 - [Vercel AI SDK](https://sdk.vercel.ai/) - AI 集成
@@ -244,4 +265,4 @@ UMAMI_WEBSITE_ID=your-id
 
 ---
 
-**使用 Next.js、TypeScript 和现代 Web 技术精心打造**
+**使用 Next.js 16、React 19 和现代 Web 技术精心打造**

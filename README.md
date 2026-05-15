@@ -2,7 +2,7 @@
 
 **English Version** | [中文版本](README.zh.md)
 
-A modern demo showcase built with Next.js 16, featuring various web experiments and UI components.
+A modern full-stack demo showcase built with Next.js 16, featuring an admin dashboard, AI chat, task management, and analytics.
 
 **Live Demo**: [https://demo.daolanx.com/](https://demo.daolanx.com/)
 
@@ -12,49 +12,52 @@ A modern demo showcase built with Next.js 16, featuring various web experiments 
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Core Framework
-- **Next.js 16.1.1** (App Router) - Server components
+- **Next.js 16.1.1** (App Router) - Server components, React Compiler
 - **React 19.2.3** - Latest React with hooks
-- **TypeScript** - Type-safe development
+- **TypeScript** - Strict mode, bundler module resolution
 
 ### UI & Styling
-- **Tailwind CSS** - Utility-first CSS
-- **shadcn/ui** - Accessible UI components
+- **Tailwind CSS v4** - CSS-based config (no tailwind.config.ts)
+- **shadcn/ui** - 40+ accessible UI components
 - **Radix UI** - Headless primitives
-- **Lucide React** - Icon library
+- **Lucide React / Tabler Icons** - Icon libraries
 
 ### Database & ORM
-- **PostgreSQL** - Relational database
+- **PostgreSQL** (Neon Serverless) - Relational database
 - **Drizzle ORM** - Type-safe SQL ORM
 - **Drizzle Kit** - Migrations & tooling
 
-### Authentication
-- **Better Auth** - Modern auth solution
-- **Session Management** - Secure sessions with IP tracking
-- **OAuth** - GitHub and other providers
+### Authentication & Payments
+- **Better Auth** - Modern auth with admin plugin
+- **OAuth** - GitHub & Google providers
+- **Creem.io** - Subscription billing (Hobby/Pro/Studio)
 
 ### AI Integration
 - **Vercel AI SDK** - AI model integration
-- **OpenRouter** - AI provider
+- **OpenRouter** - Multi-model provider
 - **Streaming Responses** - Real-time AI chat
+
+### State & Data
+- **SWR** - Client-side data fetching & caching
+- **Zustand** - Global client state
+- **Zod** - Schema validation (前后端统一)
 
 ### Internationalization
 - **next-intl** - i18n for Next.js
 - **Multi-language** - English & Chinese support
 
-### Testing
-- **Vitest** - Unit testing
+### Testing & Quality
+- **Vitest** - Unit & component testing
 - **Playwright** - E2E testing
-- **Testing Library** - Component testing
-
-### Development Tools
 - **Biome** - Linting & formatting
-- **Husky** - Git hooks
-- **TypeScript** - Type checking
+- **Husky** - Git hooks with lint-staged
 
-## 🚀 Quick Start
+---
+
+## Quick Start
 
 ### Installation
 ```bash
@@ -80,132 +83,129 @@ pnpm db:mi     # Run migrations
 
 ### Development
 ```bash
-pnpm dev       # Start dev server
+pnpm dev       # Start dev server (http://localhost:3000)
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+---
 
-### Build & Production
-```bash
-pnpm build     # Build for production
-pnpm start     # Start production server
+## Project Structure
+
+```
+app/                          # Routes (page-level)
+├── api/                      # API endpoints
+├── auth/                     # Login, register, reset-password
+├── console/                  # Dashboard, tasks, admin, billing, profile
+├── ai-chat/                  # AI chat interface
+├── landing/                  # Marketing page
+└── flower-shop/              # E-commerce demo
+
+features/                     # Business logic modules
+├── console/                  #   auth, dashboard, payments, task, user
+├── ai-chat/                  #   chat service, hooks, components
+├── landing/                  #   page sections
+└── flower-shop/              #   page sections
+
+components/                   # Shared UI (shadcn/ui + custom)
+db/                           # Schema definitions (Drizzle)
+lib/                          # Shared utilities
 ```
 
-## 📊 Key Features
+---
 
-### Demo Gallery (Homepage)
-- Project showcase with preview images
-- Grayscale minimalist design
-- Theme switcher (light/dark)
-- Language switcher (EN/ZH)
-- MagicCard hover effects
+## Key Features
 
 ### Admin Dashboard
-- **Summary Cards** - Key metrics overview
+- **Summary Cards** - MRR, Retention, Conversion, MAU (Server Component)
 - **Visitor Analytics** - Interactive charts with Recharts
-- **Task Management** - Full CRUD operations
-- **Real-time Updates** - SWR data fetching
+- **User Management** - Ban/Unban, role switching (admin only)
+- **Task Management** - Full CRUD with pagination, filtering, sorting
 
 ### AI Chat Interface
-- **Streaming Responses** - Real-time conversation
+- **Streaming Responses** - Real-time conversation via OpenRouter
 - **Message History** - Persistent sessions
-- **File Support** - Upload attachments
-- **Multiple Models** - Via OpenRouter
+- **Multiple Models** - Switch between AI models
 
 ### Authentication
 - **Login/Register** - Email/password auth
-- **OAuth** - GitHub integration
+- **OAuth** - GitHub & Google providers
+- **Password Reset** - Email-based flow via Resend
 - **Session Tracking** - IP and device info
-- **Password Reset** - Email-based flow
 
-## 📁 Project Structure
+### Payments
+- **Subscription Tiers** - Hobby / Pro / Studio
+- **Checkout Flow** - Creem.io integration
+- **Billing Management** - Customer portal
 
-```
-app/
-├── api/           # API routes (ai-chat, auth, console, upload)
-├── auth/          # Authentication pages (login, register, reset-password)
-├── console/       # Admin dashboard (tasks/, admin/, profile/, plans/)
-├── landing/       # Marketing page
-├── ai-chat/       # AI chat interface (Simple Chat)
-├── flower-shop/   # Demo: flower shop e-commerce
-├── legal/         # Legal pages (privacy, refund, terms)
-├── (profile)/     # Route group: Demo Gallery homepage
-└── layout.tsx     # Root layout
+---
 
-components/
-├── ui/            # shadcn/ui components (40+)
-├── auth/          # Auth components (login, register, oauth)
-├── ai/            # AI chat UI (chat messages, input, sidebar)
-├── ai-elements/   # AI chat components (conversation, message, prompt)
-├── creem/          # Payment integration (checkout, billing)
-└── forms/         # Form components
+## Architecture Patterns
 
-db/
-├── auth.schema.ts # User, session, account tables (Better Auth)
-├── biz.schema.ts  # Tasks, visit_stats tables
-└── index.ts       # DB connection (Drizzle)
+### Feature-based Module Structure
+Each feature module (`features/console/task/`, etc.) contains:
+- `service.ts` - Server Actions for mutations
+- `hooks/` - SWR hooks for client data fetching
+- `components/` - Feature-specific UI components
+- `schemas.ts` - Zod validation schemas
+- `constants.ts` - Enum mappings and config
 
-lib/
-├── auth/          # Auth utilities (client, server, paths, schemas)
-├── validations/   # Zod schemas (task validation)
-├── utils.ts       # cn() utility for className merging
-├── api-handler.ts # Typed API handler wrapper
-├── email.tsx      # React Email templates
-├── r2.ts          # AWS S3/R2 file storage
-└── fetcher.ts     # Data fetching utilities
+### Data Flow
+- **Reads**: Client Component → SWR Hook → API Route → Service → DB
+- **Writes**: Client Component → SWR Mutation → Server Action → DB → revalidatePath
 
-i18n/
-├── config.ts      # Locale config
-├── locale.ts      # Locale utils
-└── request.ts     # i18n handling
+### Error Handling
+- `api-handler.ts` wraps all API routes with `withErrorHandler`
+- `authApi` injects session validation for protected routes
+- Custom `ValidationError` for business logic errors
 
-messages/
-├── en.json        # English translations
-└── zh.json        # Chinese translations
-```
+---
 
-## 🧪 Testing
+## Scripts
 
+### Development
 ```bash
-pnpm test        # All tests (vitest + playwright)
-pnpm test:unit   # Unit tests (vitest)
-pnpm test:e2e    # End-to-end tests (playwright)
-pnpm test:api    # API tests (vitest)
-pnpm test:ui     # Component tests (vitest)
+pnpm dev          # Start dev server
+pnpm build        # Production build
+pnpm start        # Start production server
+pnpm type-check   # TypeScript check
 ```
 
-## 📦 Database Schema
+### Linting & Formatting
+```bash
+pnpm lint         # Run Biome check
+pnpm format       # Format with Biome
+pnpm lint:fix     # Fix lint issues
+```
 
-### Users & Auth
-- **user** - User accounts (id, email, name, OAuth)
-- **session** - Active sessions (IP tracking)
-- **account** - OAuth provider connections
+### Testing
+```bash
+pnpm test         # All tests (vitest + playwright)
+pnpm test:unit    # Unit tests only
+pnpm test:e2e     # E2E tests only
+pnpm test:api     # API tests
+pnpm test:ui      # Component tests
+```
 
-### Business Logic
-- **tasks** - Task management
-  - Categories: PERSONAL, WORK, STUDY, OTHER
-  - Priorities: URGENT, HIGH, MEDIUM, LOW
-  - Status: To Do, In Process, Done, Canceled
-- **visit_stats** - Traffic analytics (desktop/mobile)
+### Database
+```bash
+pnpm db:gen       # Generate migrations
+pnpm db:mi        # Run migrations
+pnpm db:push      # Push schema to DB
+pnpm db:studio    # Open Drizzle Studio
+```
 
-## 🚀 Deployment
+---
 
-### Vercel (Recommended)
-1. Push to GitHub
-2. Connect repository to Vercel
-3. Add environment variables
-4. Deploy automatically
+## Environment Variables
 
-### Environment Variables
 ```env
-# Database
+# Database (required)
 DATABASE_URL=postgresql://...
 
-# Auth
+# Auth (required)
 BETTER_AUTH_SECRET=your-secret
 BETTER_AUTH_URL=https://your-app.com
 
-# AI
+# AI (required for chat)
 OPENROUTER_API_KEY=your-key
 OPENROUTER_MODEL=anthropic/claude-3-5-sonnet
 
@@ -213,35 +213,17 @@ OPENROUTER_MODEL=anthropic/claude-3-5-sonnet
 RESEND_API_KEY=your-key
 RESEND_FROM_EMAIL=noreply@yourdomain.com
 
-# Analytics (optional)
-UMAMI_WEBSITE_ID=your-id
+# Storage (optional, for avatar upload)
+R2_ACCOUNT_ID=your-cloudflare-account-id
+R2_ACCESS_KEY_ID=your-r2-access-key
+R2_SECRET_ACCESS_KEY=your-r2-secret-key
+R2_BUCKET_NAME=your-bucket-name
+R2_PUBLIC_URL=https://your-bucket.r2.dev
 ```
 
-## 📝 Scripts
+---
 
-### Development
-- `pnpm dev` - Start dev server
-- `pnpm lint` - Check code quality
-- `pnpm lint:fix` - Auto-fix issues
-- `pnpm format` - Format code
-- `pnpm type-check` - TypeScript check
-
-### Database
-- `pnpm db:gen` - Generate migrations
-- `pnpm db:mi` - Run migrations
-- `pnpm db:push` - Push schema
-- `pnpm db:studio` - Open Drizzle Studio
-
-### Testing
-- `pnpm test` - Run all tests
-- `pnpm test:unit` - Unit tests
-- `pnpm test:e2e` - E2E tests
-
-### Git Hooks
-- `pnpm prepare` - Setup Husky
-- `pnpm pre-commit` - Pre-commit checks
-
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [shadcn/ui](https://ui.shadcn.com/) - UI components
 - [Vercel AI SDK](https://sdk.vercel.ai/) - AI integration
@@ -253,4 +235,4 @@ UMAMI_WEBSITE_ID=your-id
 
 ---
 
-**Built with ❤️ using Next.js, TypeScript, and modern web technologies**
+**Built with Next.js 16, React 19, and modern web technologies**
