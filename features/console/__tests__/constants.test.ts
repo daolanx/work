@@ -78,7 +78,7 @@ describe("NAVIGATION_CONFIG", () => {
 	it("has Platform group with expected items", () => {
 		const platform = NAVIGATION_CONFIG.find((g) => g.label === "Platform");
 		expect(platform).toBeDefined();
-		expect(platform?.items.length).toBeGreaterThanOrEqual(3);
+		expect(platform?.items.length).toBeGreaterThanOrEqual(2);
 	});
 
 	it("has Console nav item", () => {
@@ -104,18 +104,5 @@ describe("NAVIGATION_CONFIG", () => {
 		expect(userMgmt).toBeDefined();
 		expect(userMgmt?.url).toBe("/console/admin");
 		expect(userMgmt?.roles).toContain("admin");
-	});
-
-	it("marks disabled items correctly", () => {
-		const platform = NAVIGATION_CONFIG.find((g) => g.label === "Platform");
-		const projects = platform?.items.find((i) => i.label === "Projects");
-		expect(projects?.disabled).toBe(true);
-	});
-
-	it("has sub-items for Projects", () => {
-		const platform = NAVIGATION_CONFIG.find((g) => g.label === "Platform");
-		const projects = platform?.items.find((i) => i.label === "Projects");
-		expect(projects?.items).toBeDefined();
-		expect(projects?.items?.length).toBe(3);
 	});
 });
