@@ -12,11 +12,18 @@ import {
  */
 const preprocessQueryParams = (schema: z.ZodEnum<any>) =>
 	z.preprocess((val) => {
-		// 1. Handle empty/null values
 		if (!val) return undefined;
 		if (Array.isArray(val) && val.length === 0) return undefined;
 
-		// 2. Normalize to array
+		// Split comma-separated strings: "a,b" → ["a", "b"]
+		if (typeof val === "string") {
+			const items = val
+				.split(",")
+				.map((s) => s.trim())
+				.filter(Boolean);
+			return items.length > 0 ? items : undefined;
+		}
+
 		return Array.isArray(val) ? val : [val];
 	}, z.array(schema).optional());
 

@@ -1,5 +1,6 @@
 import {
 	date,
+	index,
 	integer,
 	pgTable,
 	serial,
@@ -13,24 +14,30 @@ import {
 } from "@/features/console/task/constants";
 import { user } from "./auth.schema";
 
-export const tasks = pgTable("tasks", {
-	id: serial("id").primaryKey(),
-	title: text("title").notNull(),
-	content: text("content"),
-	priority: text("priority", { enum: TASK_PRIORITY_ENUM_KEYS }),
-	category: text("category", { enum: TASK_CATEGORY_ENUM_KEYS }),
-	status: text("status", { enum: ["Done", "In Process", "To Do", "Canceled"] })
-		.notNull()
-		.default("To Do"),
-	userId: text("user_id")
-		.notNull()
-		.references(() => user.id, { onDelete: "cascade" }),
-	createdAt: timestamp("created_at").defaultNow().notNull(),
-	updatedAt: timestamp("updated_at")
-		.defaultNow()
-		.notNull()
-		.$onUpdate(() => new Date()),
-});
+export const tasks = pgTable(
+	"tasks",
+	{
+		id: serial("id").primaryKey(),
+		title: text("title").notNull(),
+		content: text("content"),
+		priority: text("priority", { enum: TASK_PRIORITY_ENUM_KEYS }),
+		category: text("category", { enum: TASK_CATEGORY_ENUM_KEYS }),
+		status: text("status", {
+			enum: ["Done", "In Process", "To Do", "Canceled"],
+		})
+			.notNull()
+			.default("To Do"),
+		userId: text("user_id")
+			.notNull()
+			.references(() => user.id, { onDelete: "cascade" }),
+		createdAt: timestamp("created_at").defaultNow().notNull(),
+		updatedAt: timestamp("updated_at")
+			.defaultNow()
+			.notNull()
+			.$onUpdate(() => new Date()),
+	},
+	(t) => [index("tasks_user_id_idx").on(t.userId)],
+);
 
 export const visitStats = pgTable("visit_stats", {
 	id: serial("id").primaryKey(),

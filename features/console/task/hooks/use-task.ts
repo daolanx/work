@@ -29,11 +29,7 @@ interface UseTasksProps {
 function buildTasksUrl(params: Record<string, unknown>): string {
 	const sp = new URLSearchParams();
 	for (const [key, value] of Object.entries(params)) {
-		if (Array.isArray(value)) {
-			for (const v of value) {
-				if (v !== undefined && v !== null) sp.append(key, String(v));
-			}
-		} else if (value !== undefined && value !== null) {
+		if (value !== undefined && value !== null) {
 			sp.set(key, String(value));
 		}
 	}
@@ -54,15 +50,14 @@ export function useTasks({
 			...(searchKey ? { searchKey } : {}),
 		};
 
-		columnFilters?.forEach((filter) => {
-			if (Array.isArray(filter.value)) {
-				const valid = filter.value.filter((v) => v !== undefined && v !== null);
-				if (valid.length > 0) result[filter.id] = valid;
-			} else if (filter.value !== undefined && filter.value !== null) {
-				result[filter.id] = filter.value;
+		columnFilters?.forEach(({ id, value }) => {
+			if (Array.isArray(value)) {
+				const valid = value.filter((v) => v != null);
+				if (valid.length) result[id] = valid.join(",");
+			} else if (value != null) {
+				result[id] = value;
 			}
 		});
-
 		if (sorting && sorting.length > 0) {
 			const sort = sorting[0];
 			result.orderBy = sort.id;

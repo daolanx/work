@@ -44,8 +44,7 @@ async function requireUserId() {
 	return session.user.id;
 }
 
-export async function getTasks(rawParams: unknown) {
-	const userId = await requireUserId();
+export async function getTasks(userId: string, rawParams: unknown) {
 	const {
 		pageIndex,
 		pageSize,

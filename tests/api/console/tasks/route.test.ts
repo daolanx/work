@@ -74,7 +74,7 @@ describe("GET /api/console/tasks", () => {
 			params: {},
 		} as any);
 
-		expect(getTasks).toHaveBeenCalledWith({
+		expect(getTasks).toHaveBeenCalledWith("user-1", {
 			pageIndex: "1",
 			pageSize: "5",
 			searchKey: "foo",

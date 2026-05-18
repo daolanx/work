@@ -74,7 +74,7 @@ describe("getTasks", () => {
 			return mockChain(countResult);
 		});
 
-		const result = await getTasks({ pageIndex: 0, pageSize: 10 });
+		const result = await getTasks("user-1", { pageIndex: 0, pageSize: 10 });
 
 		expect(result.list).toEqual(tasks);
 		expect(result.total).toBe(1);
@@ -83,14 +83,10 @@ describe("getTasks", () => {
 		expect(result.pageSize).toBe(10);
 	});
 
-	it("throws Unauthorized when no session", async () => {
-		(getSession as ReturnType<typeof vi.fn>).mockResolvedValue(null);
-
-		await expect(getTasks({})).rejects.toThrow("Unauthorized");
-	});
-
 	it("throws ValidationError for invalid params", async () => {
-		await expect(getTasks({ pageSize: -1 })).rejects.toThrow(ValidationError);
+		await expect(getTasks("user-1", { pageSize: -1 })).rejects.toThrow(
+			ValidationError,
+		);
 	});
 
 	it("filters by status", async () => {
@@ -103,7 +99,7 @@ describe("getTasks", () => {
 			return mockChain(countResult);
 		});
 
-		await getTasks({ status: ["To Do"] });
+		await getTasks("user-1", { status: ["To Do"] });
 
 		// Verify where was called (filters applied)
 		expect(db.select).toHaveBeenCalled();
@@ -119,7 +115,7 @@ describe("getTasks", () => {
 			return mockChain(countResult);
 		});
 
-		await getTasks({ searchKey: "Test" });
+		await getTasks("user-1", { searchKey: "Test" });
 		expect(db.select).toHaveBeenCalled();
 	});
 });

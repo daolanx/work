@@ -3,6 +3,7 @@ import { getTask } from "@/features/console/task/services";
 import { authApi } from "@/lib/api-handler";
 
 export const GET = authApi(async (_req, { params }) => {
-	const task = await getTask(params);
+	const { taskId } = await params;
+	const task = await getTask(taskId);
 	return NextResponse.json(task);
 });
