@@ -6,7 +6,6 @@ import {
 	count,
 	desc,
 	eq,
-	getTableColumns,
 	ilike,
 	inArray,
 	type SQL,
@@ -14,37 +13,24 @@ import {
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { tasks } from "@/db/biz.schema";
+import { NotFoundError } from "@/lib/errors";
+import { getUserId } from "@/lib/session";
+import { validate } from "@/lib/utils";
 import {
+	type CreateTask,
 	createTaskSchema,
-	taskPaginationSchema,
-	taskResourceIdSchema,
+	type ListTasks,
+	listTaskSchema,
+	type TaskId,
+	taskIdSchema,
+	type UpdateTask,
 	updateTaskSchema,
-} from "@/features/console/task/schemas";
-import { ValidationError } from "@/lib/errors";
-import { getSession } from "@/lib/session";
+} from "./schemas";
 
-function validate<T>(
-	schema: {
-		safeParse: (
-			v: unknown,
-		) =>
-			| { success: false; error: { message: string } }
-			| { success: true; data: T };
-	},
-	data: unknown,
-): T {
-	const result = schema.safeParse(data);
-	if (!result.success) throw new ValidationError(result.error.message);
-	return result.data;
-}
+const TASK_LIST_VALIDATE_PATH = "/console/tasks";
 
-async function requireUserId() {
-	const session = await getSession();
-	if (!session?.user) throw new Error("Unauthorized");
-	return session.user.id;
-}
-
-export async function getTasks(userId: string, rawParams: unknown) {
+export async function getTasks(params: ListTasks) {
+	const userId = await getUserId();
 	const {
 		pageIndex,
 		pageSize,
@@ -54,7 +40,15 @@ export async function getTasks(userId: string, rawParams: unknown) {
 		category,
 		orderBy,
 		order,
-	} = validate(taskPaginationSchema, rawParams);
+	} = validate(listTaskSchema, params);
+
+	const sortColumns = {
+		createdAt: tasks.createdAt,
+		updatedAt: tasks.updatedAt,
+		title: tasks.title,
+		priority: tasks.priority,
+		status: tasks.status,
+	} as const;
 
 	const filters = [
 		eq(tasks.userId, userId),
@@ -65,11 +59,7 @@ export async function getTasks(userId: string, rawParams: unknown) {
 	].filter((f): f is SQL => !!f);
 
 	const whereClause = and(...filters);
-	const columns = getTableColumns(tasks);
-	const sortColumn =
-		orderBy && orderBy in columns
-			? columns[orderBy as keyof typeof columns]
-			: tasks.createdAt;
+	const sortColumn = orderBy ? sortColumns[orderBy] : tasks.createdAt;
 	const sortDirection = order === "asc" ? asc : desc;
 
 	const [data, [{ total }]] = await Promise.all([
@@ -92,48 +82,49 @@ export async function getTasks(userId: string, rawParams: unknown) {
 	};
 }
 
-export async function getTask(rawParams: unknown) {
-	const userId = await requireUserId();
-	const { taskId } = validate(taskResourceIdSchema, rawParams);
+export async function getTask(taskId: TaskId) {
+	const userId = await getUserId();
+	const id = validate(taskIdSchema, taskId);
 	const [task] = await db
 		.select()
 		.from(tasks)
-		.where(and(eq(tasks.id, taskId), eq(tasks.userId, userId)))
-		.limit(1);
+		.where(and(eq(tasks.id, id), eq(tasks.userId, userId)));
 	return task ?? null;
 }
 
-export async function createTask(input: unknown) {
-	const userId = await requireUserId();
-	const data = validate(createTaskSchema, input);
+export async function createTask(params: CreateTask) {
+	const userId = await getUserId();
+	const data = validate(createTaskSchema, params);
 	const [newTask] = await db
 		.insert(tasks)
 		.values({ ...data, userId })
 		.returning();
-	revalidatePath("/console/tasks");
+	revalidatePath(TASK_LIST_VALIDATE_PATH);
 	return newTask;
 }
 
-export async function updateTask(rawParams: unknown, body: unknown) {
-	const userId = await requireUserId();
-	const { taskId } = validate(taskResourceIdSchema, rawParams);
-	const data = validate(updateTaskSchema, body);
+export async function updateTask(taskId: string, update: UpdateTask) {
+	const userId = await getUserId();
+	const id = validate(taskIdSchema, taskId);
+	const data = validate(updateTaskSchema, update);
 	const [updatedTask] = await db
 		.update(tasks)
 		.set(data)
-		.where(and(eq(tasks.id, taskId), eq(tasks.userId, userId)))
+		.where(and(eq(tasks.id, id), eq(tasks.userId, userId)))
 		.returning();
-	if (updatedTask) revalidatePath("/console/tasks");
-	return updatedTask ?? null;
+	if (!updatedTask) throw new NotFoundError("Task not found");
+	revalidatePath(TASK_LIST_VALIDATE_PATH);
+	return updatedTask;
 }
 
-export async function deleteTask(rawParams: unknown) {
-	const userId = await requireUserId();
-	const { taskId } = validate(taskResourceIdSchema, rawParams);
+export async function deleteTask(taskId: TaskId) {
+	const userId = await getUserId();
+	const id = validate(taskIdSchema, taskId);
 	const [deletedTask] = await db
 		.delete(tasks)
-		.where(and(eq(tasks.id, taskId), eq(tasks.userId, userId)))
+		.where(and(eq(tasks.id, id), eq(tasks.userId, userId)))
 		.returning();
-	if (deletedTask) revalidatePath("/console/tasks");
-	return deletedTask ?? null;
+	if (!deletedTask) throw new NotFoundError("Task not found");
+	revalidatePath(TASK_LIST_VALIDATE_PATH);
+	return deletedTask;
 }

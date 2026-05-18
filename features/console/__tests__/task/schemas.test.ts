@@ -1,38 +1,34 @@
 import { describe, expect, it } from "vitest";
 import {
 	createTaskSchema,
-	taskPaginationSchema,
-	taskResourceIdSchema,
+	listTaskSchema,
+	taskIdSchema,
 	updateTaskSchema,
 } from "@/features/console/task/schemas";
 
-describe("taskResourceIdSchema", () => {
+describe("taskIdSchema", () => {
 	it("accepts a valid numeric taskId", () => {
-		const result = taskResourceIdSchema.safeParse({ taskId: 1 });
+		const result = taskIdSchema.safeParse(1);
 		expect(result.success).toBe(true);
 	});
 
 	it("coerces string numbers", () => {
-		const result = taskResourceIdSchema.safeParse({ taskId: "42" });
+		const result = taskIdSchema.safeParse("42");
 		expect(result.success).toBe(true);
-		if (result.success) expect(result.data.taskId).toBe(42);
+		if (result.success) expect(result.data).toBe(42);
 	});
 
 	it("rejects zero", () => {
-		const result = taskResourceIdSchema.safeParse({ taskId: 0 });
+		const result = taskIdSchema.safeParse(0);
 		expect(result.success).toBe(false);
 	});
 
 	it("rejects negative numbers", () => {
-		expect(taskResourceIdSchema.safeParse({ taskId: -1 }).success).toBe(false);
+		expect(taskIdSchema.safeParse(-1).success).toBe(false);
 	});
 
 	it("rejects non-integer values", () => {
-		expect(taskResourceIdSchema.safeParse({ taskId: 1.5 }).success).toBe(false);
-	});
-
-	it("rejects missing taskId", () => {
-		expect(taskResourceIdSchema.safeParse({}).success).toBe(false);
+		expect(taskIdSchema.safeParse(1.5).success).toBe(false);
 	});
 });
 
@@ -137,9 +133,9 @@ describe("updateTaskSchema", () => {
 	});
 });
 
-describe("taskPaginationSchema", () => {
+describe("listTaskSchema", () => {
 	it("applies defaults for missing fields", () => {
-		const result = taskPaginationSchema.safeParse({});
+		const result = listTaskSchema.safeParse({});
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.pageIndex).toBe(0);
@@ -148,7 +144,7 @@ describe("taskPaginationSchema", () => {
 	});
 
 	it("coerces string numbers from URL params", () => {
-		const result = taskPaginationSchema.safeParse({
+		const result = listTaskSchema.safeParse({
 			pageIndex: "2",
 			pageSize: "20",
 		});
@@ -160,28 +156,28 @@ describe("taskPaginationSchema", () => {
 	});
 
 	it("rejects pageSize > 100", () => {
-		const result = taskPaginationSchema.safeParse({ pageSize: 101 });
+		const result = listTaskSchema.safeParse({ pageSize: 101 });
 		expect(result.success).toBe(false);
 	});
 
 	it("rejects pageSize < 1", () => {
-		const result = taskPaginationSchema.safeParse({ pageSize: 0 });
+		const result = listTaskSchema.safeParse({ pageSize: 0 });
 		expect(result.success).toBe(false);
 	});
 
 	it("rejects pageIndex < 0", () => {
-		const result = taskPaginationSchema.safeParse({ pageIndex: -1 });
+		const result = listTaskSchema.safeParse({ pageIndex: -1 });
 		expect(result.success).toBe(false);
 	});
 
 	it("normalizes single status string to array", () => {
-		const result = taskPaginationSchema.safeParse({ status: "Done" });
+		const result = listTaskSchema.safeParse({ status: "Done" });
 		expect(result.success).toBe(true);
 		if (result.success) expect(result.data.status).toEqual(["Done"]);
 	});
 
 	it("passes through status array", () => {
-		const result = taskPaginationSchema.safeParse({
+		const result = listTaskSchema.safeParse({
 			status: ["To Do", "Done"],
 		});
 		expect(result.success).toBe(true);
@@ -189,41 +185,41 @@ describe("taskPaginationSchema", () => {
 	});
 
 	it("treats empty/null status as undefined", () => {
-		const r1 = taskPaginationSchema.safeParse({ status: "" });
+		const r1 = listTaskSchema.safeParse({ status: "" });
 		expect(r1.success).toBe(true);
 		if (r1.success) expect(r1.data.status).toBeUndefined();
 
-		const r2 = taskPaginationSchema.safeParse({ status: null });
+		const r2 = listTaskSchema.safeParse({ status: null });
 		expect(r2.success).toBe(true);
 		if (r2.success) expect(r2.data.status).toBeUndefined();
 	});
 
 	it("normalizes single priority string to array", () => {
-		const result = taskPaginationSchema.safeParse({ priority: "HIGH" });
+		const result = listTaskSchema.safeParse({ priority: "HIGH" });
 		expect(result.success).toBe(true);
 		if (result.success) expect(result.data.priority).toEqual(["HIGH"]);
 	});
 
 	it("normalizes single category string to array", () => {
-		const result = taskPaginationSchema.safeParse({ category: "WORK" });
+		const result = listTaskSchema.safeParse({ category: "WORK" });
 		expect(result.success).toBe(true);
 		if (result.success) expect(result.data.category).toEqual(["WORK"]);
 	});
 
 	it("trims whitespace from searchKey", () => {
-		const result = taskPaginationSchema.safeParse({ searchKey: "  hello  " });
+		const result = listTaskSchema.safeParse({ searchKey: "  hello  " });
 		expect(result.success).toBe(true);
 		if (result.success) expect(result.data.searchKey).toBe("hello");
 	});
 
 	it("treats empty searchKey as undefined", () => {
-		const result = taskPaginationSchema.safeParse({ searchKey: "" });
+		const result = listTaskSchema.safeParse({ searchKey: "" });
 		expect(result.success).toBe(true);
 		if (result.success) expect(result.data.searchKey).toBeUndefined();
 	});
 
 	it("accepts valid orderBy and order", () => {
-		const result = taskPaginationSchema.safeParse({
+		const result = listTaskSchema.safeParse({
 			orderBy: "title",
 			order: "asc",
 		});
@@ -231,7 +227,7 @@ describe("taskPaginationSchema", () => {
 	});
 
 	it("rejects invalid order value", () => {
-		const result = taskPaginationSchema.safeParse({ order: "random" });
+		const result = listTaskSchema.safeParse({ order: "random" });
 		expect(result.success).toBe(false);
 	});
 });

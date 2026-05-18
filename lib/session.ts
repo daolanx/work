@@ -9,3 +9,9 @@ export async function getSession(): Promise<Session | null> {
 	});
 	return session;
 }
+
+export async function getUserId() {
+	const session = await getSession();
+	if (!session?.user) throw new Error("Unauthorized");
+	return session.user.id;
+}

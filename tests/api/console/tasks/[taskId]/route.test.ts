@@ -42,6 +42,7 @@ describe("GET /api/console/tasks/[taskId]", () => {
 		expect(body.id).toBe(mockTask.id);
 		expect(body.title).toBe(mockTask.title);
 		expect(body.status).toBe(mockTask.status);
+		expect(getTask).toHaveBeenCalledWith("1");
 	});
 
 	it("returns null when task not found", async () => {

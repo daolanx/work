@@ -5,18 +5,13 @@ import { useMemo } from "react";
 import { toast } from "sonner";
 import useSWR, { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
-import type { PaginatedResponse } from "@/features/console/task/components/card-table/types";
-import type {
-	CreateTaskInput,
-	Task,
-	UpdateTaskInput,
-} from "@/features/console/task/schemas";
-import {
-	createTask,
-	deleteTask,
-	updateTask,
-} from "@/features/console/task/services";
 import { fetcher } from "@/lib/fetcher";
+import type { PaginatedResponse } from "../components/card-table/types";
+import type { CreateTask, Task, UpdateTask } from "../schemas";
+import { createTask, deleteTask, updateTask } from "../services";
+
+const TASK_LIST_CACHE_KEY = "task-list";
+const TASK_DETAIL_CACHE_KEY = "task-detail";
 
 interface UseTasksProps {
 	pageIndex: number;
@@ -28,12 +23,10 @@ interface UseTasksProps {
 
 function buildTasksUrl(params: Record<string, unknown>): string {
 	const sp = new URLSearchParams();
-	for (const [key, value] of Object.entries(params)) {
-		if (value !== undefined && value !== null) {
-			sp.set(key, String(value));
-		}
+	for (const [k, v] of Object.entries(params)) {
+		if (v != null) sp.set(k, String(v));
 	}
-	return `/api/console/tasks?${sp.toString()}`;
+	return `/api/console/tasks?${sp}`;
 }
 
 export function useTasks({
@@ -71,7 +64,7 @@ export function useTasks({
 	}, [pageIndex, pageSize, searchKey, columnFilters, sorting]);
 
 	const { data, error, isLoading, mutate } = useSWR(
-		["tasks-list", params],
+		[TASK_LIST_CACHE_KEY, params],
 		([, p]) => fetcher<PaginatedResponse<Task>>(buildTasksUrl(p)),
 		{ keepPreviousData: true },
 	);
@@ -86,7 +79,7 @@ export function useTasks({
 
 export function useTask(taskId?: string | number) {
 	const { data, error, isLoading, mutate } = useSWR<Task>(
-		taskId != null ? ["task-detail", String(taskId)] : null,
+		taskId != null ? [TASK_DETAIL_CACHE_KEY, String(taskId)] : null,
 		([, id]) => fetcher(`/api/console/tasks/${id}`),
 	);
 
@@ -101,8 +94,8 @@ export function useTask(taskId?: string | number) {
 export function useCreateTask() {
 	const { mutate: globalMutate } = useSWRConfig();
 
-	return useSWRMutation<Task, Error, "tasks-list", CreateTaskInput>(
-		"tasks-list",
+	return useSWRMutation<Task, Error, typeof TASK_LIST_CACHE_KEY, CreateTask>(
+		TASK_LIST_CACHE_KEY,
 		(_, { arg }) => createTask(arg),
 		{
 			onSuccess: async () => {
@@ -118,11 +111,11 @@ export function useCreateTask() {
 
 export function useUpdateTask(taskId?: string | number) {
 	const { mutate: globalMutate } = useSWRConfig();
-	const key = taskId != null ? ["task-detail", String(taskId)] : null;
+	const key = taskId != null ? [TASK_DETAIL_CACHE_KEY, String(taskId)] : null;
 
-	return useSWRMutation<Task, Error, typeof key, UpdateTaskInput>(
+	return useSWRMutation<Task, Error, typeof key, UpdateTask>(
 		key,
-		(_, { arg }) => updateTask({ taskId }, arg),
+		(_, { arg }) => updateTask(String(taskId), arg),
 		{
 			populateCache: true,
 			revalidate: false,
@@ -139,12 +132,12 @@ export function useUpdateTask(taskId?: string | number) {
 
 export function useDeleteTask(taskId?: string | number) {
 	const { mutate: globalMutate } = useSWRConfig();
-	const key = taskId != null ? ["task-detail", String(taskId)] : null;
+	const key = taskId != null ? [TASK_DETAIL_CACHE_KEY, String(taskId)] : null;
 
 	return useSWRMutation<void, Error, typeof key, void>(
 		key,
 		async () => {
-			await deleteTask({ taskId });
+			await deleteTask(Number(taskId));
 		},
 		{
 			populateCache: false,
@@ -163,7 +156,7 @@ export function useDeleteTask(taskId?: string | number) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function revalidateTasks(mutate: any) {
 	return await mutate((key: unknown) => {
-		if (Array.isArray(key)) return key[0] === "tasks-list";
+		if (Array.isArray(key)) return key[0] === TASK_LIST_CACHE_KEY;
 		return false;
 	});
 }

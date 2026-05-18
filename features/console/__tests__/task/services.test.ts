@@ -1,9 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { ValidationError } from "@/lib/errors";
+import type { CreateTask } from "@/features/console/task/schemas";
+import { NotFoundError, ValidationError } from "@/lib/errors";
 
 // Mock dependencies before importing the module under test
 vi.mock("@/db", () => ({ db: {} }));
-vi.mock("@/lib/session", () => ({ getSession: vi.fn() }));
+vi.mock("@/lib/session", () => ({
+	getSession: vi.fn(),
+	getUserId: vi.fn(),
+}));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 
 import { revalidatePath } from "next/cache";
@@ -15,7 +19,7 @@ import {
 	getTasks,
 	updateTask,
 } from "@/features/console/task/services";
-import { getSession } from "@/lib/session";
+import { getSession, getUserId } from "@/lib/session";
 
 // Helper: build a thenable chain that resolves with `data`
 function mockChain<T>(data: T) {
@@ -57,7 +61,9 @@ const mockTask = {
 
 beforeEach(() => {
 	vi.clearAllMocks();
-	(getSession as ReturnType<typeof vi.fn>).mockResolvedValue(mockSession);
+	(getUserId as ReturnType<typeof vi.fn>).mockResolvedValue(
+		mockSession.user.id,
+	);
 });
 
 describe("getTasks", () => {
@@ -65,8 +71,6 @@ describe("getTasks", () => {
 		const tasks = [mockTask];
 		const countResult = [{ total: 1 }];
 
-		// db.select().from().where().orderBy().limit().offset() → tasks
-		// db.select({total}).from().where() → countResult
 		let callCount = 0;
 		(db as any).select = vi.fn().mockImplementation(() => {
 			callCount++;
@@ -74,7 +78,7 @@ describe("getTasks", () => {
 			return mockChain(countResult);
 		});
 
-		const result = await getTasks("user-1", { pageIndex: 0, pageSize: 10 });
+		const result = await getTasks({ pageIndex: 0, pageSize: 10 });
 
 		expect(result.list).toEqual(tasks);
 		expect(result.total).toBe(1);
@@ -84,7 +88,7 @@ describe("getTasks", () => {
 	});
 
 	it("throws ValidationError for invalid params", async () => {
-		await expect(getTasks("user-1", { pageSize: -1 })).rejects.toThrow(
+		await expect(getTasks({ pageIndex: 0, pageSize: -1 })).rejects.toThrow(
 			ValidationError,
 		);
 	});
@@ -99,9 +103,8 @@ describe("getTasks", () => {
 			return mockChain(countResult);
 		});
 
-		await getTasks("user-1", { status: ["To Do"] });
+		await getTasks({ pageIndex: 0, pageSize: 10, status: ["To Do"] });
 
-		// Verify where was called (filters applied)
 		expect(db.select).toHaveBeenCalled();
 	});
 
@@ -115,8 +118,18 @@ describe("getTasks", () => {
 			return mockChain(countResult);
 		});
 
-		await getTasks("user-1", { searchKey: "Test" });
+		await getTasks({ pageIndex: 0, pageSize: 10, searchKey: "Test" });
 		expect(db.select).toHaveBeenCalled();
+	});
+
+	it("throws Unauthorized when no session", async () => {
+		(getUserId as ReturnType<typeof vi.fn>).mockRejectedValue(
+			new Error("Unauthorized"),
+		);
+
+		await expect(getTasks({ pageIndex: 0, pageSize: 10 })).rejects.toThrow(
+			"Unauthorized",
+		);
 	});
 });
 
@@ -124,25 +137,27 @@ describe("getTask", () => {
 	it("returns a single task", async () => {
 		(db as any).select = vi.fn().mockReturnValue(mockChain([mockTask]));
 
-		const result = await getTask({ taskId: 1 });
+		const result = await getTask(1);
 		expect(result).toEqual(mockTask);
 	});
 
 	it("returns null when task not found", async () => {
 		(db as any).select = vi.fn().mockReturnValue(mockChain([]));
 
-		const result = await getTask({ taskId: 999 });
+		const result = await getTask(999);
 		expect(result).toBeNull();
 	});
 
 	it("throws Unauthorized when no session", async () => {
-		(getSession as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+		(getUserId as ReturnType<typeof vi.fn>).mockRejectedValue(
+			new Error("Unauthorized"),
+		);
 
-		await expect(getTask({ taskId: 1 })).rejects.toThrow("Unauthorized");
+		await expect(getTask(1)).rejects.toThrow("Unauthorized");
 	});
 
 	it("throws ValidationError for invalid taskId", async () => {
-		await expect(getTask({ taskId: 0 })).rejects.toThrow(ValidationError);
+		await expect(getTask(0)).rejects.toThrow(ValidationError);
 	});
 });
 
@@ -162,7 +177,9 @@ describe("createTask", () => {
 	});
 
 	it("throws Unauthorized when no session", async () => {
-		(getSession as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+		(getUserId as ReturnType<typeof vi.fn>).mockRejectedValue(
+			new Error("Unauthorized"),
+		);
 
 		await expect(createTask({ title: "T", status: "To Do" })).rejects.toThrow(
 			"Unauthorized",
@@ -170,7 +187,7 @@ describe("createTask", () => {
 	});
 
 	it("throws ValidationError for invalid input", async () => {
-		await expect(createTask({ status: "To Do" })).rejects.toThrow(
+		await expect(createTask({ status: "To Do" } as CreateTask)).rejects.toThrow(
 			ValidationError,
 		);
 	});
@@ -181,30 +198,33 @@ describe("updateTask", () => {
 		const updated = { ...mockTask, title: "Updated" };
 		(db as any).update = vi.fn().mockReturnValue(mockChain([updated]));
 
-		const result = await updateTask({ taskId: 1 }, { title: "Updated" });
+		const result = await updateTask("1", { title: "Updated" });
 
 		expect(result).toEqual(updated);
 		expect(revalidatePath).toHaveBeenCalledWith("/console/tasks");
 	});
 
-	it("returns null when task not found", async () => {
+	it("throws NotFoundError when task not found", async () => {
 		(db as any).update = vi.fn().mockReturnValue(mockChain([]));
 
-		const result = await updateTask({ taskId: 999 }, { title: "X" });
-		expect(result).toBeNull();
+		await expect(updateTask("999", { title: "X" })).rejects.toThrow(
+			NotFoundError,
+		);
 		expect(revalidatePath).not.toHaveBeenCalled();
 	});
 
 	it("throws Unauthorized when no session", async () => {
-		(getSession as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+		(getUserId as ReturnType<typeof vi.fn>).mockRejectedValue(
+			new Error("Unauthorized"),
+		);
 
-		await expect(updateTask({ taskId: 1 }, { title: "X" })).rejects.toThrow(
+		await expect(updateTask("1", { title: "X" })).rejects.toThrow(
 			"Unauthorized",
 		);
 	});
 
 	it("throws ValidationError for invalid taskId", async () => {
-		await expect(updateTask({ taskId: 0 }, { title: "X" })).rejects.toThrow(
+		await expect(updateTask("0", { title: "X" })).rejects.toThrow(
 			ValidationError,
 		);
 	});
@@ -214,23 +234,24 @@ describe("deleteTask", () => {
 	it("deletes a task and revalidates path", async () => {
 		(db as any).delete = vi.fn().mockReturnValue(mockChain([mockTask]));
 
-		const result = await deleteTask({ taskId: 1 });
+		const result = await deleteTask(1);
 
 		expect(result).toEqual(mockTask);
 		expect(revalidatePath).toHaveBeenCalledWith("/console/tasks");
 	});
 
-	it("returns null when task not found", async () => {
+	it("throws NotFoundError when task not found", async () => {
 		(db as any).delete = vi.fn().mockReturnValue(mockChain([]));
 
-		const result = await deleteTask({ taskId: 999 });
-		expect(result).toBeNull();
+		await expect(deleteTask(999)).rejects.toThrow(NotFoundError);
 		expect(revalidatePath).not.toHaveBeenCalled();
 	});
 
 	it("throws Unauthorized when no session", async () => {
-		(getSession as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+		(getUserId as ReturnType<typeof vi.fn>).mockRejectedValue(
+			new Error("Unauthorized"),
+		);
 
-		await expect(deleteTask({ taskId: 1 })).rejects.toThrow("Unauthorized");
+		await expect(deleteTask(1)).rejects.toThrow("Unauthorized");
 	});
 });

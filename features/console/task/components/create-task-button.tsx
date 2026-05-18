@@ -32,9 +32,9 @@ import {
 	TASK_STATUS_ENUMS,
 } from "../constants";
 import { useCreateTask } from "../hooks/use-task";
-import { type CreateTaskInput, createTaskSchema } from "../schemas";
+import { type CreateTask, createTaskSchema } from "../schemas";
 
-const TASK_FORM_CONFIG: FormFieldConfig<CreateTaskInput>[] = [
+const TASK_FORM_CONFIG: FormFieldConfig<CreateTask>[] = [
 	{
 		name: "title",
 		label: "Title",
@@ -78,7 +78,7 @@ export function CreateTaskButton({ onSuccess }) {
 	const [open, setOpen] = useState(false);
 	const { trigger: createTask, isMutating: isCreating } = useCreateTask();
 
-	const form = useForm<CreateTaskInput>({
+	const form = useForm<CreateTask>({
 		resolver: zodResolver(createTaskSchema),
 		defaultValues: {
 			title: "",
@@ -89,7 +89,7 @@ export function CreateTaskButton({ onSuccess }) {
 		},
 	});
 
-	const onSubmit = async (data: CreateTaskInput) => {
+	const onSubmit = async (data: CreateTask) => {
 		try {
 			const newTask = await createTask(data);
 			setOpen(false);

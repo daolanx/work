@@ -74,10 +74,15 @@ describe("GET /api/console/tasks", () => {
 			params: {},
 		} as any);
 
-		expect(getTasks).toHaveBeenCalledWith("user-1", {
-			pageIndex: "1",
-			pageSize: "5",
+		expect(getTasks).toHaveBeenCalledWith({
+			pageIndex: 1,
+			pageSize: 5,
 			searchKey: "foo",
+			status: undefined,
+			priority: undefined,
+			category: undefined,
+			orderBy: undefined,
+			order: undefined,
 		});
 	});
 });

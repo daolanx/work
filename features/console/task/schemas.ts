@@ -2,7 +2,7 @@ import { z } from "zod";
 import {
 	TASK_CATEGORY_ENUM_KEYS,
 	TASK_PRIORITY_ENUM_KEYS,
-} from "@/features/console/task/constants";
+} from "./constants";
 
 /**
  * 0. Helpers
@@ -40,9 +40,7 @@ const preprocessString = z.preprocess((val) => {
 /**
  * 1. Request Parameter Schemas
  */
-export const taskResourceIdSchema = z.object({
-	taskId: z.coerce.number().int().min(1, "Invalid Task ID"),
-});
+export const taskIdSchema = z.coerce.number().int().min(1, "Invalid Task ID");
 
 /**
  * 2. Base Entity Schemas & Enums
@@ -52,14 +50,22 @@ const taskPriorityEnum = z.enum(TASK_PRIORITY_ENUM_KEYS);
 const taskCategoryEnum = z.enum(TASK_CATEGORY_ENUM_KEYS);
 
 // Schema for pagination and filter validation
-export const taskPaginationSchema = z.object({
+const taskSortFieldEnum = z.enum([
+	"createdAt",
+	"updatedAt",
+	"title",
+	"priority",
+	"status",
+]);
+
+export const listTaskSchema = z.object({
 	pageIndex: z.coerce.number().min(0).default(0),
 	pageSize: z.coerce.number().min(1).max(100).default(10),
 	searchKey: preprocessString,
 	status: preprocessQueryParams(taskStatusEnum),
 	priority: preprocessQueryParams(taskPriorityEnum),
 	category: preprocessQueryParams(taskCategoryEnum),
-	orderBy: z.string().nullish(),
+	orderBy: taskSortFieldEnum.nullish(),
 	order: z.enum(["asc", "desc"]).nullish(),
 });
 
@@ -93,9 +99,10 @@ export const updateTaskSchema = createTaskSchema.partial();
  * 4. TypeScript Type Inference
  */
 export type Task = z.infer<typeof taskSchema>;
+export type TaskId = z.infer<typeof taskIdSchema>;
 export type TaskStatus = z.infer<typeof taskStatusEnum>;
 export type TaskPriority = z.infer<typeof taskPriorityEnum>;
 export type TaskCategory = z.infer<typeof taskCategoryEnum>;
-export type TaskPagination = z.infer<typeof taskPaginationSchema>;
-export type CreateTaskInput = z.infer<typeof createTaskSchema>;
-export type UpdateTaskInput = z.infer<typeof updateTaskSchema>;
+export type CreateTask = z.infer<typeof createTaskSchema>;
+export type UpdateTask = z.infer<typeof updateTaskSchema>;
+export type ListTasks = z.infer<typeof listTaskSchema>;
