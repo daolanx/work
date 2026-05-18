@@ -1,7 +1,7 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("@/features/console/dashboard/service", () => ({
+vi.mock("@/features/console/dashboard/services", () => ({
 	queryMAU: vi.fn(),
 	queryRetentionRate: vi.fn(),
 }));
@@ -17,7 +17,7 @@ import {
 import {
 	queryMAU,
 	queryRetentionRate,
-} from "@/features/console/dashboard/service";
+} from "@/features/console/dashboard/services";
 import {
 	queryConversionRate,
 	queryMRR,

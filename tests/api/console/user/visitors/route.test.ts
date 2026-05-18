@@ -3,10 +3,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/db", () => ({ db: {} }));
 vi.mock("@/lib/session", () => ({ getSession: vi.fn() }));
-vi.mock("@/features/console/user/service", () => ({ getVisitors: vi.fn() }));
+vi.mock("@/features/console/user/services", () => ({ getVisitors: vi.fn() }));
 
 import { GET } from "@/app/api/console/user/visitors/route";
-import { getVisitors } from "@/features/console/user/service";
+import { getVisitors } from "@/features/console/user/services";
 
 beforeEach(() => {
 	vi.clearAllMocks();

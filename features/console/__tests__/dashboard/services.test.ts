@@ -6,7 +6,7 @@ import { db } from "@/db";
 import {
 	queryMAU,
 	queryRetentionRate,
-} from "@/features/console/dashboard/service";
+} from "@/features/console/dashboard/services";
 
 function mockChain<T>(data: T) {
 	const chain = {

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getVisitors } from "@/features/console/user/service";
+import { getVisitors } from "@/features/console/user/services";
 import { api } from "@/lib/api-handler";
 
 export const GET = api(async () => {

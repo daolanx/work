@@ -6,7 +6,7 @@ import { DemoCard } from "@/features/console/profile/components/demo-card";
 import { FadeIn } from "@/features/console/profile/components/fade-in";
 import LocaleSwitch from "@/features/console/profile/components/locale-switch";
 import ThemeSwitch from "@/features/console/profile/components/theme-switch";
-import { getSites, type Site } from "@/features/console/profile/service";
+import { getSites, type Site } from "@/features/console/profile/services";
 
 const metadataBase = new URL("https://demo.daolanx.com");
 

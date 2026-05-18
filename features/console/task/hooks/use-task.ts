@@ -15,7 +15,7 @@ import {
 	createTask,
 	deleteTask,
 	updateTask,
-} from "@/features/console/task/service";
+} from "@/features/console/task/services";
 import { fetcher } from "@/lib/fetcher";
 
 interface UseTasksProps {

@@ -18,7 +18,7 @@ import { FormError } from "@/components/ui/form-messages";
 import { Input } from "@/components/ui/input";
 import { AUTH_CONFIG } from "@/features/console/constants";
 import { type LoginInput, loginSchema } from "../schemas";
-import { loginUser } from "../service";
+import { loginUser } from "../services";
 import { PasswordInput } from "./password-input";
 
 const LOGIN_TYPES = {

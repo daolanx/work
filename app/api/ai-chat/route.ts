@@ -1,4 +1,4 @@
-import { streamChatCompletion } from "@/features/ai-chat/service";
+import { streamChatCompletion } from "@/features/ai-chat/services";
 import { ValidationError } from "@/lib/errors";
 
 export async function POST(req: Request) {

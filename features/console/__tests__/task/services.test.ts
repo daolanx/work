@@ -14,7 +14,7 @@ import {
 	getTask,
 	getTasks,
 	updateTask,
-} from "@/features/console/task/service";
+} from "@/features/console/task/services";
 import { getSession } from "@/lib/session";
 
 // Helper: build a thenable chain that resolves with `data`

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getTasks } from "@/features/console/task/service";
+import { getTasks } from "@/features/console/task/services";
 import { authApi } from "@/lib/api-handler";
 
 export const GET = authApi(async (req) => {

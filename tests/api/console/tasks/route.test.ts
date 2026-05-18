@@ -2,10 +2,10 @@ import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/lib/session", () => ({ getSession: vi.fn() }));
-vi.mock("@/features/console/task/service", () => ({ getTasks: vi.fn() }));
+vi.mock("@/features/console/task/services", () => ({ getTasks: vi.fn() }));
 
 import { GET } from "@/app/api/console/tasks/route";
-import { getTasks } from "@/features/console/task/service";
+import { getTasks } from "@/features/console/task/services";
 import { getSession } from "@/lib/session";
 
 const mockSession = { user: { id: "user-1" }, session: { id: "sess-1" } };

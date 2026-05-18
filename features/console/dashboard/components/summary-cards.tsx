@@ -10,7 +10,7 @@ import {
 import {
 	queryMAU,
 	queryRetentionRate,
-} from "@/features/console/dashboard/service";
+} from "@/features/console/dashboard/services";
 import {
 	queryConversionRate,
 	queryMRR,

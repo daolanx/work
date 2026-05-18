@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 import type { UpdateUserInput } from "@/features/console/auth/schemas";
-import { updateUser } from "@/features/console/user/service";
+import { updateUser } from "@/features/console/user/services";
 import { fetcher } from "@/lib/fetcher";
 
 const USER_KEY = "user-profile";
