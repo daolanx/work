@@ -1,3 +1,4 @@
+import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/db", () => ({ db: {} }));
@@ -12,7 +13,7 @@ beforeEach(() => {
 });
 
 function req() {
-	return new Request("http://localhost:3000/api/console/user/visitors");
+	return new NextRequest("http://localhost:3000/api/console/user/visitors");
 }
 
 describe("GET /api/console/user/visitors", () => {

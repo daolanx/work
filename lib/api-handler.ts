@@ -1,69 +1,84 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { getSession, type Session } from "@/lib/session";
+import { getSession } from "@/lib/session";
 
-/**
- * Type definition for a handler that requires authentication
- */
-type AuthHandler = (
+// ---- Core types ----
+
+type RouteHandler<P = Record<string, string>> = (
 	req: NextRequest,
-	context: {
-		params: any;
-		user: Session["user"];
-		session: Session["session"];
-	},
-) => Promise<any>;
+	ctx: { params: P },
+) => Promise<Response>;
 
 /**
- * Base logic: A high-order function to catch errors and return consistent JSON responses
+ * A middleware receives a handler and returns a new handler
+ * with additional behavior (error handling, auth, logging, etc.)
  */
-function withErrorHandler(handler: (...args: any[]) => Promise<any>) {
-	return async (...args: any[]) => {
-		try {
-			return await handler(...args);
-		} catch (err: any) {
-			console.error("[api.error]", err.statusCode || 500, err.message);
-			return NextResponse.json(
-				{
-					success: false,
-					message: err.message || "Internal Server Error",
-				},
-				{ status: err.statusCode || 500 },
-			);
-		}
+type Middleware = <P>(handler: RouteHandler<P>) => RouteHandler<P>;
+
+// ---- Middlewares ----
+
+/** Catch any unhandled error and return a consistent JSON error response */
+const withErrorHandling: Middleware = (handler) => async (req, ctx) => {
+	try {
+		return await handler(req, ctx);
+	} catch (err: any) {
+		console.error("[api.error]", err.statusCode || 500, err.message);
+		return NextResponse.json(
+			{ success: false, message: err.message || "Internal Server Error" },
+			{ status: err.statusCode || 500 },
+		);
+	}
+};
+
+/** Validate session and inject user/session into context */
+const withAuth: Middleware = (handler) => async (req, ctx) => {
+	const resSession = await getSession();
+
+	if (!resSession) {
+		return NextResponse.json(
+			{ success: false, message: "Unauthorized" },
+			{ status: 401 },
+		);
+	}
+
+	return await handler(req, {
+		...ctx,
+		user: resSession.user,
+		session: resSession.session,
+	} as any);
+};
+
+// ---- Composition ----
+/**
+ * Compose middlewares into a single handler.
+ * Execution order: the rightmost middleware wraps the outermost layer.
+ *
+ * chain([withAuth, withErrorHandling]) produces:
+ *   withErrorHandling(withAuth(handler))
+ *
+ * Request flow:
+ *   → withErrorHandling (catches all errors)
+ *     → withAuth (validates session)
+ *       → your handler (business logic)
+ *     ← back through withAuth
+ *   ← back through withErrorHandling
+ */
+
+function chain(middlewares: Middleware[]) {
+	return <P>(
+		handler: (req: NextRequest, ctx: any) => Promise<Response>,
+	): RouteHandler<P> => {
+		return middlewares.reduce(
+			(composed, middleware) => middleware(composed),
+			handler as any,
+		) as RouteHandler<P>;
 	};
 }
 
-/**
- * Basic API Handler: Includes error handling only.
- * Useful for public endpoints.
- */
-export const api = (handler: any) => withErrorHandler(handler);
+// ---- Exports ----
 
-/**
- * Authenticated API Handler: Reuses error handling and injects session validation.
- * Intercepts requests if the user is not logged in.
- */
-export const authApi = (handler: AuthHandler) => {
-	// We wrap the logic inside withErrorHandler for maximum code reuse
-	return withErrorHandler(
-		async (req: NextRequest, context: { params: any }) => {
-			// Better-auth requires current headers (cookies) to identify the session
-			const sessionData = await getSession();
+/** Public endpoint: error handling only */
+export const api = chain([withErrorHandling]);
 
-			// If no active session exists, block the request early
-			if (!sessionData) {
-				return NextResponse.json(
-					{ success: false, message: "Unauthorized: Access denied" },
-					{ status: 401 },
-				);
-			}
-
-			// Pass control to the business logic, injecting 'user' and 'session' into context
-			return await handler(req, {
-				...context,
-				user: sessionData.user,
-				session: sessionData.session,
-			});
-		},
-	);
-};
+/** Protected endpoint: error handling + auth */
+// the execution order is from right to left: withErrorHandling -> withAuth
+export const authApi = chain([withAuth, withErrorHandling]);

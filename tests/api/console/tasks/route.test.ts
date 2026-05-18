@@ -1,3 +1,4 @@
+import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/lib/session", () => ({ getSession: vi.fn() }));
@@ -27,7 +28,7 @@ beforeEach(() => {
 });
 
 function req(path = "/api/console/tasks") {
-	return new Request(`http://localhost:3000${path}`);
+	return new NextRequest(`http://localhost:3000${path}`);
 }
 
 describe("GET /api/console/tasks", () => {
