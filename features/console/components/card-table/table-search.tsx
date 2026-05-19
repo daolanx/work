@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
  * SearchInput Component
  * Optimized for explicit search invocation via 'Enter' key or 'Clear' action.
  */
-export function SearchInput({
+export function TableSearch({
 	placeholder = "Search...",
 	defaultValue = "",
 	onSearch,

@@ -1,17 +1,12 @@
 "use client";
 
-import { IconLayoutColumns } from "@tabler/icons-react";
 import {
-	type Cell,
-	type Column,
 	flexRender,
 	getCoreRowModel,
-	type Table as ReactTable,
-	type Row,
 	useReactTable,
 } from "@tanstack/react-table";
-import { forwardRef, useImperativeHandle } from "react";
-import { Button } from "@/components/ui/button";
+import { useImperativeHandle } from "react";
+
 // UI Components
 import {
 	Card,
@@ -20,12 +15,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import {
-	DropdownMenu,
-	DropdownMenuCheckboxItem,
-	DropdownMenuContent,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import {
 	Table,
 	TableBody,
@@ -35,15 +25,15 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { SearchInput } from "../search-input";
-
 // Internal Logic & Components
 import { useTableFilter } from "./hooks/use-table-filter";
 import { useTableRowFlash } from "./hooks/use-table-row-flash";
 import { DataTableColumnHeader } from "./table-column-header";
+import { TableColumnToggle } from "./table-column-toggle";
 import { TableFacedFilters } from "./table-faced-fliters";
 import { TablePagination } from "./table-pagination";
 import { TableRowsSkeleton } from "./table-rows-skeleton";
+import { TableSearch } from "./table-search";
 import type { CardTableHandle, ExtendedDataTableProps } from "./types";
 
 /**
@@ -51,19 +41,17 @@ import type { CardTableHandle, ExtendedDataTableProps } from "./types";
  * A highly decoupled table component that separates state management (filters),
  * data fetching, and UI rendering.
  */
-const CardTableInner = <T,>(
-	{
-		header,
-		columns,
-		useDataHook,
-		toolbar,
-		initialPageSize = 10,
-		variant = "default",
-	}: ExtendedDataTableProps<T>,
-	ref: React.Ref<CardTableHandle>,
-) => {
+function CardTable<T>({
+	header,
+	columns,
+	useDataHook,
+	toolbar,
+	initialPageSize = 10,
+	variant = "default",
+	ref,
+}: ExtendedDataTableProps<T> & { ref?: React.Ref<CardTableHandle> }) {
 	// Temporary state for highlighting a specific row (e.g., after creation/update)
-	const { flashTaskId, triggerTaskRowFlash, isRowFlashed } = useTableRowFlash();
+	const { triggerTableRowFlash, isRowFlashed } = useTableRowFlash();
 
 	/**
 	 * 1. State Management
@@ -127,8 +115,8 @@ const CardTableInner = <T,>(
 		reset: () => {
 			filter.reset();
 		},
-		flashTaskRow(taskId) {
-			triggerTaskRowFlash(taskId);
+		flashTableRow(rowId) {
+			triggerTableRowFlash(rowId);
 		},
 	}));
 
@@ -150,11 +138,11 @@ const CardTableInner = <T,>(
 				<CardTitle>{header}</CardTitle>
 				<CardAction className="flex items-center gap-2">
 					{/* Flat access to filter state and actions */}
-					<SearchInput
+					<TableSearch
 						defaultValue={filter.searchKey}
 						onSearch={filter.setSearchKey}
 					/>
-					<ColumnToggle table={table} />
+					<TableColumnToggle table={table} />
 					{toolbar}
 				</CardAction>
 			</CardHeader>
@@ -181,14 +169,47 @@ const CardTableInner = <T,>(
 							))}
 						</TableHeader>
 						<TableBody>
-							<TableBodyRender
-								columnCount={columns.length}
-								flashTaskId={flashTaskId}
-								isLoading={isLoading}
-								isRowFlashed={isRowFlashed}
-								pageSize={filter.pageSize}
-								rows={table.getRowModel().rows}
-							/>
+							{isLoading ? (
+								<TableRowsSkeleton
+									columnCount={columns.length}
+									pageSize={filter.pageSize}
+								/>
+							) : table.getRowModel().rows.length === 0 ? (
+								<TableRow>
+									<TableCell
+										className="h-24 text-center text-muted-foreground"
+										colSpan={columns.length}
+									>
+										No Data.
+									</TableCell>
+								</TableRow>
+							) : (
+								table.getRowModel().rows.map((row) => {
+									const isFlashRow = !!isRowFlashed?.(
+										// eslint-disable-next-line @typescript-eslint/no-explicit-any
+										(row.original as any).id,
+									);
+									return (
+										<TableRow
+											className={cn(
+												"transition-colors duration-500",
+												isFlashRow &&
+													"animate-fade-out-highlight bg-green-100/50",
+											)}
+											key={row.id}
+										>
+											{row.getVisibleCells().map((cell) => (
+												<TableCell key={cell.id}>
+													{flexRender(
+														cell.column.columnDef.cell,
+														cell.getContext(),
+													)}
+												</TableCell>
+											))}
+										</TableRow>
+									);
+								})
+							)}
 						</TableBody>
 					</Table>
 				</div>
@@ -202,96 +223,6 @@ const CardTableInner = <T,>(
 			</CardContent>
 		</Card>
 	);
-};
-
-/**
- * Helper component to toggle column visibility.
- */
-function ColumnToggle<T>({ table }: { table: ReactTable<T> }) {
-	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<Button size="sm" variant="outline">
-					<IconLayoutColumns className="mr-2 h-4 w-4" /> Column
-				</Button>
-			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end">
-				{table
-					.getAllColumns()
-					.filter((c: Column<T>) => c.getCanHide())
-					.map((column: Column<T>) => (
-						<DropdownMenuCheckboxItem
-							checked={column.getIsVisible()}
-							key={column.id}
-							onCheckedChange={(v) => column.toggleVisibility(!!v)}
-						>
-							{column.id}
-						</DropdownMenuCheckboxItem>
-					))}
-			</DropdownMenuContent>
-		</DropdownMenu>
-	);
 }
 
-/**
- * Encapsulated TableBody logic to handle loading, empty states, and row rendering.
- */
-interface TableBodyRenderProps<T> {
-	rows: Row<T>[];
-	isLoading: boolean;
-	columnCount: number;
-	pageSize: number;
-	isRowFlashed?: (taskId: string) => boolean;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	flashTaskId?: any;
-}
-
-function TableBodyRender<T>({
-	rows,
-	isLoading,
-	columnCount,
-	pageSize,
-	isRowFlashed,
-}: TableBodyRenderProps<T>) {
-	if (isLoading) {
-		return <TableRowsSkeleton columnCount={columnCount} pageSize={pageSize} />;
-	}
-
-	if (!rows.length) {
-		return (
-			<TableRow>
-				<TableCell
-					className="h-24 text-center text-muted-foreground"
-					colSpan={columnCount}
-				>
-					No Data.
-				</TableCell>
-			</TableRow>
-		);
-	}
-
-	return rows.map((row: Row<T>) => {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const isFlashTaskRow = !!isRowFlashed?.((row.original as any).id);
-
-		return (
-			<TableRow
-				className={cn(
-					"transition-colors duration-500",
-					isFlashTaskRow && "animate-fade-out-highlight bg-green-100/50",
-				)}
-				key={row.id}
-			>
-				{row.getVisibleCells().map((cell: Cell<T, unknown>) => (
-					<TableCell key={cell.id}>
-						{flexRender(cell.column.columnDef.cell, cell.getContext())}
-					</TableCell>
-				))}
-			</TableRow>
-		);
-	});
-}
-
-export const CardTable = forwardRef(CardTableInner) as <T>(
-	props: ExtendedDataTableProps<T> & { ref?: React.Ref<CardTableHandle> },
-) => React.ReactElement;
+export { CardTable };

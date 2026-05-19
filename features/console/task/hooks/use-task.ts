@@ -5,8 +5,8 @@ import { useMemo } from "react";
 import { toast } from "sonner";
 import useSWR, { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
+import type { PaginatedResponse } from "@/features/console/components/card-table/types";
 import { fetcher } from "@/lib/fetcher";
-import type { PaginatedResponse } from "../components/card-table/types";
 import type { CreateTask, Task, UpdateTask } from "../schemas";
 import { createTask, deleteTask, updateTask } from "../services";
 

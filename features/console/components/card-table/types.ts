@@ -15,7 +15,7 @@ export interface PaginationParams {
 
 export interface ExtendedDataTableProps<T> extends DataTableProps<T> {
 	variant?: "default" | "ghost";
-	isRowFlashed?: (taskId: string) => boolean;
+	isRowFlashed?: (rowId: string) => boolean;
 }
 
 export interface CardTableHandle {
@@ -28,7 +28,7 @@ export interface CardTableHandle {
 	 * Briefly flashes a row to draw the user's attention.
 	 * Ideal for new or updated tasks.
 	 */
-	flashTaskRow: (taskId: string) => void;
+	flashTableRow: (rowId: string) => void;
 }
 
 export interface PaginatedResponse<T> {
