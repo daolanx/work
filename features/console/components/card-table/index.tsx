@@ -91,8 +91,7 @@ function CardTable<T>({
 				typeof updater === "function"
 					? updater({ pageIndex: filter.pageIndex, pageSize: filter.pageSize })
 					: updater;
-			filter.setPageIndex(next.pageIndex);
-			filter.setPageSize(next.pageSize);
+			filter.setPagination(next);
 		},
 		onColumnFiltersChange: (updater) => {
 			const next =
@@ -213,13 +212,7 @@ function CardTable<T>({
 						</TableBody>
 					</Table>
 				</div>
-				<TablePagination
-					onPageChange={filter.setPageIndex}
-					onPageSizeChange={filter.setPageSize}
-					pageIndex={filter.pageIndex}
-					pageSize={filter.pageSize}
-					total={res?.total ?? 0}
-				/>
+				<TablePagination table={table} />
 			</CardContent>
 		</Card>
 	);

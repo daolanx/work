@@ -1,6 +1,7 @@
 import type {
 	ColumnDef,
 	ColumnFiltersState,
+	Table as ReactTable,
 	Row,
 	SortingState,
 } from "@tanstack/react-table";
@@ -50,12 +51,8 @@ export interface DataTableProps<T> {
 	toolbar?: React.ReactNode;
 }
 
-export interface TablePaginationProps {
-	total: number;
-	pageSize: number;
-	pageIndex: number;
-	onPageChange: (index: number) => void;
-	onPageSizeChange: (size: number) => void;
+export interface TablePaginationProps<T> {
+	table: ReactTable<T>;
 }
 
 export interface TableBodyContentProps<T> {

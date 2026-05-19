@@ -1,7 +1,6 @@
 "use client";
 
 import type { ColumnFiltersState, SortingState } from "@tanstack/react-table";
-import { useMemo } from "react";
 import { create } from "zustand";
 
 interface TableFilterState {
@@ -10,8 +9,7 @@ interface TableFilterState {
 	searchKey: string;
 	columnFilters: ColumnFiltersState;
 	sorting: SortingState;
-	setPageIndex: (val: number) => void;
-	setPageSize: (val: number) => void;
+	setPagination: (val: { pageIndex?: number; pageSize?: number }) => void;
 	setSearchKey: (val: string) => void;
 	setColumnFilters: (val: ColumnFiltersState) => void;
 	setSorting: (val: SortingState) => void;
@@ -29,8 +27,7 @@ const createTableStore = (initialPageSize: number) =>
 		columnFilters: [],
 		sorting: [{ id: "createdAt", desc: true }],
 
-		setPageIndex: (pageIndex) => set({ pageIndex }),
-		setPageSize: (pageSize) => set({ pageSize }),
+		setPagination: (val) => set(val),
 		setSearchKey: (searchKey) => set({ searchKey, pageIndex: 0 }),
 		setColumnFilters: (columnFilters) => set({ columnFilters, pageIndex: 0 }),
 		setSorting: (sorting) => set({ sorting }),
@@ -45,10 +42,6 @@ const createTableStore = (initialPageSize: number) =>
 	}));
 
 export function useTableFilter(header: string, initialPageSize = 10) {
-	const useStore = useMemo(() => {
-		if (!stores[header]) stores[header] = createTableStore(initialPageSize);
-		return stores[header];
-	}, [header, initialPageSize]);
-
-	return useStore() as TableFilterState;
+	if (!stores[header]) stores[header] = createTableStore(initialPageSize);
+	return stores[header]() as TableFilterState;
 }

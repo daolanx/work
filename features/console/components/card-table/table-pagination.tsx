@@ -18,14 +18,11 @@ import {
 
 import type { TablePaginationProps } from "./types";
 
-export const TablePagination = ({
-	total,
-	pageSize,
-	pageIndex,
-	onPageChange,
-	onPageSizeChange,
-}: TablePaginationProps) => {
-	const pageCount = Math.ceil(total / pageSize);
+export const TablePagination = <T,>({ table }: TablePaginationProps<T>) => {
+	const { pageIndex, pageSize } = table.getState().pagination;
+	const total = table.getRowCount();
+	const pageCount = table.getPageCount();
+
 	const pages = useMemo(() => {
 		const acc: { id: string; value: number | string }[] = [];
 		for (let i = 0; i < pageCount; i++) {
@@ -51,7 +48,9 @@ export const TablePagination = ({
 				<div className="flex items-center gap-2">
 					<span>PageSize:</span>
 					<Select
-						onValueChange={(v) => onPageSizeChange(Number(v))}
+						onValueChange={(v) =>
+							table.setPagination({ pageIndex: 0, pageSize: Number(v) })
+						}
 						value={`${pageSize}`}
 					>
 						<SelectTrigger className="h-8 w-[70px]">
@@ -76,7 +75,9 @@ export const TablePagination = ({
 									? "pointer-events-none opacity-50"
 									: "cursor-pointer"
 							}
-							onClick={() => onPageChange(pageIndex - 1)}
+							onClick={() =>
+								table.setPagination({ pageIndex: pageIndex - 1, pageSize })
+							}
 						/>
 					</PaginationItem>
 					{pages.map((p) => (
@@ -87,7 +88,12 @@ export const TablePagination = ({
 								<PaginationLink
 									className="cursor-pointer"
 									isActive={pageIndex === p.value}
-									onClick={() => onPageChange(p.value as number)}
+									onClick={() =>
+										table.setPagination({
+											pageIndex: p.value as number,
+											pageSize,
+										})
+									}
 								>
 									{(p.value as number) + 1}
 								</PaginationLink>
@@ -101,7 +107,9 @@ export const TablePagination = ({
 									? "pointer-events-none opacity-50"
 									: "cursor-pointer"
 							}
-							onClick={() => onPageChange(pageIndex + 1)}
+							onClick={() =>
+								table.setPagination({ pageIndex: pageIndex + 1, pageSize })
+							}
 						/>
 					</PaginationItem>
 				</PaginationContent>
