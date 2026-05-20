@@ -25,9 +25,9 @@ export default function ForgetPasswordPage() {
 		setIsPending(false);
 
 		if (result.success) {
-			setState({ success: result.success.reason });
-		} else if (result.error) {
-			setState({ error: result.error.reason });
+			setState({ success: result.message });
+		} else {
+			setState({ error: result.message });
 		}
 	};
 

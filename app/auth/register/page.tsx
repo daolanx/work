@@ -6,15 +6,17 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { OAuthButton } from "@/features/console/auth/components/oauth-button";
 import RegisterForm from "@/features/console/auth/components/register-form";
+import { OAUTH_PROVIDERS } from "@/features/console/auth/constants";
 
 export default function RegisterPage() {
-	const [isPending, setIsPending] = useState(false);
+	const [registerChannel, setRegisterChannel] = useState<string | null>(null);
+	const isRegistering = registerChannel !== null;
 
 	return (
 		<div className="flex min-h-screen w-full items-center justify-center px-4">
 			<motion.div
 				animate={{ opacity: 1, y: 0 }}
-				className={`w-full transition-all duration-300 sm:max-w-[400px] md:max-w-[420px] lg:max-w-[440px] ${isPending ? "pointer-events-none opacity-70 blur-[0.3px]" : ""}`}
+				className={`w-full transition-all duration-300 sm:max-w-[400px] md:max-w-[420px] lg:max-w-[440px] ${isRegistering ? "pointer-events-none opacity-70 blur-[0.3px]" : ""}`}
 				initial={{ opacity: 0, y: 10 }}
 			>
 				<div className="mb-10 flex flex-col items-center gap-3 text-center">
@@ -27,12 +29,18 @@ export default function RegisterPage() {
 				</div>
 
 				<Card className="relative overflow-hidden border-muted/40 border-t-primary/20 bg-card/95 shadow-2xl backdrop-blur-xl">
-					{isPending && (
+					{isRegistering && (
 						<div className="absolute top-0 right-0 left-0 h-[3px] animate-pulse bg-primary" />
 					)}
 					<CardContent className="flex flex-col gap-6 px-8 pt-12 pb-10 sm:px-12">
-						{/* Note: Ensure RegisterForm accepts and calls onLoading if you want the pulse bar to sync with form submission */}
-						<RegisterForm onLoading={setIsPending} />
+						<RegisterForm
+							onRegisteringEnd={() => {
+								setRegisterChannel(null);
+							}}
+							onRegisteringStart={() => {
+								setRegisterChannel("form");
+							}}
+						/>
 
 						<div className="flex items-center">
 							<div className="h-px flex-1 bg-muted-foreground/15" />
@@ -43,22 +51,26 @@ export default function RegisterPage() {
 						</div>
 
 						<div className="flex gap-3">
-							<OAuthButton
-								disabled={isPending}
-								onLoading={setIsPending}
-								provider="google"
-							/>
-							<OAuthButton
-								disabled={isPending}
-								onLoading={setIsPending}
-								provider="github"
-							/>
+							{OAUTH_PROVIDERS.map((p) => (
+								<OAuthButton
+									disabled={isRegistering}
+									isSubmitting={registerChannel === p.id}
+									key={p.id}
+									onSubmittingEnd={() => {
+										setRegisterChannel(null);
+									}}
+									onSubmittingStart={(providerId) => {
+										setRegisterChannel(providerId);
+									}}
+									provider={p}
+								/>
+							))}
 						</div>
 					</CardContent>
 				</Card>
 
 				<p className="mt-10 text-center text-muted-foreground text-sm">
-					Already have a account?
+					Already have an account?
 					<Link
 						className="ml-2 font-bold text-foreground transition-colors hover:text-primary"
 						href="/auth/login"

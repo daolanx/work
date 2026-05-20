@@ -1,62 +1,47 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { GithubIcon, GoogleIcon } from "@/components/ui/icons";
-import {
-	signInWithGithub,
-	signInWithGoogle,
-} from "@/features/console/auth/lib/client";
+import type { OAUTH_PROVIDERS } from "../constants";
+
+type OAuthProvider = (typeof OAUTH_PROVIDERS)[number];
 
 interface OAuthButtonProps {
-	provider: "google" | "github";
+	provider: OAuthProvider;
 	disabled?: boolean;
-	onLoading?: (loading: boolean) => void;
+	isSubmitting?: boolean;
+	onSubmittingEnd?: (id: string | null) => void;
+	onSubmittingStart?: (id: string | null) => void;
 }
-
-const PROVIDER_CONFIG = {
-	google: {
-		label: "Google",
-		icon: GoogleIcon,
-		signIn: signInWithGoogle,
-	},
-	github: {
-		label: "GitHub",
-		icon: GithubIcon,
-		signIn: signInWithGithub,
-	},
-};
 
 export function OAuthButton({
 	provider,
 	disabled,
-	onLoading,
+	isSubmitting,
+	onSubmittingEnd,
+	onSubmittingStart,
 }: OAuthButtonProps) {
-	const [isLoading, setIsLoading] = useState(false);
-	const { label, icon: Icon, signIn } = PROVIDER_CONFIG[provider];
+	const { id, label, icon: Icon, signIn } = provider;
 
 	const handleSignIn = async () => {
-		setIsLoading(true);
-		onLoading?.(true);
+		onSubmittingStart?.(id);
 		try {
 			await signIn();
 		} catch (error) {
 			console.error(`${label} Sign-in Error:`, error);
-			setIsLoading(false);
-			onLoading?.(false);
+			onSubmittingEnd?.(id);
 		}
 	};
 
 	return (
 		<Button
 			className="h-11 w-full flex-1 cursor-pointer"
-			disabled={disabled || isLoading}
+			disabled={disabled || isSubmitting}
 			onClick={handleSignIn}
 			type="button"
 			variant="outline"
 		>
-			{isLoading ? (
+			{isSubmitting ? (
 				<Loader2 className="mr-2 h-4 w-4 animate-spin" />
 			) : (
 				<Icon className="mr-2" />

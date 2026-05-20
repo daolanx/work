@@ -3,17 +3,21 @@
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
+
 import { Card, CardContent } from "@/components/ui/card";
 import LoginForm from "@/features/console/auth/components/login-form";
 import { OAuthButton } from "@/features/console/auth/components/oauth-button";
+import { OAUTH_PROVIDERS } from "@/features/console/auth/constants";
 
 export default function LoginPage() {
-	const [isPending, setIsPending] = useState(false);
+	const [loginChannel, setLoginChannel] = useState<string | null>(null);
+	const isLogging = loginChannel !== null;
+
 	return (
 		<div className="flex min-h-screen w-full items-center justify-center px-4">
 			<motion.div
 				animate={{ opacity: 1, y: 0 }}
-				className={`w-full transition-all duration-300 sm:max-w-[400px] md:max-w-[420px] lg:max-w-[440px] ${isPending ? "pointer-events-none opacity-70 blur-[0.3px]" : ""}`}
+				className={`w-full transition-all duration-300 sm:max-w-[400px] md:max-w-[420px] lg:max-w-[440px] ${isLogging ? "pointer-events-none opacity-70 blur-[0.3px]" : ""}`}
 				initial={{ opacity: 0, y: 10 }}
 			>
 				<div className="mb-10 flex flex-col items-center gap-3 text-center">
@@ -26,11 +30,18 @@ export default function LoginPage() {
 				</div>
 
 				<Card className="relative overflow-hidden border-muted/40 border-t-primary/20 bg-card/95 shadow-2xl backdrop-blur-xl">
-					{isPending && (
+					{isLogging && (
 						<div className="absolute top-0 right-0 left-0 h-[3px] animate-pulse bg-primary" />
 					)}
 					<CardContent className="flex flex-col gap-6 px-8 pt-12 pb-10 sm:px-12">
-						<LoginForm onLoading={setIsPending} />
+						<LoginForm
+							onLoginingEnd={() => {
+								setLoginChannel(null);
+							}}
+							onLoginingStart={() => {
+								setLoginChannel("form");
+							}}
+						/>
 
 						<div className="-mt-2 flex justify-end">
 							<Link
@@ -50,16 +61,20 @@ export default function LoginPage() {
 						</div>
 
 						<div className="flex gap-3">
-							<OAuthButton
-								disabled={isPending}
-								onLoading={setIsPending}
-								provider="google"
-							/>
-							<OAuthButton
-								disabled={isPending}
-								onLoading={setIsPending}
-								provider="github"
-							/>
+							{OAUTH_PROVIDERS.map((p) => (
+								<OAuthButton
+									disabled={isLogging}
+									isSubmitting={loginChannel === p.id}
+									key={p.id}
+									onSubmittingEnd={() => {
+										setLoginChannel(null);
+									}}
+									onSubmittingStart={(providerId) => {
+										setLoginChannel(providerId);
+									}}
+									provider={p}
+								/>
+							))}
 						</div>
 					</CardContent>
 				</Card>

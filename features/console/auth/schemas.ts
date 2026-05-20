@@ -39,6 +39,13 @@ export const registerSchema = z.object({
 	password: passwordSchema,
 });
 
+/**
+ * Request Password Reset Schema
+ */
+export const requestPasswordSchema = z.object({
+	email: z.string().email("Please enter a valid email address."),
+});
+
 // Reset Password (with confirmation check)
 export const resetPasswordSchema = z
 	.object({
@@ -64,7 +71,7 @@ export type UpdateUserInput = z.infer<typeof UpdateUserSchema>;
 export type RegisterSchema = z.infer<typeof registerSchema>;
 
 export type ActionResult<T = unknown> = {
-	success: { reason: string } | null;
-	error: { reason: string } | null;
+	success?: boolean | undefined;
+	message?: string | undefined;
 	data?: T;
 };

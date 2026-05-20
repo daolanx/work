@@ -9,15 +9,19 @@ import {
 	loginSchema,
 	type RegisterInput,
 	registerSchema,
+	requestPasswordSchema,
 } from "./schemas";
 
-export async function loginUser(values: LoginInput): Promise<ActionResult> {
+const DEMO_EMAIL = process.env.NEXT_PUBLIC_DEMO_USER_EMAIL ?? "";
+const DEMO_PASSWORD = process.env.NEXT_PUBLIC_DEMO_USER_PASSWORD ?? "";
+
+export async function loginUser(values?: LoginInput): Promise<ActionResult> {
 	const validatedFields = loginSchema.safeParse(values);
 
 	if (!validatedFields.success) {
 		return {
-			error: { reason: "Invalid input fields." },
-			success: null,
+			success: false,
+			message: "Invalid input fields.",
 		};
 	}
 
@@ -33,37 +37,41 @@ export async function loginUser(values: LoginInput): Promise<ActionResult> {
 		});
 
 		return {
-			success: { reason: "Welcome back! Redirecting..." },
-			error: null,
+			success: true,
+			message: "Welcome back! Redirecting...",
 		};
 	} catch (err) {
 		if (err instanceof APIError) {
 			return {
-				error: { reason: err.message },
-				success: null,
+				message: err.message,
+				success: false,
 			};
 		}
 
 		console.error("Login Action Error:", err);
 		return {
-			error: { reason: "Internal server error. Please try again later." },
-			success: null,
+			message: "Internal server error. Please try again later.",
+			success: false,
 		};
 	}
+}
+
+export async function loginDemoUser(): Promise<ActionResult> {
+	return await loginUser({ email: DEMO_EMAIL, password: DEMO_PASSWORD });
 }
 
 export async function registerUser(
 	formData: RegisterInput,
 ): Promise<ActionResult> {
-	const parsed = registerSchema.safeParse(formData);
-	if (!parsed.success) {
+	const validatedFields = registerSchema.safeParse(formData);
+	if (!validatedFields.success) {
 		return {
-			success: null,
-			error: { reason: parsed.error.issues[0]?.message || "Invalid input" },
+			success: false,
+			message: validatedFields.error.issues[0]?.message || "Invalid input",
 		};
 	}
 
-	const { email, password, name } = parsed.data;
+	const { email, password, name } = validatedFields.data;
 
 	try {
 		await auth.api.signUpEmail({
@@ -76,40 +84,22 @@ export async function registerUser(
 		});
 
 		return {
-			success: {
-				reason:
-					"Account created! Please check your email and click the verification link to activate your account.",
-			},
-			error: null,
+			success: true,
+			message:
+				"Account created! Please check your email and click the verification link to activate your account.",
 		};
 	} catch (error: unknown) {
-		const err = error as {
-			status?: string | number;
-			statusCode?: string | number;
-			body?: { message?: string };
-		};
-		const status = err.status || err.statusCode;
-		if (status === "UNPROCESSABLE_ENTITY" || status === 422) {
-			const message =
-				err.body?.message || "Email already exists or invalid data.";
-
-			return {
-				error: { reason: message },
-				success: null,
-			};
-		}
-
 		if (error instanceof APIError) {
 			return {
-				error: { reason: error.message },
-				success: null,
+				message: error.message || "Email already exists or invalid data.",
+				success: false,
 			};
 		}
 
 		console.error("Registration Error:", error);
 		return {
-			error: { reason: "An unexpected error occurred." },
-			success: null,
+			message: "An unexpected error occurred.",
+			success: false,
 		};
 	}
 }
@@ -117,10 +107,11 @@ export async function registerUser(
 export async function requestPasswordReset(
 	email: string,
 ): Promise<ActionResult> {
-	if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+	const validatedFields = requestPasswordSchema.safeParse({ email });
+	if (!validatedFields.success) {
 		return {
-			success: null,
-			error: { reason: "Please enter a valid email address." },
+			success: false,
+			message: validatedFields.error.issues[0]?.message || "Invalid email",
 		};
 	}
 
@@ -131,23 +122,12 @@ export async function requestPasswordReset(
 				redirectTo: "/auth/reset-password",
 			},
 		});
-
-		return {
-			success: { reason: "A recovery link has been sent to your inbox." },
-			error: null,
-		};
 	} catch (err) {
-		if (err instanceof APIError) {
-			return {
-				error: { reason: err.message },
-				success: null,
-			};
-		}
-
 		console.error("Password Reset Error:", err);
-		return {
-			error: { reason: "Internal server error. Please try again later." },
-			success: null,
-		};
 	}
+
+	return {
+		success: true,
+		message: "A recovery link has been sent to your email.",
+	};
 }

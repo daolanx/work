@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, MailCheck } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,19 +16,26 @@ import {
 } from "@/components/ui/form";
 import { FormError } from "@/components/ui/form-messages";
 import { Input } from "@/components/ui/input";
-import { type RegisterSchema, registerSchema } from "../schemas";
+import {
+	type ActionResult,
+	type RegisterSchema,
+	registerSchema,
+} from "../schemas";
 import { registerUser } from "../services";
 import { PasswordInput } from "./password-input";
 
 interface RegisterFormProps {
-	onLoading?: (loading: boolean) => void;
+	onRegisteringStart?: () => void;
+	onRegisteringEnd?: () => void;
 }
 
-const RegisterForm = ({ onLoading }: RegisterFormProps) => {
-	const [serverState, setServerState] = React.useState<{
-		success?: string;
-		error?: string;
-	}>({});
+const RegisterForm = ({
+	onRegisteringStart,
+	onRegisteringEnd,
+}: RegisterFormProps) => {
+	const [resSubmit, setResSubmit] = useState<ActionResult<{ email: string }>>(
+		{},
+	);
 
 	const form = useForm<RegisterSchema>({
 		resolver: zodResolver(registerSchema),
@@ -37,27 +44,28 @@ const RegisterForm = ({ onLoading }: RegisterFormProps) => {
 
 	const { isSubmitting } = form.formState;
 
-	// Notify parent component of loading state
-	useEffect(() => {
-		onLoading?.(isSubmitting);
-	}, [isSubmitting, onLoading]);
-
 	const onSubmit = async (data: RegisterSchema) => {
-		setServerState({});
+		setResSubmit({});
+		onRegisteringStart?.();
 		try {
-			const result = await registerUser(data);
-			if (result.success) {
-				setServerState({ success: result.success.reason });
-			} else if (result.error) {
-				setServerState({ error: result.error.reason });
-			}
+			const res = await registerUser(data);
+			setResSubmit({
+				success: res.success,
+				message: res.message,
+				...(res.success ? { data: { email: data.email } } : {}),
+			});
 		} catch (_err) {
-			setServerState({ error: "Something went wrong. Please try again." });
+			setResSubmit({
+				success: false,
+				message: "Something went wrong. Please try again.",
+			});
+		} finally {
+			onRegisteringEnd?.();
 		}
 	};
 
 	// Success view: Guides user to their inbox
-	if (serverState.success) {
+	if (resSubmit.success) {
 		return (
 			<div className="fade-in zoom-in-95 flex w-full animate-in flex-col items-center justify-center space-y-6 bg-card p-8 text-center duration-300">
 				<div className="rounded-full bg-primary/10 p-4 text-primary">
@@ -70,7 +78,7 @@ const RegisterForm = ({ onLoading }: RegisterFormProps) => {
 					<p className="text-muted-foreground">
 						We sent a verification link to{" "}
 						<span className="font-semibold text-foreground">
-							{form.getValues("email")}
+							{resSubmit.data?.email}
 						</span>
 					</p>
 				</div>
@@ -83,7 +91,7 @@ const RegisterForm = ({ onLoading }: RegisterFormProps) => {
 
 	return (
 		<div className="w-full">
-			<FormError message={serverState.error || ""} />
+			{!resSubmit.success && <FormError message={resSubmit.message ?? ""} />}
 
 			<Form {...form}>
 				<form

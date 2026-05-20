@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,77 +16,67 @@ import {
 } from "@/components/ui/form";
 import { FormError } from "@/components/ui/form-messages";
 import { Input } from "@/components/ui/input";
-import { AUTH_CONFIG } from "@/features/console/constants";
-import { type LoginInput, loginSchema } from "../schemas";
-import { loginUser } from "../services";
+import { LOGIN_TYPE, type LoginType } from "../constants";
+import { type ActionResult, type LoginInput, loginSchema } from "../schemas";
+import { loginDemoUser, loginUser } from "../services";
 import { PasswordInput } from "./password-input";
 
-const LOGIN_TYPES = {
-	NORMAL: "NORMAL",
-	DEMO: "DEMO",
-} as const;
-
-type LoginType = keyof typeof LOGIN_TYPES;
-
+// ── Login form ───────────────────────────────────────────────
 interface LoginFormProps {
-	onLoading?: (loading: boolean) => void;
+	onLoginingStart?: () => void;
+	onLoginingEnd?: () => void;
 }
 
-const LoginForm = ({ onLoading }: LoginFormProps) => {
-	const [loginType, setLoginType] = useState<LoginType | null>(null);
-	const [serverError, setServerError] = useState<string | null>(null);
-
+const LoginForm = ({ onLoginingStart, onLoginingEnd }: LoginFormProps) => {
 	const router = useRouter();
+	const [loginType, setLoginType] = useState<LoginType | null>(null);
+	const isLogging = loginType !== null;
+	const [errorMessage, setErrorMessage] = useState("");
 
 	const form = useForm<LoginInput>({
 		resolver: zodResolver(loginSchema),
-		defaultValues: {
-			email: "",
-			password: "",
-		},
+		defaultValues: { email: "", password: "" },
 	});
 
-	const { isSubmitting } = form.formState;
-
-	useEffect(() => {
-		onLoading?.(isSubmitting);
-		if (!isSubmitting) setLoginType(null);
-	}, [isSubmitting, onLoading]);
-
-	const onSubmit = async (data: LoginInput) => {
-		setServerError(null);
-		setLoginType(LOGIN_TYPES.NORMAL);
+	const login = async (
+		execLogin: (data?: LoginInput) => Promise<ActionResult>,
+		type: LoginType,
+		data?: LoginInput,
+	) => {
+		setErrorMessage("");
+		setLoginType(type);
+		onLoginingStart?.();
 
 		try {
-			const result = await loginUser(data);
+			const result = await execLogin(data);
 			if (result.success) {
-				router.push(AUTH_CONFIG.defaultRedirectPath);
-			} else if (result.error) {
-				setServerError(result.error.reason);
+				router.push("/console");
+				return;
 			}
-		} catch (_err) {
-			setServerError("An unexpected error occurred.");
+			setErrorMessage(result.message || "Login failed");
+		} catch (err) {
+			setErrorMessage(
+				err instanceof Error ? err.message : "An unexpected error occurred",
+			);
+		} finally {
+			setLoginType(null);
+			onLoginingEnd?.();
 		}
 	};
 
-	const handleDemoLogin = async () => {
-		setLoginType(LOGIN_TYPES.DEMO);
-		const email = process.env.NEXT_PUBLIC_DEMO_USER_EMAIL ?? "";
-		const password = process.env.NEXT_PUBLIC_DEMO_USER_PASSWORD ?? "";
+	const onSubmit = async (data: LoginInput) => {
+		await login(loginUser, LOGIN_TYPE.normal, data);
+	};
 
-		form.setValue("email", email, { shouldValidate: true });
-		form.setValue("password", password, { shouldValidate: true });
-
-		// Manually trigger submission
-		await form.handleSubmit(onSubmit)();
+	const onSubmitWithDemoAccount = async () => {
+		await login(loginDemoUser, LOGIN_TYPE.demo);
 	};
 
 	return (
 		<Form {...form}>
 			<form className="w-full space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
-				<FormError message={serverError || ""} />
+				<FormError message={errorMessage} />
 
-				{/* Email Field */}
 				<FormField
 					control={form.control}
 					name="email"
@@ -95,7 +85,7 @@ const LoginForm = ({ onLoading }: LoginFormProps) => {
 							<FormLabel>Email</FormLabel>
 							<FormControl>
 								<Input
-									disabled={isSubmitting}
+									disabled={isLogging}
 									placeholder="you@example.com"
 									{...field}
 								/>
@@ -105,7 +95,6 @@ const LoginForm = ({ onLoading }: LoginFormProps) => {
 					)}
 				/>
 
-				{/* Password Field */}
 				<FormField
 					control={form.control}
 					name="password"
@@ -115,8 +104,8 @@ const LoginForm = ({ onLoading }: LoginFormProps) => {
 							<FormControl>
 								<PasswordInput
 									{...field}
-									disabled={isSubmitting}
-									hideStrength={false} // Set to true for a cleaner login, false for registration
+									disabled={isLogging}
+									hideStrength={false}
 								/>
 							</FormControl>
 							<FormMessage />
@@ -125,13 +114,12 @@ const LoginForm = ({ onLoading }: LoginFormProps) => {
 				/>
 
 				<div className="mt-4 flex flex-col gap-3">
-					{/* Sign In Button */}
 					<Button
 						className="h-11 w-full cursor-pointer"
-						disabled={isSubmitting}
+						disabled={isLogging}
 						type="submit"
 					>
-						{isSubmitting && loginType === LOGIN_TYPES.NORMAL ? (
+						{isLogging && loginType === LOGIN_TYPE.normal ? (
 							<>
 								<Loader2 className="mr-2 h-4 w-4 animate-spin" />
 								Logging in...
@@ -141,20 +129,18 @@ const LoginForm = ({ onLoading }: LoginFormProps) => {
 						)}
 					</Button>
 
-					{/* Demo Button with Shimmer and Tilt effects */}
 					<div className="group relative">
 						<div className="absolute -inset-0.5 animate-tilt rounded-lg bg-gradient-to-r from-purple-600 via-pink-500 to-blue-600 opacity-30 blur transition duration-1000 group-hover:opacity-60 group-hover:duration-200" />
 						<Button
 							className="group relative h-11 w-full cursor-pointer overflow-hidden border-none bg-background transition-all duration-300 hover:bg-background/90"
-							disabled={isSubmitting}
-							onClick={handleDemoLogin}
+							disabled={isLogging}
+							onClick={onSubmitWithDemoAccount}
 							type="button"
 							variant="outline"
 						>
 							<span className="absolute inset-0 h-full w-full -translate-x-full bg-gradient-to-r from-transparent via-primary/10 to-transparent group-hover:animate-[shimmer_2s_infinite]" />
-
 							<div className="flex items-center justify-center gap-2 font-bold tracking-wide">
-								{isSubmitting && loginType === LOGIN_TYPES.DEMO ? (
+								{isLogging && loginType === LOGIN_TYPE.demo ? (
 									<>
 										<Loader2 className="mr-2 h-4 w-4 animate-spin text-purple-600" />
 										Please wait...
