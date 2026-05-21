@@ -8,9 +8,10 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-
-import { RefreshUserButton } from "@/features/console/admin/components/refresh-user-button";
-import { UsersTable } from "@/features/console/admin/components/users-table";
+import {
+	RefreshTableButton,
+	UsersTable,
+} from "@/features/console/admin/components/users-table";
 
 export default function AdminPage() {
 	return (
@@ -25,7 +26,7 @@ export default function AdminPage() {
 						Manage system users, assign roles, and monitor account status.
 					</CardDescription>
 				</div>
-				<RefreshUserButton />
+				<RefreshTableButton />
 			</CardHeader>
 			<CardContent>
 				<UsersTable />

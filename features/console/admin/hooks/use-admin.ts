@@ -4,12 +4,13 @@ import { toast } from "sonner";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 import { authClient } from "@/features/console/auth/lib/client";
+import type { Role } from "@/features/console/constants";
 
 export type AdminUser = {
 	id: string;
 	email: string;
 	name: string;
-	role: "admin" | "user";
+	role: Role;
 	banned: boolean;
 	image?: string;
 	createdAt: string;

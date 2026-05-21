@@ -27,6 +27,13 @@ export type NavGroup = {
 	className?: string;
 };
 
+export const ROLES = {
+	admin: "admin",
+	user: "user",
+} as const;
+
+export type Role = (typeof ROLES)[keyof typeof ROLES];
+
 export const NAVIGATION_CONFIG: NavGroup[] = [
 	{
 		label: "Platform",
@@ -36,13 +43,13 @@ export const NAVIGATION_CONFIG: NavGroup[] = [
 		],
 	},
 	{
-		label: "Admin ",
+		label: "Admin",
 		items: [
 			{
 				label: "User Management",
 				url: "/console/admin",
 				icon: IconShieldLock,
-				roles: ["admin"],
+				roles: [ROLES.admin],
 			},
 		],
 	},

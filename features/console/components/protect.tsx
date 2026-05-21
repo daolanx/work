@@ -9,19 +9,21 @@ import {
 } from "@/components/ui/tooltip";
 import { useUser } from "@/features/console/user/hooks/use-user";
 
-type GuardRender = (children: React.ReactNode) => React.ReactNode;
+type ProtectRender = (children: React.ReactNode) => React.ReactNode;
 
-function Guard({
-	access = "admin",
+interface IProtect {
+	access?: string;
+	loading?: React.ReactNode | ProtectRender;
+	fallback?: React.ReactNode | ProtectRender;
+	children: React.ReactNode;
+}
+
+function Protect({
+	access,
 	loading,
 	fallback,
 	children,
-}: {
-	access?: string;
-	loading?: React.ReactNode | GuardRender;
-	fallback?: React.ReactNode | GuardRender;
-	children: React.ReactNode;
-}): React.ReactNode {
+}: IProtect): React.ReactNode {
 	const { user, isLoading } = useUser();
 	const noAccess = access && user?.role !== access;
 
@@ -38,17 +40,10 @@ function Guard({
 	return children;
 }
 
-function GuardPanel({
-	children,
-	fallback,
-	loading,
-}: {
-	children: React.ReactNode;
-	fallback?: React.ReactNode;
-	loading?: React.ReactNode;
-}) {
+function ProtectSection({ access, children, fallback, loading }: IProtect) {
 	return (
-		<Guard
+		<Protect
+			access={access}
 			fallback={
 				fallback || (
 					<div className="flex h-[400px] items-center justify-center p-6 text-center">
@@ -79,43 +74,50 @@ function GuardPanel({
 			}
 		>
 			{children}
-		</Guard>
+		</Protect>
 	);
 }
 
-function GuardAction({ children }: { children: React.ReactNode }) {
+function ProtectAction({
+	access,
+	children,
+	disabledTooltip = "No permission",
+	loadingTooltip = "Loading...",
+}: IProtect & {
+	disabledTooltip?: string;
+	loadingTooltip?: string;
+}) {
 	return (
-		<Guard
+		<Protect
+			access={access}
 			fallback={(ch) => (
 				<Tooltip>
 					<TooltipTrigger asChild>
 						<span className="inline-flex">
-							{React.cloneElement(
-								ch as React.ReactElement<Record<string, unknown>>,
-								{ disabled: true },
-							)}
+							{React.isValidElement<Record<string, unknown>>(ch)
+								? React.cloneElement(ch, { disabled: true })
+								: ch}
 						</span>
 					</TooltipTrigger>
-					<TooltipContent>No permission</TooltipContent>
+					<TooltipContent>{disabledTooltip}</TooltipContent>
 				</Tooltip>
 			)}
 			loading={(ch) => (
 				<Tooltip>
 					<TooltipTrigger asChild>
 						<span className="inline-flex">
-							{React.cloneElement(
-								ch as React.ReactElement<Record<string, unknown>>,
-								{ disabled: true },
-							)}
+							{React.isValidElement<Record<string, unknown>>(ch)
+								? React.cloneElement(ch, { disabled: true })
+								: ch}
 						</span>
 					</TooltipTrigger>
-					<TooltipContent>Loading...</TooltipContent>
+					<TooltipContent>{loadingTooltip}</TooltipContent>
 				</Tooltip>
 			)}
 		>
 			{children}
-		</Guard>
+		</Protect>
 	);
 }
 
-export { Guard, GuardPanel, GuardAction };
+export { Protect, ProtectSection, ProtectAction };
