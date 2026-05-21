@@ -8,7 +8,7 @@ import {
 	ShieldAlert,
 	ShieldCheck,
 } from "lucide-react";
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -29,115 +29,94 @@ import type { AdminActions, AdminUser } from "../hooks/use-admin";
 
 interface UserActionsProps extends AdminActions {
 	user: AdminUser;
-	currentUserId: string;
+	accountId: string;
 }
 
 export function UserActions({
 	user,
-	currentUserId,
+	accountId,
 	banUser,
 	setUserRole,
 	unbanUser,
 }: UserActionsProps) {
-	const [isPending, setIsPending] = useState(false);
 	const [isBanDialogOpen, setIsBanDialogOpen] = useState(false);
 	const [banReason, setBanReason] = useState("");
 
-	const isSelf = user.id === currentUserId;
+	const isSelf = user.id === accountId;
+	const isPending =
+		banUser.isMutating || unbanUser.isMutating || setUserRole.isMutating;
 
-	/**
-	 * REFINED: A Higher-Order Function that wraps async actions
-	 * This removes the need to write "await handleAction(() => ...)" repeatedly.
-	 */
-	const wrapAction =
-		(fn: (...args: unknown[]) => Promise<void>) =>
-		async (...args: unknown[]) => {
-			if (isPending) return;
-			setIsPending(true);
-			try {
-				await fn(...args);
-			} finally {
-				setIsPending(false);
-			}
-		};
-
-	/**
-	 * Pre-wrap the functions to clean up the configuration section
-	 */
-	const onToggleRole = wrapAction(() =>
-		setUserRole(user.id, user.role === "admin" ? "user" : "admin"),
-	);
-	const onUnban = wrapAction(() => unbanUser(user.id));
-	const onConfirmBan = wrapAction(async () => {
-		await banUser(user.id, banReason);
+	const onToggleRole = () =>
+		setUserRole.trigger({
+			userId: user.id,
+			role: user.role === "admin" ? "user" : "admin",
+		});
+	const onUnban = () => unbanUser.trigger({ userId: user.id });
+	const onConfirmBan = async () => {
+		await banUser.trigger({ userId: user.id, reason: banReason });
 		setIsBanDialogOpen(false);
-	});
+	};
 
-	const menuGroups = useMemo(
-		() => [
-			{
-				label: "role-management",
-				items: [
-					{
-						label: "Toggle Role",
-						show: true,
-						render: () => (
-							<DropdownMenuItem onClick={onToggleRole}>
-								{user.role === "admin" ? (
-									<>
-										<ShieldCheck className="mr-2 h-4 w-4" /> Demote to User
-									</>
-								) : (
-									<>
-										<ShieldAlert className="mr-2 h-4 w-4" /> Promote to Admin
-									</>
-								)}
-							</DropdownMenuItem>
-						),
-					},
-				],
-			},
-			{
-				label: "access-control",
-				items: [
-					{
-						label: "Unban User",
-						show: user.banned,
-						render: () => (
-							<DropdownMenuItem
-								className="font-medium text-green-600"
-								onClick={onUnban}
-							>
-								<CheckCircle className="mr-2 h-4 w-4" /> Unban User
-							</DropdownMenuItem>
-						),
-					},
-					{
-						label: "Ban User",
-						show: !user.banned,
-						render: () => (
-							<DropdownMenuItem
-								className="text-red-600"
-								onClick={() => setIsBanDialogOpen(true)}
-							>
-								<Ban className="mr-2 h-4 w-4" /> Ban User
-							</DropdownMenuItem>
-						),
-					},
-				],
-			},
-		],
-		[user, onToggleRole, onUnban],
-	); // Dependencies are now much cleaner
+	const menuGroups = [
+		{
+			label: "role-management",
+			items: [
+				{
+					label: "Toggle Role",
+					show: true,
+					render: () => (
+						<DropdownMenuItem onClick={onToggleRole}>
+							{user.role === "admin" ? (
+								<>
+									<ShieldCheck className="mr-2 h-4 w-4" /> Demote to User
+								</>
+							) : (
+								<>
+									<ShieldAlert className="mr-2 h-4 w-4" /> Promote to Admin
+								</>
+							)}
+						</DropdownMenuItem>
+					),
+				},
+			],
+		},
+		{
+			label: "access-control",
+			items: [
+				{
+					label: "Unban User",
+					show: user.banned,
+					render: () => (
+						<DropdownMenuItem
+							className="font-medium text-green-600"
+							onClick={onUnban}
+						>
+							<CheckCircle className="mr-2 h-4 w-4" /> Unban User
+						</DropdownMenuItem>
+					),
+				},
+				{
+					label: "Ban User",
+					show: !user.banned,
+					render: () => (
+						<DropdownMenuItem
+							className="text-red-600"
+							onClick={() => setIsBanDialogOpen(true)}
+						>
+							<Ban className="mr-2 h-4 w-4" /> Ban User
+						</DropdownMenuItem>
+					),
+				},
+			],
+		},
+	];
 
-	const activeGroups = useMemo(() => {
-		return menuGroups
-			.map((group) => ({
-				...group,
-				items: group.items.filter((item) => item.show),
-			}))
-			.filter((group) => group.items.length > 0);
-	}, [menuGroups]);
+	const activeGroups = menuGroups
+		.map((group) => ({
+			...group,
+			items: group.items.filter((item) => item.show),
+		}))
+		.filter((group) => group.items.length > 0);
 
 	if (isSelf) return <div className="text-center text-muted-foreground">-</div>;
 
