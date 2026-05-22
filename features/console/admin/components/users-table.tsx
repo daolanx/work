@@ -4,13 +4,19 @@ import {
 	type ColumnDef,
 	flexRender,
 	getCoreRowModel,
-	type Table as ReactTable,
 	useReactTable,
 } from "@tanstack/react-table";
-import { RefreshCw } from "lucide-react";
+import { MoreHorizontal, RefreshCw } from "lucide-react";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Spinner } from "@/components/ui/spinner";
 import {
 	Table,
@@ -20,20 +26,32 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+
 import {
 	ProtectAction,
 	ProtectSection,
 } from "@/features/console/components/protect";
 import { useUser } from "@/features/console/user/hooks/use-user";
 import { cn } from "@/lib/utils";
+import type { Role } from "../../constants";
 import { ROLES } from "../../constants";
-import type { AdminUser } from "../hooks/use-admin";
-import { useAdminUsers } from "../hooks/use-admin";
-import { AdminActions } from "./admin-actions";
+import { useUsers } from "../hooks/use-users";
+import { UserBanToggle } from "./user-ban-toggle";
+import { UserRoleSelect } from "./user-role-select";
+
+type AdminUser = {
+	id: string;
+	email: string;
+	name: string;
+	role: Role;
+	banned: boolean;
+	image?: string;
+	createdAt: string;
+};
 
 export function UsersTable() {
 	const { user: currentUser } = useUser();
-	const { users, isLoading, isValidating } = useAdminUsers();
+	const { data: users = [], isLoading, isValidating } = useUsers();
 
 	const columns: ColumnDef<AdminUser>[] = [
 		{
@@ -93,11 +111,28 @@ export function UsersTable() {
 		{
 			id: "actions",
 			header: () => <div className="text-right">Actions</div>,
-			cell: ({ row }) => (
-				<div className="text-right">
-					<AdminActions accountId={currentUser?.id ?? ""} user={row.original} />
-				</div>
-			),
+			cell: ({ row }) => {
+				const user = row.original;
+				if (user.id === currentUser?.id) {
+					return <div className="text-center text-muted-foreground">-</div>;
+				}
+				return (
+					<div className="text-right">
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<Button className="h-8 w-8 p-0" variant="ghost">
+									<MoreHorizontal className="h-4 w-4" />
+								</Button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent align="end" className="w-48">
+								<UserRoleSelect user={user} />
+								<DropdownMenuSeparator />
+								<UserBanToggle user={user} />
+							</DropdownMenuContent>
+						</DropdownMenu>
+					</div>
+				);
+			},
 		},
 	];
 
@@ -173,7 +208,7 @@ export function UsersTable() {
 }
 
 export function RefreshTableButton() {
-	const { mutate, isLoading, isValidating } = useAdminUsers();
+	const { isLoading, isValidating, mutate } = useUsers();
 	const refreshing = isValidating && !isLoading;
 
 	return (

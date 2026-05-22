@@ -32,6 +32,8 @@ export const ROLES = {
 	user: "user",
 } as const;
 
+export const ADMIN_USERS_KEY = "admin-users";
+
 export type Role = (typeof ROLES)[keyof typeof ROLES];
 
 export const NAVIGATION_CONFIG: NavGroup[] = [
