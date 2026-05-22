@@ -136,7 +136,7 @@
 			"current-usage": "当前使用量和账单状态",
 			"active-plan": "当前套餐",
 			"hobby-free": "免费版",
-			"renews-on": "续订日期：2026年3月12日",
+			"renews-on": "续订日期：{date}",
 			"project-slots": "项目配额",
 			"slot-remaining": "剩余 {count} 个配额，升级获取无限访问权限。",
 			"available-plans": "可用套餐",
@@ -243,7 +243,13 @@
 			"send-recovery-link": "发送恢复链接",
 			"check-email-instructions": "请查收邮件并按照说明重置密码。",
 			"return-to-login": "返回登录",
-			"remember-password": "想起密码了？"
+			"remember-password": "想起密码了？",
+			"bg-mrr": "月经常性收入 +¥8,640",
+			"bg-active-users": "活跃用户：8.4k",
+			"bg-new-sale": "新销售：专业版",
+			"bg-ctr": "点击率：3.2%",
+			"bg-todo": "待办：部署 v2.1",
+			"bg-server-uptime": "服务器：99.9% 在线"
 		},
 		"payments": {
 			"redirecting": "跳转中...",

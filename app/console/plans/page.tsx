@@ -126,7 +126,7 @@ export default async function BillingPage() {
 										{t("plans.hobby-free")}
 									</h4>
 									<p className="text-[10px] text-muted-foreground">
-										{t("plans.renews-on")}
+										{t("plans.renews-on", { date: "Mar 12, 2026" })}
 									</p>
 								</div>
 							</div>

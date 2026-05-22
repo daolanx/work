@@ -9,6 +9,7 @@ import {
 	Users,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { useTranslations } from "next-intl";
 
 const FloatingMetric = ({
 	children,
@@ -34,27 +35,29 @@ const FloatingMetric = ({
 );
 
 export function AuthBackground() {
+	const t = useTranslations("console");
+
 	return (
 		<div className="pointer-events-none fixed inset-0 z-0">
 			<div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
 
 			<FloatingMetric className="top-[10%] left-[15%]" delay={0}>
-				<TrendingUp size={14} /> <span>MRR +$1,240</span>
+				<TrendingUp size={14} /> <span>{t("auth.bg-mrr")}</span>
 			</FloatingMetric>
 			<FloatingMetric className="top-[40%] left-[8%]" delay={2}>
-				<Users size={14} /> <span>Active Users: 8.4k</span>
+				<Users size={14} /> <span>{t("auth.bg-active-users")}</span>
 			</FloatingMetric>
 			<FloatingMetric className="bottom-[20%] left-[12%]" delay={4}>
-				<DollarSign size={14} /> <span>New Sale: Pro Plan</span>
+				<DollarSign size={14} /> <span>{t("auth.bg-new-sale")}</span>
 			</FloatingMetric>
 			<FloatingMetric className="top-[25%] right-[10%]" delay={1}>
-				<MousePointer2 size={14} /> <span>CTR: 3.2%</span>
+				<MousePointer2 size={14} /> <span>{t("auth.bg-ctr")}</span>
 			</FloatingMetric>
 			<FloatingMetric className="top-[60%] right-[15%]" delay={3}>
-				<CheckSquare size={14} /> <span>Todo: Deploy v2.1</span>
+				<CheckSquare size={14} /> <span>{t("auth.bg-todo")}</span>
 			</FloatingMetric>
 			<FloatingMetric className="right-[20%] bottom-[10%]" delay={5}>
-				<Activity size={14} /> <span>Server: 99.9% Up</span>
+				<Activity size={14} /> <span>{t("auth.bg-server-uptime")}</span>
 			</FloatingMetric>
 
 			<div className="absolute top-[20%] left-[20%] h-[300px] w-[300px] animate-pulse rounded-full bg-primary/10 blur-[100px]" />

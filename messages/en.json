@@ -136,7 +136,7 @@
 			"current-usage": "Current usage & billing status",
 			"active-plan": "Active Plan",
 			"hobby-free": "Hobby Free",
-			"renews-on": "Renews on Mar 12, 2026",
+			"renews-on": "Renews on {date}",
 			"project-slots": "Project Slots",
 			"slot-remaining": "{count} slot remaining. Upgrade for unlimited access.",
 			"available-plans": "Available Plans",
@@ -243,7 +243,13 @@
 			"send-recovery-link": "Send Recovery Link",
 			"check-email-instructions": "Please check your email and follow the instructions to reset your password.",
 			"return-to-login": "Return to Login",
-			"remember-password": "Remember your password?"
+			"remember-password": "Remember your password?",
+			"bg-mrr": "MRR +$1,240",
+			"bg-active-users": "Active Users: 8.4k",
+			"bg-new-sale": "New Sale: Pro Plan",
+			"bg-ctr": "CTR: 3.2%",
+			"bg-todo": "Todo: Deploy v2.1",
+			"bg-server-uptime": "Server: 99.9% Up"
 		},
 		"payments": {
 			"redirecting": "Redirect...",

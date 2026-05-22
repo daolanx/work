@@ -42,7 +42,7 @@ export function VisitorChart() {
 	const chartConfig = {
 		visitors: { label: t("dashboard.visitors") },
 		desktop: { label: t("dashboard.desktop"), color: "var(--primary)" },
-		mobile: { label: t("dashboard.mobile"), color: "var(--primary)" },
+		mobile: { label: t("dashboard.mobile"), color: "var(--secondary)" },
 	} satisfies ChartConfig;
 
 	const TIME_RANGES = [
