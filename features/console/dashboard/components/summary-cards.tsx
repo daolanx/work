@@ -1,4 +1,5 @@
 import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
+import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
 import {
 	Card,
@@ -29,6 +30,8 @@ function computeChange(current: number, previous: number): number {
 }
 
 export async function SummaryCards() {
+	const t = await getTranslations("console");
+
 	const extract = <T,>(result: PromiseSettledResult<T>, fallback: T): T =>
 		result.status === "fulfilled" ? result.value : fallback;
 
@@ -48,28 +51,28 @@ export async function SummaryCards() {
 	const data: SummaryCard[] = [
 		{
 			id: "mrr",
-			label: "MRR",
+			label: t("dashboard.mrr"),
 			amount: mrr.current,
 			unit: "$",
 			monthlyChange: computeChange(mrr.current, mrr.previous),
 		},
 		{
 			id: "retention-rate",
-			label: "Retention",
+			label: t("dashboard.retention"),
 			amount: Number.parseFloat(retention.current.toFixed(2)),
 			unit: "%",
 			monthlyChange: computeChange(retention.current, retention.previous),
 		},
 		{
 			id: "conversion-rate",
-			label: "Conversion",
+			label: t("dashboard.conversion"),
 			amount: Number.parseFloat(conversion.current.toFixed(2)),
 			unit: "%",
 			monthlyChange: computeChange(conversion.current, conversion.previous),
 		},
 		{
 			id: "mau",
-			label: "MAU",
+			label: t("dashboard.mau"),
 			amount: mau.current,
 			monthlyChange: computeChange(mau.current, mau.previous),
 		},

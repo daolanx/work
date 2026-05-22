@@ -2,6 +2,7 @@
 
 import { IconRotateClockwise2, IconX } from "@tabler/icons-react";
 import type { Table } from "@tanstack/react-table";
+import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -18,6 +19,7 @@ interface TableFacedFiltersProps<TData> {
 export function TableFacedFilters<TData>({
 	table,
 }: TableFacedFiltersProps<TData>) {
+	const t = useTranslations("console");
 	const { columnFilters } = table.getState();
 
 	/**
@@ -93,7 +95,7 @@ export function TableFacedFilters<TData>({
 
 							{/* Removal Action */}
 							<button
-								aria-label={`Remove filter ${label}`}
+								aria-label={t("card-table.remove-filter", { label })}
 								className="ml-1.5 rounded-full p-0.5 transition-colors hover:bg-black/10 dark:hover:bg-white/20"
 								onClick={() => handleRemoveFilter(filter.id, val)}
 								type="button"
@@ -114,7 +116,7 @@ export function TableFacedFilters<TData>({
 					variant="ghost"
 				>
 					<IconRotateClockwise2 className="mr-1 h-3 w-3" />
-					Clear All
+					{t("card-table.clear-all")}
 				</Button>
 			)}
 		</div>

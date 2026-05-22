@@ -1,6 +1,7 @@
 "use client";
 
 import { IconSearch, IconX } from "@tabler/icons-react";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +11,7 @@ import { Input } from "@/components/ui/input";
  * Optimized for explicit search invocation via 'Enter' key or 'Clear' action.
  */
 export function TableSearch({
-	placeholder = "Search...",
+	placeholder,
 	defaultValue = "",
 	onSearch,
 }: {
@@ -18,6 +19,8 @@ export function TableSearch({
 	defaultValue?: string;
 	onSearch: (value: string) => void;
 }) {
+	const t = useTranslations("console");
+	const resolvedPlaceholder = placeholder ?? t("common.search");
 	const [value, setValue] = useState(defaultValue);
 
 	// Sync internal state with external defaultValue (e.g., on store reset)
@@ -56,7 +59,7 @@ export function TableSearch({
 				className="h-full flex-1 border-0 bg-transparent py-0 pr-0 text-sm placeholder:text-muted-foreground/60 focus-visible:ring-0 focus-visible:ring-offset-0"
 				onChange={(e) => setValue(e.target.value)}
 				onKeyDown={handleKeyDown}
-				placeholder={placeholder}
+				placeholder={resolvedPlaceholder}
 				value={value}
 			/>
 

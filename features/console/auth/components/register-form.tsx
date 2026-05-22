@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, MailCheck } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,7 @@ const RegisterForm = ({
 	onRegisteringStart,
 	onRegisteringEnd,
 }: RegisterFormProps) => {
+	const t = useTranslations("console");
 	const [resSubmit, setResSubmit] = useState<ActionResult<{ email: string }>>(
 		{},
 	);
@@ -57,7 +59,7 @@ const RegisterForm = ({
 		} catch (_err) {
 			setResSubmit({
 				success: false,
-				message: "Something went wrong. Please try again.",
+				message: t("auth.something-wrong"),
 			});
 		} finally {
 			onRegisteringEnd?.();
@@ -73,17 +75,17 @@ const RegisterForm = ({
 				</div>
 				<div className="space-y-2">
 					<h2 className="font-bold text-2xl tracking-tight">
-						Check your email
+						{t("auth.check-email")}
 					</h2>
 					<p className="text-muted-foreground">
-						We sent a verification link to{" "}
+						{t("auth.verification-sent")}{" "}
 						<span className="font-semibold text-foreground">
 							{resSubmit.data?.email}
 						</span>
 					</p>
 				</div>
 				<Button asChild className="w-full">
-					<Link href="/auth/login">Back to Sign In</Link>
+					<Link href="/auth/login">{t("common.back-to-sign-in")}</Link>
 				</Button>
 			</div>
 		);
@@ -104,7 +106,7 @@ const RegisterForm = ({
 						name="name"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Name</FormLabel>
+								<FormLabel>{t("auth.name")}</FormLabel>
 								<FormControl>
 									<Input
 										autoComplete="name"
@@ -124,7 +126,7 @@ const RegisterForm = ({
 						name="email"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Email</FormLabel>
+								<FormLabel>{t("auth.email")}</FormLabel>
 								<FormControl>
 									<Input
 										autoComplete="email"
@@ -145,13 +147,13 @@ const RegisterForm = ({
 						name="password"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Password</FormLabel>
+								<FormLabel>{t("auth.password")}</FormLabel>
 								<FormControl>
 									<PasswordInput
 										{...field}
 										disabled={isSubmitting}
 										hideStrength={false}
-										placeholder="Create a password" // Registration usually shows strength
+										placeholder={t("auth.enter-password")} // Registration usually shows strength
 									/>
 								</FormControl>
 								<FormMessage />
@@ -167,10 +169,10 @@ const RegisterForm = ({
 						{isSubmitting ? (
 							<>
 								<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-								Creating account...
+								{t("auth.creating-account")}
 							</>
 						) : (
-							"Get Started"
+							t("auth.get-started")
 						)}
 					</Button>
 				</form>

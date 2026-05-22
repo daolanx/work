@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 import {
 	Pagination,
@@ -19,6 +20,7 @@ import {
 import type { TablePaginationProps } from "./types";
 
 export const TablePagination = <T,>({ table }: TablePaginationProps<T>) => {
+	const t = useTranslations("console");
 	const { pageIndex, pageSize } = table.getState().pagination;
 	const total = table.getRowCount();
 	const pageCount = table.getPageCount();
@@ -44,9 +46,9 @@ export const TablePagination = <T,>({ table }: TablePaginationProps<T>) => {
 	return (
 		<div className="flex flex-col items-center justify-between gap-4 px-2 py-4 font-medium md:flex-row">
 			<div className="flex items-center gap-6 text-muted-foreground text-sm">
-				<span>Total: {total}</span>
+				<span>{t("card-table.total", { total })}</span>
 				<div className="flex items-center gap-2">
-					<span>PageSize:</span>
+					<span>{t("card-table.page-size")}</span>
 					<Select
 						onValueChange={(v) =>
 							table.setPagination({ pageIndex: 0, pageSize: Number(v) })

@@ -76,31 +76,31 @@ describe("NAVIGATION_CONFIG", () => {
 	});
 
 	it("has Platform group with expected items", () => {
-		const platform = NAVIGATION_CONFIG.find((g) => g.label === "Platform");
+		const platform = NAVIGATION_CONFIG.find((g) => g.label === "nav.platform");
 		expect(platform).toBeDefined();
 		expect(platform?.items.length).toBeGreaterThanOrEqual(2);
 	});
 
 	it("has Console nav item", () => {
-		const platform = NAVIGATION_CONFIG.find((g) => g.label === "Platform");
-		const consoleItem = platform?.items.find((i) => i.label === "Console");
+		const platform = NAVIGATION_CONFIG.find((g) => g.label === "nav.platform");
+		const consoleItem = platform?.items.find((i) => i.label === "nav.console");
 		expect(consoleItem).toBeDefined();
 		expect(consoleItem?.url).toBe("/console");
 	});
 
 	it("has Tasks nav item", () => {
-		const platform = NAVIGATION_CONFIG.find((g) => g.label === "Platform");
-		const tasksItem = platform?.items.find((i) => i.label === "Tasks");
+		const platform = NAVIGATION_CONFIG.find((g) => g.label === "nav.platform");
+		const tasksItem = platform?.items.find((i) => i.label === "nav.tasks");
 		expect(tasksItem).toBeDefined();
 		expect(tasksItem?.url).toBe("/console/tasks");
 	});
 
 	it("has Admin group with User Management", () => {
-		const admin = NAVIGATION_CONFIG.find((g) =>
-			g.label?.trim().startsWith("Admin"),
-		);
+		const admin = NAVIGATION_CONFIG.find((g) => g.label === "nav.admin");
 		expect(admin).toBeDefined();
-		const userMgmt = admin?.items.find((i) => i.label === "User Management");
+		const userMgmt = admin?.items.find(
+			(i) => i.label === "nav.user-management",
+		);
 		expect(userMgmt).toBeDefined();
 		expect(userMgmt?.url).toBe("/console/admin");
 		expect(userMgmt?.roles).toContain("admin");

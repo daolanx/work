@@ -3,6 +3,7 @@
 import { Loader2, ShieldCheck } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Suspense, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ResetPasswordForm } from "@/features/console/auth/components/reset-password-form";
@@ -12,6 +13,7 @@ import { ResetPasswordForm } from "@/features/console/auth/components/reset-pass
  */
 export default function ResetPasswordPage() {
 	const [isPending, setIsPending] = useState(false);
+	const t = useTranslations("console");
 
 	return (
 		<div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden p-4">
@@ -29,10 +31,10 @@ export default function ResetPasswordPage() {
 						<ShieldCheck size={28} />
 					</div>
 					<h1 className="font-black text-3xl uppercase italic tracking-tighter">
-						Reset Password
+						{t("auth.reset-password-title")}
 					</h1>
 					<p className="text-muted-foreground text-sm">
-						Secure your account with a new strong password.
+						{t("auth.reset-password-desc")}
 					</p>
 				</div>
 
@@ -50,7 +52,7 @@ export default function ResetPasswordPage() {
 								<div className="flex flex-col items-center justify-center gap-4 py-12">
 									<Loader2 className="animate-spin text-primary" size={40} />
 									<p className="animate-pulse text-muted-foreground text-xs">
-										Initializing...
+										{t("auth.initializing")}
 									</p>
 								</div>
 							}
@@ -61,12 +63,12 @@ export default function ResetPasswordPage() {
 				</Card>
 
 				<p className="mt-8 text-center text-muted-foreground text-xs">
-					Need help?{" "}
+					{t("auth.need-help")}{" "}
 					<Link
 						className="underline underline-offset-4 hover:text-primary"
 						href="mailto:daolanx.dev@gmail.com"
 					>
-						Contact Security Team
+						{t("auth.contact-security")}
 					</Link>
 				</p>
 			</motion.div>

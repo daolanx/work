@@ -10,6 +10,7 @@ import {
 	IconX,
 } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
@@ -163,6 +164,7 @@ function TaskEnumField({
 // ==================== 2. Main Page Component ====================
 
 export default function TaskDetailPage() {
+	const t = useTranslations("console");
 	const params = useParams<{ taskId: string }>();
 	const [isEditing, setIsEditing] = useState(false);
 
@@ -189,7 +191,7 @@ export default function TaskDetailPage() {
 	if (error || !task)
 		return (
 			<div className="p-10 text-center font-bold text-slate-500">
-				Task not found.
+				{t("tasks.task-not-found")}
 			</div>
 		);
 
@@ -215,7 +217,7 @@ export default function TaskDetailPage() {
 										type="button"
 										variant="ghost"
 									>
-										<IconX size={18} /> Cancel
+										<IconX size={18} /> {t("common.cancel")}
 									</Button>
 									<Button
 										className="h-8 bg-slate-900 px-3 font-bold text-white shadow-sm"
@@ -228,7 +230,7 @@ export default function TaskDetailPage() {
 										) : (
 											<IconCheck size={18} />
 										)}
-										Update
+										{t("common.update")}
 									</Button>
 								</div>
 							) : (
@@ -241,7 +243,7 @@ export default function TaskDetailPage() {
 										variant="outline"
 									>
 										<IconEdit className="mr-1.5" size={16} />
-										Edit
+										{t("common.edit")}
 									</Button>
 
 									<DropdownMenu>
@@ -260,7 +262,7 @@ export default function TaskDetailPage() {
 												onClick={() => setIsEditing(true)}
 											>
 												<IconEdit className="mr-2" size={16} />
-												Edit Task
+												{t("tasks.edit-task")}
 											</DropdownMenuItem>
 											<DeleteTaskButton
 												taskId={String(task.id)}
@@ -310,7 +312,7 @@ export default function TaskDetailPage() {
 										<Textarea
 											{...field}
 											className="min-h-[350px] resize-none border-none bg-transparent p-0 text-base leading-relaxed focus-visible:ring-0 sm:min-h-[500px]"
-											placeholder="Details..."
+											placeholder={t("tasks.details-placeholder")}
 											value={field.value ?? ""}
 										/>
 									)}
@@ -320,7 +322,9 @@ export default function TaskDetailPage() {
 											{field.value ? (
 												<MarkdownWrapper>{field.value}</MarkdownWrapper>
 											) : (
-												<p className="text-slate-300 italic">No description.</p>
+												<p className="text-slate-300 italic">
+													{t("tasks.no-description")}
+												</p>
 											)}
 										</div>
 									)}

@@ -38,17 +38,21 @@ export type Role = (typeof ROLES)[keyof typeof ROLES];
 
 export const NAVIGATION_CONFIG: NavGroup[] = [
 	{
-		label: "Platform",
+		label: "nav.platform",
 		items: [
-			{ label: "Console", url: "/console", icon: IconLayoutDashboard },
-			{ label: "Tasks", url: "/console/tasks", icon: IconList },
+			{
+				label: "nav.console",
+				url: "/console",
+				icon: IconLayoutDashboard,
+			},
+			{ label: "nav.tasks", url: "/console/tasks", icon: IconList },
 		],
 	},
 	{
-		label: "Admin",
+		label: "nav.admin",
 		items: [
 			{
-				label: "User Management",
+				label: "nav.user-management",
 				url: "/console/admin",
 				icon: IconShieldLock,
 				roles: [ROLES.admin],
@@ -59,7 +63,7 @@ export const NAVIGATION_CONFIG: NavGroup[] = [
 		className: "mt-auto",
 		items: [
 			{
-				label: "My Profile",
+				label: "nav.my-profile",
 				url: "/",
 				icon: () => (
 					<IconRocket className="hover:animate-bounce hover:text-orange-600" />

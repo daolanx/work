@@ -12,6 +12,7 @@ import {
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -48,6 +49,7 @@ interface NavMenuItemConfig {
 export function NavUser() {
 	const { isMobile } = useSidebar();
 	const { user } = useUser();
+	const t = useTranslations("console");
 
 	/**
 	 * Menu items grouped by category.
@@ -55,12 +57,12 @@ export function NavUser() {
 	const menuGroups: NavMenuItemConfig[][] = [
 		[
 			{
-				label: "Profile",
+				label: t("nav.profile"),
 				icon: IconUser,
 				href: "/console/profile",
 			},
 			{
-				label: "Notifications",
+				label: t("nav.notifications"),
 				icon: IconNotification,
 				disabled: true,
 				comingSoon: true,
@@ -68,12 +70,12 @@ export function NavUser() {
 		],
 		[
 			{
-				label: "Plans",
+				label: t("nav.plans"),
 				icon: IconCategory,
 				href: "/console/plans",
 			},
 			{
-				label: "Billing",
+				label: t("nav.billing"),
 				icon: IconCreditCard,
 				disabled: true,
 				comingSoon: true,
@@ -82,7 +84,7 @@ export function NavUser() {
 
 		[
 			{
-				label: "Settings",
+				label: t("nav.settings"),
 				icon: IconSettings,
 				disabled: true,
 				comingSoon: true,
@@ -156,6 +158,7 @@ export function NavUser() {
  */
 function NavMenuItem({ item }: { item: NavMenuItemConfig }) {
 	const Icon = item.icon;
+	const t = useTranslations("console");
 
 	// Wrap the label and icon in a div with fixed gap
 	const content = (
@@ -164,7 +167,7 @@ function NavMenuItem({ item }: { item: NavMenuItemConfig }) {
 			<span className="truncate">{item.label}</span>
 			{item.comingSoon && (
 				<span className="ml-auto rounded bg-muted px-1 font-medium text-[10px] opacity-70">
-					SOON
+					{t("common.soon")}
 				</span>
 			)}
 		</div>
@@ -216,6 +219,7 @@ function UserAvatar({ user, className = "h-8 w-8" }: UserAvatarProps) {
 function NavLogoutItem() {
 	const router = useRouter();
 	const [isPending, setIsPending] = useState(false);
+	const t = useTranslations("console");
 
 	const handleSignOut = async () => {
 		try {
@@ -251,7 +255,7 @@ function NavLogoutItem() {
 			) : (
 				<IconLogout className="mr-2 size-4" />
 			)}
-			<span>{isPending ? "Logging out..." : "Log out"}</span>
+			<span>{isPending ? t("nav.logging-out") : t("nav.log-out")}</span>
 		</DropdownMenuItem>
 	);
 }

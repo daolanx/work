@@ -1,6 +1,18 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+vi.mock("next-intl/server", () => ({
+	getTranslations: vi.fn().mockResolvedValue((key: string) => {
+		const translations: Record<string, string> = {
+			"dashboard.mrr": "MRR",
+			"dashboard.retention": "Retention",
+			"dashboard.conversion": "Conversion",
+			"dashboard.mau": "MAU",
+		};
+		return translations[key] || key;
+	}),
+}));
+
 vi.mock("@/features/console/dashboard/services", () => ({
 	queryMAU: vi.fn(),
 	queryRetentionRate: vi.fn(),

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
 import { useRef } from "react";
 import { CardTable } from "@/features/console/components/card-table";
 import type { CardTableHandle } from "@/features/console/components/card-table/types";
@@ -21,12 +22,14 @@ export default function TaskTable({
 }: {
 	variant?: "default" | "ghost";
 }) {
+	const t = useTranslations("console");
+	const locale = useLocale();
 	const tableRef = useRef<CardTableHandle>(null);
 	const columns = [
 		{
 			accessorKey: "title",
 			id: "title",
-			header: "Title",
+			header: t("tasks.title"),
 			cell: ({ row }) => (
 				<Link
 					className="font-medium text-slate-900 hover:text-blue-600 hover:underline"
@@ -40,7 +43,7 @@ export default function TaskTable({
 		{
 			accessorKey: "priority",
 			id: "priority",
-			header: "Priority",
+			header: t("tasks.priority"),
 			meta: {
 				options: TASK_PRIORITY_ENUMS,
 			},
@@ -49,7 +52,7 @@ export default function TaskTable({
 		{
 			accessorKey: "status",
 			id: "status",
-			header: "Status",
+			header: t("tasks.status"),
 			meta: {
 				options: TASK_STATUS_ENUMS,
 			},
@@ -58,7 +61,7 @@ export default function TaskTable({
 		{
 			accessorKey: "category",
 			id: "category",
-			header: "Category",
+			header: t("tasks.category"),
 			meta: {
 				options: TASK_CATEGORY_ENUMS,
 			},
@@ -67,7 +70,7 @@ export default function TaskTable({
 		{
 			accessorKey: "createdAt",
 			id: "createdAt",
-			header: "Created",
+			header: t("tasks.created"),
 			enableSorting: true,
 			sortDescFirst: true,
 			cell: ({ row }) => {
@@ -75,7 +78,7 @@ export default function TaskTable({
 				if (!date) return <span className="text-slate-400">-</span>;
 				return (
 					<div
-						title={new Intl.DateTimeFormat("en-US", {
+						title={new Intl.DateTimeFormat(locale, {
 							dateStyle: "long",
 							timeStyle: "short",
 						}).format(new Date(date))}
@@ -87,13 +90,13 @@ export default function TaskTable({
 		},
 		{
 			id: "actions",
-			header: "Actions",
+			header: t("tasks.actions"),
 			cell: ({ row }) => (
 				<Link
 					className="text-slate-900 hover:text-blue-600 hover:underline"
 					href={`/console/tasks/${row.original.id}`}
 				>
-					Detail
+					{t("tasks.detail")}
 				</Link>
 			),
 		},
@@ -108,7 +111,7 @@ export default function TaskTable({
 	return (
 		<CardTable
 			columns={columns}
-			header="Tasks"
+			header={t("tasks.tasks")}
 			ref={tableRef}
 			toolbar={<CreateTaskButton onSuccess={handleCreateSuccess} />}
 			useDataHook={useTasks}

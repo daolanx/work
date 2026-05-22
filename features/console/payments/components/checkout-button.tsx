@@ -1,6 +1,7 @@
 // components/buy-license-button.tsx
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/features/console/auth/lib/client";
@@ -13,6 +14,7 @@ export function CheckoutButton({
 	productId: string;
 	name: string;
 }) {
+	const t = useTranslations("console");
 	const [isLoading, setIsLoading] = useState(false);
 	const { user } = useUser();
 	const handlePurchase = async () => {
@@ -49,7 +51,7 @@ export function CheckoutButton({
 			disabled={isLoading}
 			onClick={handlePurchase}
 		>
-			{isLoading ? "Redirect..." : name}
+			{isLoading ? t("payments.redirecting") : name}
 		</Button>
 	);
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader2, ShieldAlert, ShieldCheck } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { useSWRConfig } from "swr";
 import useSWRMutation from "swr/mutation";
@@ -20,6 +21,7 @@ type AdminUser = {
 };
 
 export function UserRoleSelect({ user }: { user: AdminUser }) {
+	const t = useTranslations("console");
 	const { mutate: globalMutate } = useSWRConfig();
 	const setUserRole = useSWRMutation(
 		ADMIN_USERS_KEY,
@@ -33,7 +35,7 @@ export function UserRoleSelect({ user }: { user: AdminUser }) {
 			revalidate: false,
 			onSuccess: () => {
 				globalMutate(ADMIN_USERS_KEY);
-				toast.success("Role updated");
+				toast.success(t("admin.role-updated"));
 			},
 		},
 	);
@@ -41,12 +43,12 @@ export function UserRoleSelect({ user }: { user: AdminUser }) {
 	const config = {
 		[ROLES.admin]: {
 			icon: <ShieldCheck className="mr-2 h-4 w-4" />,
-			label: "Demote to User",
+			label: t("admin.demote-to-user"),
 			targetRole: ROLES.user,
 		},
 		[ROLES.user]: {
 			icon: <ShieldAlert className="mr-2 h-4 w-4" />,
-			label: "Promote to Admin",
+			label: t("admin.promote-to-admin"),
 			targetRole: ROLES.admin,
 		},
 	} as const;

@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,7 @@ interface LoginFormProps {
 
 const LoginForm = ({ onLoginingStart, onLoginingEnd }: LoginFormProps) => {
 	const router = useRouter();
+	const t = useTranslations("console");
 	const [loginType, setLoginType] = useState<LoginType | null>(null);
 	const isLogging = loginType !== null;
 	const [errorMessage, setErrorMessage] = useState("");
@@ -53,10 +55,10 @@ const LoginForm = ({ onLoginingStart, onLoginingEnd }: LoginFormProps) => {
 				router.push("/console");
 				return;
 			}
-			setErrorMessage(result.message || "Login failed");
+			setErrorMessage(result.message || t("auth.login-failed"));
 		} catch (err) {
 			setErrorMessage(
-				err instanceof Error ? err.message : "An unexpected error occurred",
+				err instanceof Error ? err.message : t("auth.unexpected-error"),
 			);
 		} finally {
 			setLoginType(null);
@@ -82,7 +84,7 @@ const LoginForm = ({ onLoginingStart, onLoginingEnd }: LoginFormProps) => {
 					name="email"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Email</FormLabel>
+							<FormLabel>{t("auth.email")}</FormLabel>
 							<FormControl>
 								<Input
 									disabled={isLogging}
@@ -100,7 +102,7 @@ const LoginForm = ({ onLoginingStart, onLoginingEnd }: LoginFormProps) => {
 					name="password"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Password</FormLabel>
+							<FormLabel>{t("auth.password")}</FormLabel>
 							<FormControl>
 								<PasswordInput
 									{...field}
@@ -122,10 +124,10 @@ const LoginForm = ({ onLoginingStart, onLoginingEnd }: LoginFormProps) => {
 						{isLogging && loginType === LOGIN_TYPE.normal ? (
 							<>
 								<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-								Logging in...
+								{t("auth.logging-in")}
 							</>
 						) : (
-							"Sign In"
+							t("auth.sign-in")
 						)}
 					</Button>
 
@@ -143,7 +145,7 @@ const LoginForm = ({ onLoginingStart, onLoginingEnd }: LoginFormProps) => {
 								{isLogging && loginType === LOGIN_TYPE.demo ? (
 									<>
 										<Loader2 className="mr-2 h-4 w-4 animate-spin text-purple-600" />
-										Please wait...
+										{t("auth.please-wait")}
 									</>
 								) : (
 									<>
@@ -152,7 +154,7 @@ const LoginForm = ({ onLoginingStart, onLoginingEnd }: LoginFormProps) => {
 											size={16}
 										/>
 										<span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-											Quick Demo Access
+											{t("auth.quick-demo")}
 										</span>
 										<Sparkles
 											className="animate-pulse text-blue-500"

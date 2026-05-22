@@ -1,4 +1,5 @@
 import { BarChart3, Check, Crown, Rocket, Shield, Zap } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { CheckoutButton } from "@/features/console/payments/components/checkout-button";
@@ -44,55 +45,57 @@ const TIER_STRATEGIES = {
 	},
 };
 
-const TIER_DATA = [
-	{
-		type: "entry",
-		name: "Hobby",
-		price: "0",
-		variantId: "prod_32Z37XlRXMWJhOEP0Dl0eB",
-		description: "Perfect for rapid idea validation.",
-		features: [
-			"3 Sandbox Projects",
-			"Basic Traffic Stats",
-			"Global Edge Deployment",
-			"IndieConsole Watermark",
-		],
-		cta: "Current Plan",
-	},
-	{
-		type: "main",
-		name: "Pro",
-		price: "12",
-		variantId: "prod_5nkYrUTcacVsoVAiYmNU3x",
-		description: "Scale your winning ideas into products.",
-		features: [
-			"Unlimited Projects",
-			"No Watermark",
-			"Custom Domains",
-			"Priority Email Support",
-		],
-		cta: "Upgrade to Pro",
-	},
-	{
-		type: "premium",
-		name: "Studio",
-		price: "39",
-		variantId: "creem_studio_456",
-		description: "Advanced controls for small teams.",
-		features: [
-			"3 Team Seats",
-			"White-label Console",
-			"Full API Access",
-			"Dedicated Database",
-		],
-		cta: "Go Elite",
-	},
-];
+export default async function BillingPage() {
+	const t = await getTranslations("console");
 
-export default function BillingPage() {
 	const _userPlan = "entry";
 
 	const usage = { projects: 2, limit: 3 };
+
+	const TIER_DATA = [
+		{
+			type: "entry",
+			name: t("plans.hobby"),
+			price: "0",
+			variantId: "prod_32Z37XlRXMWJhOEP0Dl0eB",
+			description: t("plans.hobby-desc"),
+			features: [
+				t("plans.features.sandbox-projects"),
+				t("plans.features.traffic-stats"),
+				t("plans.features.edge-deployment"),
+				t("plans.features.watermark"),
+			],
+			cta: t("plans.current-plan"),
+		},
+		{
+			type: "main",
+			name: t("plans.pro"),
+			price: "12",
+			variantId: "prod_5nkYrUTcacVsoVAiYmNU3x",
+			description: t("plans.pro-desc"),
+			features: [
+				t("plans.features.unlimited-projects"),
+				t("plans.features.no-watermark"),
+				t("plans.features.custom-domains"),
+				t("plans.features.priority-support"),
+			],
+			cta: t("plans.upgrade-to-pro"),
+		},
+		{
+			type: "premium",
+			name: t("plans.studio"),
+			price: "39",
+			variantId: "creem_studio_456",
+			description: t("plans.studio-desc"),
+			features: [
+				t("plans.features.team-seats"),
+				t("plans.features.white-label"),
+				t("plans.features.full-api"),
+				t("plans.features.dedicated-db"),
+			],
+			cta: t("plans.go-elite"),
+		},
+	];
 
 	return (
 		<div className="mx-auto flex w-full max-w-6xl flex-col space-y-16 px-6 py-12">
@@ -100,10 +103,10 @@ export default function BillingPage() {
 				<div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
 					<div>
 						<h2 className="font-black text-3xl uppercase italic italic tracking-tight">
-							Subscription
+							{t("plans.subscription")}
 						</h2>
 						<p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
-							Current usage & billing status
+							{t("plans.current-usage")}
 						</p>
 					</div>
 				</div>
@@ -112,7 +115,7 @@ export default function BillingPage() {
 					<CardContent className="grid grid-cols-1 gap-12 p-8 md:grid-cols-3">
 						<div className="space-y-2">
 							<span className="font-mono text-[10px] text-muted-foreground uppercase">
-								Active Plan
+								{t("plans.active-plan")}
 							</span>
 							<div className="flex items-center gap-3">
 								<div className="rounded bg-emerald-500/10 p-2 text-emerald-500">
@@ -120,10 +123,10 @@ export default function BillingPage() {
 								</div>
 								<div>
 									<h4 className="font-black text-xl uppercase italic">
-										Hobby Free
+										{t("plans.hobby-free")}
 									</h4>
 									<p className="text-[10px] text-muted-foreground">
-										Renews on Mar 12, 2026
+										{t("plans.renews-on")}
 									</p>
 								</div>
 							</div>
@@ -131,7 +134,9 @@ export default function BillingPage() {
 
 						<div className="space-y-3">
 							<div className="flex justify-between font-mono text-[10px] uppercase">
-								<span className="text-muted-foreground">Project Slots</span>
+								<span className="text-muted-foreground">
+									{t("plans.project-slots")}
+								</span>
 								<span className="text-foreground">
 									{usage.projects} / {usage.limit}
 								</span>
@@ -141,8 +146,9 @@ export default function BillingPage() {
 								value={(usage.projects / usage.limit) * 100}
 							/>
 							<p className="text-[10px] text-muted-foreground italic">
-								{usage.limit - usage.projects} slot remaining. Upgrade for
-								unlimited access.
+								{t("plans.slot-remaining", {
+									count: usage.limit - usage.projects,
+								})}
 							</p>
 						</div>
 						<div className="space-y-3">
@@ -155,10 +161,10 @@ export default function BillingPage() {
 			<section className="space-y-10 border-zinc-300 border-t pt-8">
 				<div className="text-center md:text-left">
 					<h2 className="font-black text-3xl uppercase italic tracking-tight">
-						Available Plans
+						{t("plans.available-plans")}
 					</h2>
 					<p className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.3em]">
-						Choose your performance level
+						{t("plans.choose-performance")}
 					</p>
 				</div>
 
@@ -223,10 +229,10 @@ export default function BillingPage() {
 
 			<footer className="flex justify-center gap-12 pt-4 opacity-30">
 				<div className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-widest">
-					<Shield size={12} /> SSL Encrypted
+					<Shield size={12} /> {t("plans.ssl-encrypted")}
 				</div>
 				<div className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-widest">
-					<BarChart3 size={12} /> Usage-based Billing
+					<BarChart3 size={12} /> {t("plans.usage-billing")}
 				</div>
 			</footer>
 		</div>

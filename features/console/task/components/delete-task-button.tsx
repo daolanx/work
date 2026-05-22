@@ -2,6 +2,7 @@
 
 import { Loader2, Trash2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import {
 	AlertDialog,
@@ -33,6 +34,7 @@ export function DeleteTaskButton({
 	variant = "default",
 	className,
 }: DeleteTaskButtonProps) {
+	const t = useTranslations("console");
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
 	const mutation = useDeleteTask(taskId);
@@ -59,7 +61,7 @@ export function DeleteTaskButton({
 				) : (
 					<Trash2Icon className="mr-2 h-4 w-4" />
 				)}
-				<span>Delete Task</span>
+				<span>{t("tasks.delete-task")}</span>
 			</DropdownMenuItem>
 		) : (
 			<Button
@@ -73,7 +75,7 @@ export function DeleteTaskButton({
 				) : (
 					<Trash2Icon className="mr-2 h-4 w-4" />
 				)}
-				Delete
+				{t("common.delete")}
 			</Button>
 		);
 
@@ -86,21 +88,25 @@ export function DeleteTaskButton({
 					<AlertDialogMedia>
 						<Trash2Icon className="h-5 w-5" />
 					</AlertDialogMedia>
-					<AlertDialogTitle>Delete Task?</AlertDialogTitle>
+					<AlertDialogTitle>{t("tasks.delete-task-confirm")}</AlertDialogTitle>
 					<AlertDialogDescription>
-						Are you sure you want to delete <strong>{taskTitle}</strong>? This
-						action cannot be undone.
+						{t.rich("tasks.delete-task-desc", {
+							title: taskTitle,
+							strong: (chunks) => <strong>{chunks}</strong>,
+						})}
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
-					<AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
+					<AlertDialogCancel disabled={isLoading}>
+						{t("common.cancel")}
+					</AlertDialogCancel>
 					<AlertDialogAction
 						disabled={isLoading}
 						onClick={handleConfirm}
 						variant="destructive"
 					>
 						{isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-						Delete
+						{t("common.delete")}
 					</AlertDialogAction>
 				</AlertDialogFooter>
 			</AlertDialogContent>

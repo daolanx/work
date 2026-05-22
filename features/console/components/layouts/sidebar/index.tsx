@@ -3,6 +3,7 @@
 import { IconChevronRight, IconRocket } from "@tabler/icons-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import type * as React from "react";
 import { useMemo } from "react";
 import {
@@ -34,6 +35,7 @@ import { NavUser } from "./nav-user";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { user } = useUser();
 	const pathname = usePathname();
+	const t = useTranslations("console");
 
 	// Unified filtering logic
 	const filteredNavGroups = useMemo(() => {
@@ -64,10 +66,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			const content = (
 				<>
 					{item.icon && <item.icon className="size-4 shrink-0" />}
-					<span className="truncate">{item.label}</span>
+					<span className="truncate">{t(item.label)}</span>
 					{item.disabled && (
 						<span className="ml-auto rounded bg-muted px-1 font-medium text-[10px] opacity-70">
-							SOON
+							{t("common.soon")}
 						</span>
 					)}
 					{hasItems && !item.disabled && (
@@ -84,7 +86,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 							className={cn(item.disabled && "cursor-not-allowed opacity-50")}
 							disabled={item.disabled}
 							isActive={isActive}
-							tooltip={item.label}
+							tooltip={t(item.label)}
 						>
 							{item.disabled ? (
 								<div className="flex w-full items-center gap-2">{content}</div>
@@ -107,7 +109,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				>
 					<SidebarMenuItem>
 						<CollapsibleTrigger asChild>
-							<SidebarMenuButton isActive={isActive} tooltip={item.label}>
+							<SidebarMenuButton isActive={isActive} tooltip={t(item.label)}>
 								{content}
 							</SidebarMenuButton>
 						</CollapsibleTrigger>
@@ -119,7 +121,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 											asChild
 											isActive={pathname === subItem.url}
 										>
-											<Link href={subItem.url}>{subItem.label}</Link>
+											<Link href={subItem.url}>{t(subItem.label)}</Link>
 										</SidebarMenuSubButton>
 									</SidebarMenuSubItem>
 								))}
@@ -142,9 +144,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 									<IconRocket className="size-5 stroke-[2.5] drop-shadow-sm" />
 								</div>
 								<div className="grid flex-1 text-left text-sm leading-tight">
-									<span className="truncate font-semibold">Console</span>
+									<span className="truncate font-semibold">
+										{t("nav.console")}
+									</span>
 									<span className="truncate text-muted-foreground text-xs">
-										Welcome, {user?.name}
+										{t("sidebar.welcome", { name: user?.name ?? "" })}
 									</span>
 								</div>
 							</Link>
@@ -157,7 +161,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				{filteredNavGroups.map((group, idx) => (
 					<SidebarGroup className={group.className} key={group.label || idx}>
 						{group.label && (
-							<SidebarGroupLabel>{group.label}</SidebarGroupLabel>
+							<SidebarGroupLabel>{t(group.label)}</SidebarGroupLabel>
 						)}
 						<SidebarMenu>{renderMenuItems(group.items)}</SidebarMenu>
 					</SidebarGroup>

@@ -1,4 +1,5 @@
 import { ShieldAlert } from "lucide-react";
+import { useTranslations } from "next-intl";
 import React from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -25,22 +26,24 @@ function Protect({
 	children,
 }: IProtect): React.ReactNode {
 	const { user, isLoading } = useUser();
+	const t = useTranslations("console");
 	const noAccess = access && user?.role !== access;
 
 	if (isLoading) {
 		return typeof loading === "function"
 			? loading(children)
-			: (loading ?? <>Loading...</>);
+			: (loading ?? <>{t("protect.loading")}</>);
 	}
 	if (noAccess) {
 		return typeof fallback === "function"
 			? fallback(children)
-			: (fallback ?? <>No permission</>);
+			: (fallback ?? <>{t("protect.no-permission")}</>);
 	}
 	return children;
 }
 
 function ProtectSection({ access, children, fallback, loading }: IProtect) {
+	const t = useTranslations("console");
 	return (
 		<Protect
 			access={access}
@@ -49,11 +52,9 @@ function ProtectSection({ access, children, fallback, loading }: IProtect) {
 					<div className="flex h-[400px] items-center justify-center p-6 text-center">
 						<Alert className="max-w-md" variant="destructive">
 							<ShieldAlert className="h-4 w-4" />
-							<AlertTitle>Access Denied</AlertTitle>
+							<AlertTitle>{t("protect.access-denied")}</AlertTitle>
 							<AlertDescription>
-								You do not have the required permissions to view this content.
-								Please contact your system administrator if you believe this is
-								an error.
+								{t("protect.access-denied-desc")}
 							</AlertDescription>
 						</Alert>
 					</div>
@@ -81,12 +82,15 @@ function ProtectSection({ access, children, fallback, loading }: IProtect) {
 function ProtectAction({
 	access,
 	children,
-	disabledTooltip = "No permission",
-	loadingTooltip = "Loading...",
+	disabledTooltip,
+	loadingTooltip,
 }: IProtect & {
 	disabledTooltip?: string;
 	loadingTooltip?: string;
 }) {
+	const t = useTranslations("console");
+	const resolvedDisabledTooltip = disabledTooltip ?? t("protect.no-permission");
+	const resolvedLoadingTooltip = loadingTooltip ?? t("protect.loading");
 	return (
 		<Protect
 			access={access}
@@ -99,7 +103,7 @@ function ProtectAction({
 								: ch}
 						</span>
 					</TooltipTrigger>
-					<TooltipContent>{disabledTooltip}</TooltipContent>
+					<TooltipContent>{resolvedDisabledTooltip}</TooltipContent>
 				</Tooltip>
 			)}
 			loading={(ch) => (
@@ -111,7 +115,7 @@ function ProtectAction({
 								: ch}
 						</span>
 					</TooltipTrigger>
-					<TooltipContent>{loadingTooltip}</TooltipContent>
+					<TooltipContent>{resolvedLoadingTooltip}</TooltipContent>
 				</Tooltip>
 			)}
 		>

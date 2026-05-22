@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import useSWR from "swr";
@@ -28,25 +29,27 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { fetcher } from "@/lib/fetcher";
 
-const chartConfig = {
-	visitors: { label: "Visitors" },
-	desktop: { label: "Desktop", color: "var(--primary)" },
-	mobile: { label: "Mobile", color: "var(--primary)" },
-} satisfies ChartConfig;
-
-const TIME_RANGES = [
-	{ value: "90d", label: "Last 3 months", days: 90 },
-	{ value: "30d", label: "Last 30 days", days: 30 },
-	{ value: "7d", label: "Last 7 days", days: 7 },
-] as const;
-
 const VISITOR_KEY = "visitors-profile";
 
 type VisitorStat = { date: string; desktop: number; mobile: number };
 
 export function VisitorChart() {
+	const t = useTranslations("console");
+	const locale = useLocale();
 	const isMobile = useIsMobile();
 	const [timeRange, setTimeRange] = useState("90d");
+
+	const chartConfig = {
+		visitors: { label: t("dashboard.visitors") },
+		desktop: { label: t("dashboard.desktop"), color: "var(--primary)" },
+		mobile: { label: t("dashboard.mobile"), color: "var(--primary)" },
+	} satisfies ChartConfig;
+
+	const TIME_RANGES = [
+		{ value: "90d", label: t("dashboard.last-3-months"), days: 90 },
+		{ value: "30d", label: t("dashboard.last-30-days"), days: 30 },
+		{ value: "7d", label: t("dashboard.last-7-days"), days: 7 },
+	] as const;
 	const { data, isLoading } = useSWR<VisitorStat[]>(VISITOR_KEY, () =>
 		fetcher<VisitorStat[]>("/api/console/user/visitors"),
 	);
@@ -65,17 +68,19 @@ export function VisitorChart() {
 		return data.filter(
 			(item: { date: string }) => new Date(item.date) >= startDate,
 		);
-	}, [data, timeRange]);
+	}, [data, timeRange, TIME_RANGES]);
 
 	return (
 		<Card className="@container/card">
 			<CardHeader>
-				<CardTitle>Total Visitors</CardTitle>
+				<CardTitle>{t("dashboard.total-visitors")}</CardTitle>
 				<CardDescription>
 					<span className="@[540px]/card:block hidden">
-						Total for the last 3 months
+						{t("dashboard.total-visitors-desc")}
 					</span>
-					<span className="@[540px]/card:hidden">Last 3 months</span>
+					<span className="@[540px]/card:hidden">
+						{t("dashboard.last-3-months")}
+					</span>
 				</CardDescription>
 				<CardAction>
 					<ToggleGroup
@@ -96,7 +101,7 @@ export function VisitorChart() {
 							className="flex @[767px]/card:hidden w-40 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate"
 							size="sm"
 						>
-							<SelectValue placeholder="Last 3 months" />
+							<SelectValue placeholder={t("dashboard.last-3-months")} />
 						</SelectTrigger>
 						<SelectContent className="rounded-xl">
 							{TIME_RANGES.map((range) => (
@@ -151,7 +156,7 @@ export function VisitorChart() {
 								dataKey="date"
 								minTickGap={32}
 								tickFormatter={(val) =>
-									new Date(val).toLocaleDateString("en-US", {
+									new Date(val).toLocaleDateString(locale, {
 										month: "short",
 										day: "numeric",
 									})
@@ -164,7 +169,7 @@ export function VisitorChart() {
 									<ChartTooltipContent
 										indicator="dot"
 										labelFormatter={(val) =>
-											new Date(val).toLocaleDateString("en-US", {
+											new Date(val).toLocaleDateString(locale, {
 												month: "short",
 												day: "numeric",
 											})

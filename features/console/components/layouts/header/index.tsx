@@ -3,6 +3,7 @@
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import * as React from "react";
 import {
 	Breadcrumb,
@@ -15,6 +16,7 @@ import {
 import { IconGithub } from "@/components/ui/icon-github";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import LocaleSwitch from "@/features/console/profile/components/locale-switch";
 import { useTask } from "@/features/console/task/hooks/use-task";
 import { NotifyBell } from "./notify-bell";
 
@@ -38,8 +40,13 @@ const RESOURCE_RESOLVERS = {
 		pattern: /^\/console\/tasks\/(\d+)$/,
 		Component: ({ id, fallback }: { id: string; fallback: string }) => {
 			const { task, isLoading } = useTask(id); // Using your hook directly
+			const t = useTranslations("console");
 			if (isLoading)
-				return <span className="animate-pulse opacity-50">Loading...</span>;
+				return (
+					<span className="animate-pulse opacity-50">
+						{t("common.loading")}
+					</span>
+				);
 			return <>{task?.title || fallback}</>;
 		},
 	},
@@ -141,6 +148,7 @@ export function Header() {
 
 				<div className="ml-auto flex items-center gap-3">
 					<NotifyBell />
+					<LocaleSwitch />
 					<IconGithub />
 				</div>
 			</div>
