@@ -8,16 +8,8 @@ import {
 	ShieldAlert,
 	ShieldCheck,
 } from "lucide-react";
-import { Fragment, useState } from "react";
-
+import { Fragment } from "react";
 import { Button } from "@/components/ui/button";
-import {
-	Dialog,
-	DialogContent,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/ui/dialog";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -26,16 +18,15 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { AsyncActionItem } from "../../components/actions/async-dropdown-item";
+import { Mutation, PromptMutation } from "../../components/mutations";
 import { ROLES } from "../../constants";
-import type { AdminUser } from "../hooks/use-admin";
-import { useAdminUsers } from "../hooks/use-admin";
+import { type AdminUser, useAdminUsers } from "../hooks/use-admin";
 
 /* ------------------------------------------------------------------ */
-/*  ToggleRoleUserAction                                              */
+/*  ToggleRoleUserAction                                                 */
 /* ------------------------------------------------------------------ */
 
-function ActionToggleUserRole({ user }: { user: AdminUser }) {
+function MutationToggleUserRole({ user }: { user: AdminUser }) {
 	const { setUserRole } = useAdminUsers();
 
 	const config = {
@@ -56,104 +47,99 @@ function ActionToggleUserRole({ user }: { user: AdminUser }) {
 	if (!roleConfig) return null;
 
 	return (
-		<AsyncActionItem
-			icon={roleConfig.icon}
-			onSelect={() =>
-				setUserRole.trigger({ userId: user.id, role: roleConfig.targetRole })
-			}
+		<Mutation
+			mutation={setUserRole}
+			payload={{ userId: user.id, role: roleConfig.targetRole }}
 		>
-			{roleConfig.label}
-		</AsyncActionItem>
+			{({ isMutating, trigger }) => (
+				<DropdownMenuItem disabled={isMutating} onSelect={trigger}>
+					{isMutating ? (
+						<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+					) : (
+						roleConfig.icon
+					)}
+					{roleConfig.label}
+				</DropdownMenuItem>
+			)}
+		</Mutation>
 	);
 }
 
 /* ------------------------------------------------------------------ */
-/*  ActionUserAccessControl — Ban / Unban                                  */
+/*  MutationUserAccessControl — Ban / Unban                             */
 /* ------------------------------------------------------------------ */
 
-function ActionUserAccessControl({ user }: { user: AdminUser }) {
+function MutationUserAccessControl({ user }: { user: AdminUser }) {
 	const { banUser, unbanUser } = useAdminUsers();
-	const [open, setOpen] = useState(false);
-	const [reason, setReason] = useState("");
-
-	const handleConfirmBan = async () => {
-		await banUser.trigger({ userId: user.id, reason });
-		setOpen(false);
-		setReason("");
-	};
 
 	if (user.banned) {
 		return (
-			<AsyncActionItem
-				className="font-medium text-green-600"
-				icon={<CheckCircle className="mr-2 h-4 w-4" />}
-				onSelect={() => unbanUser.trigger({ userId: user.id })}
-			>
-				Unban User
-			</AsyncActionItem>
+			<Mutation mutation={unbanUser} payload={{ userId: user.id }}>
+				{({ isMutating, trigger }) => (
+					<DropdownMenuItem
+						className="font-medium text-green-600"
+						disabled={isMutating}
+						onSelect={trigger}
+					>
+						{isMutating ? (
+							<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+						) : (
+							<CheckCircle className="mr-2 h-4 w-4" />
+						)}
+						Unban User
+					</DropdownMenuItem>
+				)}
+			</Mutation>
 		);
 	}
 
 	return (
-		<>
-			<DropdownMenuItem
-				className="text-red-600"
-				onSelect={(e) => {
-					e.preventDefault();
-					setOpen(true);
-				}}
-			>
-				<Ban className="mr-2 h-4 w-4" />
-				Ban User
-			</DropdownMenuItem>
-
-			<Dialog onOpenChange={setOpen} open={open}>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>Ban User: {user.name}</DialogTitle>
-					</DialogHeader>
-					<div className="py-4">
-						<Input
-							disabled={banUser.isMutating}
-							onChange={(e) => setReason(e.target.value)}
-							placeholder="Reason for ban"
-							value={reason}
-						/>
-					</div>
-					<DialogFooter>
-						<Button onClick={() => setOpen(false)} variant="outline">
-							Cancel
-						</Button>
-						<Button
-							disabled={banUser.isMutating}
-							onClick={handleConfirmBan}
-							variant="destructive"
-						>
-							{banUser.isMutating && (
-								<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-							)}
-							Confirm Ban
-						</Button>
-					</DialogFooter>
-				</DialogContent>
-			</Dialog>
-		</>
+		<PromptMutation
+			confirmText="Confirm Ban"
+			content={<Input name="reason" placeholder="Reason for ban" />}
+			description="Please provide a reason for banning this user."
+			getPayload={(formData) => ({
+				userId: user.id,
+				reason: (formData.get("reason") as string) || "",
+			})}
+			mutation={banUser}
+			title={`Ban User: ${user.name}`}
+		>
+			{({ isMutating }) => (
+				<DropdownMenuItem
+					className="text-red-600"
+					disabled={isMutating}
+					onSelect={(e) => e.preventDefault()}
+				>
+					{isMutating ? (
+						<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+					) : (
+						<Ban className="mr-2 h-4 w-4" />
+					)}
+					Ban User
+				</DropdownMenuItem>
+			)}
+		</PromptMutation>
 	);
 }
 
-interface UserActionsProps {
+/* ------------------------------------------------------------------ */
+/*  AdminActions — dropdown trigger                                    */
+/* ------------------------------------------------------------------ */
+
+interface AdminActionsProps {
 	user: AdminUser;
 	accountId: string;
 }
 
-export function AdminActions({ user, accountId }: UserActionsProps) {
+export function AdminActions({ user, accountId }: AdminActionsProps) {
 	if (user.id === accountId) {
 		return <div className="text-center text-muted-foreground">-</div>;
 	}
 
 	const items = [
-		<ActionToggleUserRole key="role" user={user} />,
-		<ActionUserAccessControl key="access" user={user} />,
+		<MutationToggleUserRole key="role" user={user} />,
+		<MutationUserAccessControl key="access" user={user} />,
 	];
 
 	return (

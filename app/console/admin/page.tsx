@@ -1,13 +1,7 @@
 "use client";
 
 import { Users } from "lucide-react";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
 	RefreshTableButton,
 	UsersTable,
@@ -22,9 +16,6 @@ export default function AdminPage() {
 						<Users className="h-6 w-6 text-primary" />
 						User Management
 					</CardTitle>
-					<CardDescription>
-						Manage system users, assign roles, and monitor account status.
-					</CardDescription>
 				</div>
 				<RefreshTableButton />
 			</CardHeader>

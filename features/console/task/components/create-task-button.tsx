@@ -76,7 +76,7 @@ const TASK_FORM_CONFIG: FormFieldConfig<CreateTask>[] = [
 
 export function CreateTaskButton({ onSuccess }) {
 	const [open, setOpen] = useState(false);
-	const { trigger: createTask, isMutating: isCreating } = useCreateTask();
+	const { trigger, isMutating } = useCreateTask();
 
 	const form = useForm<CreateTask>({
 		resolver: zodResolver(createTaskSchema),
@@ -91,7 +91,7 @@ export function CreateTaskButton({ onSuccess }) {
 
 	const onSubmit = async (data: CreateTask) => {
 		try {
-			const newTask = await createTask(data);
+			const newTask = await trigger(data);
 			setOpen(false);
 			onSuccess?.(newTask.id);
 			form.reset();
@@ -118,10 +118,10 @@ export function CreateTaskButton({ onSuccess }) {
 						<DialogFooter className="pt-4">
 							<Button
 								className="h-12 w-full bg-slate-900 font-extrabold"
-								disabled={isCreating}
+								disabled={isMutating}
 								type="submit"
 							>
-								{isCreating ? (
+								{isMutating ? (
 									<IconLoader className="animate-spin" />
 								) : (
 									<IconPlus />
