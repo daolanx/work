@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import type React from "react";
 import { useRef, useState } from "react";
 import ReactCrop, {
@@ -35,6 +36,7 @@ export function AvatarUploader({
 	fallbackName = "IO",
 	onSave,
 }: AvatarUploaderProps) {
+	const t = useTranslations("console");
 	const [isOpen, setIsOpen] = useState(false);
 	const [imgSrc, setImgSrc] = useState("");
 	const [crop, setCrop] = useState<Crop>();
@@ -86,11 +88,11 @@ export function AvatarUploader({
 			await onSave(fileUrl);
 
 			setIsOpen(false);
-			toast.success("Avatar updated");
+			toast.success(t("profile.avatar-updated"));
 		} catch (err: unknown) {
 			console.error(err);
 			const error = err as { message?: string };
-			toast.error(error.message || "Failed to upload avatar");
+			toast.error(error.message || t("profile.avatar-upload-failed"));
 		} finally {
 			setIsUploading(false);
 			// Reset input to allow re-uploading the same file if needed
@@ -138,7 +140,7 @@ export function AvatarUploader({
 			<Dialog onOpenChange={setIsOpen} open={isOpen}>
 				<DialogContent className="sm:max-w-md">
 					<DialogHeader>
-						<DialogTitle>Adjust Avatar</DialogTitle>
+						<DialogTitle>{t("profile.adjust-avatar")}</DialogTitle>
 					</DialogHeader>
 					<div className="flex justify-center overflow-hidden rounded-lg border border-slate-100 bg-slate-50 p-6">
 						{imgSrc && (
@@ -169,13 +171,13 @@ export function AvatarUploader({
 							onClick={() => setIsOpen(false)}
 							variant="ghost"
 						>
-							Cancel
+							{t("common.cancel")}
 						</Button>
 						<Button disabled={isUploading} onClick={handleUpload}>
 							{isUploading && (
 								<IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
 							)}
-							Save Changes
+							{t("profile.save-changes")}
 						</Button>
 					</DialogFooter>
 				</DialogContent>

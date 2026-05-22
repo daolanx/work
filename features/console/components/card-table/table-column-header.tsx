@@ -7,6 +7,7 @@ import {
 	IconFilter,
 } from "@tabler/icons-react";
 import type { Column } from "@tanstack/react-table";
+import { useTranslations } from "next-intl";
 import React, { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -88,6 +89,7 @@ const ColumnFilter = <TData, TValue>({
 	column: Column<TData, TValue>;
 	options: { label: string; value: string }[];
 }) => {
+	const t = useTranslations("console");
 	const currentFilterValue = column.getFilterValue() as string[];
 	const [tempValues, setTempValues] = useState<string[]>(
 		currentFilterValue || [],
@@ -142,7 +144,7 @@ const ColumnFilter = <TData, TValue>({
 								column.setFilterValue(undefined);
 							}}
 						>
-							Clear Filters
+							{t("card-table.clear-filters")}
 						</DropdownMenuItem>
 					</>
 				)}

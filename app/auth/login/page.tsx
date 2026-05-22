@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,6 +13,7 @@ import { OAUTH_PROVIDERS } from "@/features/console/auth/constants";
 export default function LoginPage() {
 	const [loginChannel, setLoginChannel] = useState<string | null>(null);
 	const isLogging = loginChannel !== null;
+	const t = useTranslations("console");
 
 	return (
 		<div className="flex min-h-screen w-full items-center justify-center px-4">
@@ -22,10 +24,10 @@ export default function LoginPage() {
 			>
 				<div className="mb-10 flex flex-col items-center gap-3 text-center">
 					<h1 className="font-black text-4xl uppercase italic tracking-tighter">
-						Indie Console
+						{t("auth.brand-name")}
 					</h1>
 					<p className="font-mono text-muted-foreground text-xs uppercase tracking-widest">
-						From Vision to Launch.
+						{t("auth.brand-tagline")}
 					</p>
 				</div>
 
@@ -48,14 +50,14 @@ export default function LoginPage() {
 								className="font-medium text-muted-foreground text-xs transition-colors hover:text-primary"
 								href="/auth/forget-password"
 							>
-								Forget password?
+								{t("auth.forget-password-link")}
 							</Link>
 						</div>
 
 						<div className="flex items-center">
 							<div className="h-px flex-1 bg-muted-foreground/15" />
 							<span className="mx-4 font-bold text-[10px] text-muted-foreground uppercase tracking-widest">
-								OAuth
+								{t("auth.oauth-divider")}
 							</span>
 							<div className="h-px flex-1 bg-muted-foreground/15" />
 						</div>
@@ -80,12 +82,12 @@ export default function LoginPage() {
 				</Card>
 
 				<p className="mt-10 text-center text-muted-foreground text-sm">
-					Don&apos;t have an account?{" "}
+					{t("auth.no-account-text")}{" "}
 					<Link
 						className="ml-2 font-bold text-foreground transition-colors hover:text-primary"
 						href="/auth/register"
 					>
-						Create Account
+						{t("auth.create-account-link")}
 					</Link>
 				</p>
 
@@ -96,26 +98,26 @@ export default function LoginPage() {
 							href="/legal/terms"
 							target="_blank"
 						>
-							Terms
+							{t("auth.terms")}
 						</Link>
 						<Link
 							className="transition-colors hover:text-primary hover:italic"
 							href="/legal/privacy"
 							target="_blank"
 						>
-							Privacy
+							{t("auth.privacy")}
 						</Link>
 						<Link
 							className="transition-colors hover:text-primary hover:italic"
 							href="/legal/refund"
 							target="_blank"
 						>
-							Refund
+							{t("auth.refund")}
 						</Link>
 					</div>
 					<div className="h-px w-8 bg-muted-foreground/20" />
 					<p className="font-mono text-[9px] text-muted-foreground/40 uppercase tracking-widest">
-						© 2026 Daolanx Studio
+						{t("auth.copyright")}
 					</p>
 				</footer>
 			</motion.div>

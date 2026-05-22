@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { OAuthButton } from "@/features/console/auth/components/oauth-button";
@@ -11,6 +12,7 @@ import { OAUTH_PROVIDERS } from "@/features/console/auth/constants";
 export default function RegisterPage() {
 	const [registerChannel, setRegisterChannel] = useState<string | null>(null);
 	const isRegistering = registerChannel !== null;
+	const t = useTranslations("console");
 
 	return (
 		<div className="flex min-h-screen w-full items-center justify-center px-4">
@@ -21,10 +23,10 @@ export default function RegisterPage() {
 			>
 				<div className="mb-10 flex flex-col items-center gap-3 text-center">
 					<h1 className="font-black text-4xl uppercase italic tracking-tighter">
-						Indie Console
+						{t("auth.brand-name")}
 					</h1>
 					<p className="font-mono text-muted-foreground text-xs uppercase tracking-widest">
-						From Vision to Launch.
+						{t("auth.brand-tagline")}
 					</p>
 				</div>
 
@@ -45,7 +47,7 @@ export default function RegisterPage() {
 						<div className="flex items-center">
 							<div className="h-px flex-1 bg-muted-foreground/15" />
 							<span className="mx-4 font-bold text-[10px] text-muted-foreground uppercase tracking-widest">
-								OAUTH
+								{t("auth.oauth-divider")}
 							</span>
 							<div className="h-px flex-1 bg-muted-foreground/15" />
 						</div>
@@ -70,12 +72,12 @@ export default function RegisterPage() {
 				</Card>
 
 				<p className="mt-10 text-center text-muted-foreground text-sm">
-					Already have an account?
+					{t("auth.already-have-account")}{" "}
 					<Link
 						className="ml-2 font-bold text-foreground transition-colors hover:text-primary"
 						href="/auth/login"
 					>
-						Sign In
+						{t("auth.sign-in-link")}
 					</Link>
 				</p>
 			</motion.div>

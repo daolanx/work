@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IconBan } from "@tabler/icons-react";
 import { Ban, CheckCircle, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -42,6 +43,7 @@ const banUserSchema = z.object({
 type BanUserForm = z.infer<typeof banUserSchema>;
 
 export function UserBanToggle({ user }: { user: AdminUser }) {
+	const t = useTranslations("console");
 	const { mutate: globalMutate } = useSWRConfig();
 
 	const banUser = useSWRMutation(
@@ -56,7 +58,7 @@ export function UserBanToggle({ user }: { user: AdminUser }) {
 			revalidate: false,
 			onSuccess: () => {
 				globalMutate(ADMIN_USERS_KEY);
-				toast.success("User banned successfully");
+				toast.success(t("admin.user-banned"));
 			},
 		},
 	);
@@ -70,7 +72,7 @@ export function UserBanToggle({ user }: { user: AdminUser }) {
 			revalidate: false,
 			onSuccess: () => {
 				globalMutate(ADMIN_USERS_KEY);
-				toast.success("User unbanned successfully");
+				toast.success(t("admin.user-unbanned"));
 			},
 		},
 	);
@@ -90,7 +92,7 @@ export function UserBanToggle({ user }: { user: AdminUser }) {
 				) : (
 					<CheckCircle className="mr-2 h-4 w-4" />
 				)}
-				Unban User
+				{t("admin.unban-user")}
 			</DropdownMenuItem>
 		);
 	}
@@ -106,6 +108,7 @@ function BanUserDialog({
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	banUser: ReturnType<typeof useSWRMutation<any, any, any, any>>;
 }) {
+	const t = useTranslations("console");
 	const [open, setOpen] = useState(false);
 	const isLoading = banUser.isMutating;
 	const form = useForm<BanUserForm>({
@@ -132,13 +135,15 @@ function BanUserDialog({
 					) : (
 						<Ban className="mr-2 h-4 w-4" />
 					)}
-					Ban User
+					{t("admin.ban-user")}
 				</DropdownMenuItem>
 			</DialogTrigger>
 
 			<DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
 				<DialogHeader>
-					<DialogTitle>Ban User: {user.name}</DialogTitle>
+					<DialogTitle>
+						{t("admin.ban-user-title", { name: user.name })}
+					</DialogTitle>
 				</DialogHeader>
 
 				<Form {...form}>
@@ -150,10 +155,10 @@ function BanUserDialog({
 							fields={[
 								{
 									name: "reason",
-									label: "Reason",
+									label: t("admin.reason"),
 									type: "input",
 									icon: IconBan,
-									placeholder: "Reason for ban",
+									placeholder: t("admin.reason-for-ban"),
 								},
 							]}
 							form={form}
@@ -165,11 +170,11 @@ function BanUserDialog({
 								type="button"
 								variant="outline"
 							>
-								Cancel
+								{t("common.cancel")}
 							</Button>
 							<Button disabled={isLoading} type="submit">
 								{isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-								Confirm Ban
+								{t("admin.confirm-ban")}
 							</Button>
 						</DialogFooter>
 					</form>

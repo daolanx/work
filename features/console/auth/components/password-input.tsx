@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckIcon, EyeIcon, EyeOffIcon, XIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { PASSWORD_RULES } from "../schemas";
@@ -23,10 +24,12 @@ export function PasswordInput({
 	onBlur,
 	name,
 	id,
-	placeholder = "Password",
+	placeholder,
 	hideStrength = false,
 	disabled = false,
 }: PasswordInputProps) {
+	const t = useTranslations("console");
+	const resolvedPlaceholder = placeholder ?? t("auth.password");
 	const [isVisible, setIsVisible] = useState<boolean>(false);
 
 	const toggleVisibility = () => setIsVisible((prevState) => !prevState);
@@ -52,10 +55,10 @@ export function PasswordInput({
 	};
 
 	const getStrengthText = (score: number) => {
-		if (score === 0) return "Enter a password";
-		if (score <= 2) return "Weak password";
-		if (score === 3) return "Medium password";
-		return "Strong password";
+		if (score === 0) return t("auth.enter-password");
+		if (score <= 2) return t("auth.weak-password");
+		if (score === 3) return t("auth.medium-password");
+		return t("auth.strong-password");
 	};
 
 	const shouldShowRequirements =
@@ -71,7 +74,7 @@ export function PasswordInput({
 					name={name}
 					onBlur={onBlur}
 					onChange={onChange}
-					placeholder={placeholder}
+					placeholder={resolvedPlaceholder}
 					type={isVisible ? "text" : "password"}
 					value={value}
 				/>

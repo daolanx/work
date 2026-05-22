@@ -5,6 +5,7 @@ import {
 	getCoreRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
+import { useTranslations } from "next-intl";
 import { useImperativeHandle } from "react";
 
 // UI Components
@@ -50,6 +51,8 @@ function CardTable<T>({
 	variant = "default",
 	ref,
 }: ExtendedDataTableProps<T> & { ref?: React.Ref<CardTableHandle> }) {
+	const t = useTranslations("console");
+
 	// Temporary state for highlighting a specific row (e.g., after creation/update)
 	const { triggerTableRowFlash, isRowFlashed } = useTableRowFlash();
 
@@ -179,7 +182,7 @@ function CardTable<T>({
 										className="h-24 text-center text-muted-foreground"
 										colSpan={columns.length}
 									>
-										No Data.
+										{t("card-table.no-data")}
 									</TableCell>
 								</TableRow>
 							) : (

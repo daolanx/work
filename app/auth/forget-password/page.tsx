@@ -3,6 +3,7 @@
 import { Loader2, MailCheck } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,6 +16,7 @@ export default function ForgetPasswordPage() {
 	const [email, setEmail] = useState("");
 	const [isPending, setIsPending] = useState(false);
 	const [state, setState] = useState<{ success?: string; error?: string }>({});
+	const t = useTranslations("console");
 
 	const handleForgetPassword = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -40,10 +42,10 @@ export default function ForgetPasswordPage() {
 			>
 				<div className="mb-10 flex flex-col items-center gap-3 text-center">
 					<h1 className="font-black text-3xl uppercase italic tracking-tighter sm:text-4xl">
-						Forget Password
+						{t("auth.forget-password-title")}
 					</h1>
 					<p className="text-muted-foreground text-sm sm:text-base">
-						Enter your email to receive a recovery link.
+						{t("auth.forget-password-desc")}
 					</p>
 				</div>
 
@@ -60,12 +62,11 @@ export default function ForgetPasswordPage() {
 								<div className="space-y-2">
 									<FormSuccess message={state.success} />
 									<p className="text-muted-foreground text-sm leading-relaxed">
-										Please check your email and follow the instructions to reset
-										your password.
+										{t("auth.check-email-instructions")}
 									</p>
 								</div>
 								<Button asChild className="mt-4 h-12 w-full" variant="outline">
-									<Link href="/auth/login">Return to Login</Link>
+									<Link href="/auth/login">{t("auth.return-to-login")}</Link>
 								</Button>
 							</div>
 						) : (
@@ -76,7 +77,7 @@ export default function ForgetPasswordPage() {
 								<FormError message={state.error || ""} />
 
 								<div className="flex flex-col gap-2.5">
-									<Label htmlFor="email">Email Address</Label>
+									<Label htmlFor="email">{t("auth.email-address")}</Label>
 									<Input
 										className="h-11"
 										disabled={isPending}
@@ -97,7 +98,7 @@ export default function ForgetPasswordPage() {
 									{isPending ? (
 										<Loader2 className="h-5 w-5 animate-spin" />
 									) : (
-										"Send Recovery Link"
+										t("auth.send-recovery-link")
 									)}
 								</Button>
 							</form>
@@ -106,12 +107,12 @@ export default function ForgetPasswordPage() {
 				</Card>
 
 				<p className="mt-10 text-center text-muted-foreground text-sm">
-					Remember your password?{" "}
+					{t("auth.remember-password")}{" "}
 					<Link
 						className="font-bold text-foreground transition-colors hover:text-primary"
 						href="/auth/login"
 					>
-						Return to Login
+						{t("auth.return-to-login")}
 					</Link>
 				</p>
 			</motion.div>

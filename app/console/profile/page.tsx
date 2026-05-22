@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IconCheck, IconEdit, IconLoader2, IconX } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
+import { useTranslations } from "next-intl";
 import type React from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -34,6 +35,7 @@ const AvatarUploader = dynamic(
 );
 
 export default function AccountPage() {
+	const t = useTranslations("console");
 	const { user, isLoading, updateUser, isMutating } = useUser();
 
 	if (isLoading) return <AccountSkeleton />;
@@ -44,9 +46,11 @@ export default function AccountPage() {
 		<div className="flex max-w-5xl flex-col gap-8 px-4 py-8 lg:px-12">
 			{/* Header */}
 			<div className="space-y-1">
-				<h2 className="font-bold text-3xl tracking-tight">Profile</h2>
+				<h2 className="font-bold text-3xl tracking-tight">
+					{t("profile.profile")}
+				</h2>
 				<p className="text-muted-foreground text-sm">
-					Manage your public profile settings.
+					{t("profile.manage-profile")}
 				</p>
 			</div>
 
@@ -55,8 +59,8 @@ export default function AccountPage() {
 			<div className="grid gap-12">
 				{/* Section 1: Avatar */}
 				<SectionLayout
-					description="Your avatar is visible to everyone on the platform."
-					title="Avatar"
+					description={t("profile.avatar-desc")}
+					title={t("profile.avatar")}
 				>
 					<AvatarUploader
 						fallbackName={user?.name}
@@ -69,8 +73,8 @@ export default function AccountPage() {
 
 				{/* Section 2: Display Name */}
 				<SectionLayout
-					description="The name that will be displayed on your profile."
-					title="Display Name"
+					description={t("profile.display-name-desc")}
+					title={t("profile.display-name")}
 				>
 					<InlineEditField
 						fieldName="name"
@@ -120,6 +124,7 @@ function InlineEditField({
 	isPending = false,
 	type = "text",
 }: InlineEditFieldProps) {
+	const t = useTranslations("console");
 	const [isEditing, setIsEditing] = useState(false);
 
 	const formSchema = z.object({ [fieldName]: schema });
@@ -203,7 +208,9 @@ function InlineEditField({
 	return (
 		<div className="group flex items-center gap-3 rounded-md py-1.5 pr-2 transition-colors hover:bg-slate-50/50">
 			<span className="font-medium text-md text-slate-900">
-				{initialValue || <span className="text-slate-400 italic">Not set</span>}
+				{initialValue || (
+					<span className="text-slate-400 italic">{t("profile.not-set")}</span>
+				)}
 			</span>
 			<div className="opacity-0 transition-opacity group-hover:opacity-100">
 				<div className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900">

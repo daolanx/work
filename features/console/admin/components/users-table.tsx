@@ -7,6 +7,7 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import { MoreHorizontal, RefreshCw } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -50,13 +51,14 @@ type AdminUser = {
 };
 
 export function UsersTable() {
+	const t = useTranslations("console");
 	const { user: currentUser } = useUser();
 	const { data: users = [], isLoading, isValidating } = useUsers();
 
 	const columns: ColumnDef<AdminUser>[] = [
 		{
 			accessorKey: "name",
-			header: "User",
+			header: t("admin.user"),
 			cell: ({ row }) => {
 				const user = row.original;
 				return (
@@ -72,7 +74,7 @@ export function UsersTable() {
 								{user.name}
 								{user.id === currentUser?.id && (
 									<span className="ml-2 rounded bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground uppercase tracking-wider">
-										You
+										{t("admin.you")}
 									</span>
 								)}
 							</div>
@@ -84,7 +86,7 @@ export function UsersTable() {
 		},
 		{
 			accessorKey: "role",
-			header: "Role",
+			header: t("admin.role"),
 			cell: ({ row }) => (
 				<Badge
 					variant={row.original.role === "admin" ? "default" : "secondary"}
@@ -95,22 +97,22 @@ export function UsersTable() {
 		},
 		{
 			accessorKey: "banned",
-			header: "Status",
+			header: t("admin.status"),
 			cell: ({ row }) =>
 				row.original.banned ? (
-					<Badge variant="destructive">Banned</Badge>
+					<Badge variant="destructive">{t("admin.banned")}</Badge>
 				) : (
 					<Badge
 						className="border-green-200 bg-green-50/50 text-green-600"
 						variant="outline"
 					>
-						Active
+						{t("admin.active")}
 					</Badge>
 				),
 		},
 		{
 			id: "actions",
-			header: () => <div className="text-right">Actions</div>,
+			header: () => <div className="text-right">{t("admin.actions")}</div>,
 			cell: ({ row }) => {
 				const user = row.original;
 				if (user.id === currentUser?.id) {
@@ -174,7 +176,7 @@ export function UsersTable() {
 									className="h-24 text-center"
 									colSpan={columns.length}
 								>
-									Loading...
+									{t("common.loading")}
 								</TableCell>
 							</TableRow>
 						) : table.getRowModel().rows.length ? (
@@ -196,7 +198,7 @@ export function UsersTable() {
 									className="h-24 text-center"
 									colSpan={columns.length}
 								>
-									No users.
+									{t("admin.no-users")}
 								</TableCell>
 							</TableRow>
 						)}
@@ -208,6 +210,7 @@ export function UsersTable() {
 }
 
 export function RefreshTableButton() {
+	const t = useTranslations("console");
 	const { isLoading, isValidating, mutate } = useUsers();
 	const refreshing = isValidating && !isLoading;
 
@@ -224,7 +227,7 @@ export function RefreshTableButton() {
 				) : (
 					<RefreshCw className="mr-2 h-4 w-4" />
 				)}
-				Refresh
+				{t("common.refresh")}
 			</Button>
 		</ProtectAction>
 	);

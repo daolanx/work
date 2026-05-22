@@ -1,12 +1,14 @@
 "use client";
 
 import { Loader2, Settings2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner"; // Assuming you use sonner or similar for notifications
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/features/console/auth/lib/client";
 
 export function ManageBillingButton() {
+	const t = useTranslations("console");
 	const [isLoading, setIsLoading] = useState(false);
 
 	const handlePortal = async () => {
@@ -18,13 +20,13 @@ export function ManageBillingButton() {
 
 			// Handle Better-Auth framework errors (e.g., session expired)
 			if (error) {
-				toast.error(error.message || "Authentication error occurred");
+				toast.error(error.message || t("payments.auth-error"));
 				return;
 			}
 
 			// Safeguard against null data
 			if (!data) {
-				toast.error("No data received from billing service");
+				toast.error(t("payments.no-data"));
 				return;
 			}
 
@@ -44,7 +46,7 @@ export function ManageBillingButton() {
 		} catch (err) {
 			// Catch unexpected network or runtime errors
 			console.error("Portal redirect error:", err);
-			toast.error("Could not reach the billing server");
+			toast.error(t("payments.server-error"));
 		} finally {
 			// Keep loading state until navigation begins
 			setIsLoading(false);
@@ -61,12 +63,12 @@ export function ManageBillingButton() {
 			{isLoading ? (
 				<>
 					<Loader2 className="h-4 w-4 animate-spin" />
-					<span>Connecting to Creem...</span>
+					<span>{t("payments.connecting")}</span>
 				</>
 			) : (
 				<>
 					<Settings2 className="h-4 w-4" />
-					<span>Manage Subscription</span>
+					<span>{t("payments.manage-subscription")}</span>
 				</>
 			)}
 		</Button>

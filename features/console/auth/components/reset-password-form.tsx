@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ export function ResetPasswordForm({
 }: {
 	onLoading?: (loading: boolean) => void;
 }) {
+	const t = useTranslations("console");
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const token = searchParams.get("token");
@@ -54,13 +56,15 @@ export function ResetPasswordForm({
 					<AlertCircle size={40} />
 				</div>
 				<div className="space-y-2 text-center">
-					<h3 className="font-bold text-foreground text-xl">Missing Token</h3>
+					<h3 className="font-bold text-foreground text-xl">
+						{t("auth.missing-token")}
+					</h3>
 					<p className="mx-auto max-w-[280px] text-muted-foreground text-sm">
-						The reset link is invalid or has expired. Please request a new one.
+						{t("auth.reset-link-invalid")}
 					</p>
 				</div>
 				<Button asChild className="w-full">
-					<Link href="/auth/login">Back to Sign In</Link>
+					<Link href="/auth/login">{t("common.back-to-sign-in")}</Link>
 				</Button>
 			</div>
 		);
@@ -76,7 +80,7 @@ export function ResetPasswordForm({
 				},
 				{
 					onSuccess: () => {
-						setServerState({ success: "Your password has been updated." });
+						setServerState({ success: t("auth.password-updated") });
 						setTimeout(() => router.push("/auth/login"), 2500);
 					},
 					onError: (ctx) => {
@@ -85,7 +89,7 @@ export function ResetPasswordForm({
 				},
 			);
 		} catch (_err) {
-			setServerState({ error: "An unexpected error occurred." });
+			setServerState({ error: t("auth.unexpected-error") });
 		}
 	};
 
@@ -102,7 +106,7 @@ export function ResetPasswordForm({
 							name="password"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>New Password</FormLabel>
+									<FormLabel>{t("auth.new-password")}</FormLabel>
 									<FormControl>
 										<PasswordInput {...field} disabled={isSubmitting} />
 									</FormControl>
@@ -116,13 +120,13 @@ export function ResetPasswordForm({
 							name="confirmPassword"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Confirm Password</FormLabel>
+									<FormLabel>{t("auth.confirm-password")}</FormLabel>
 									<FormControl>
 										<PasswordInput
 											{...field}
 											disabled={isSubmitting}
 											hideStrength
-											placeholder="Repeat new password"
+											placeholder={t("auth.repeat-password")}
 										/>
 									</FormControl>
 									<FormMessage />
@@ -138,10 +142,10 @@ export function ResetPasswordForm({
 							{isSubmitting ? (
 								<>
 									<Loader2 className="mr-2 h-5 w-5 animate-spin" />
-									Updating...
+									{t("auth.updating")}
 								</>
 							) : (
-								"Update Password"
+								t("auth.update-password")
 							)}
 						</Button>
 					</>
@@ -155,9 +159,9 @@ export function ResetPasswordForm({
 							/>
 						</div>
 						<div className="text-center">
-							<p className="font-bold text-lg">Success!</p>
+							<p className="font-bold text-lg">{t("auth.success")}</p>
 							<p className="text-muted-foreground text-sm">
-								Redirecting to login shortly...
+								{t("auth.redirecting")}
 							</p>
 						</div>
 					</div>
