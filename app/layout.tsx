@@ -1,5 +1,6 @@
 import { Epilogue, Manrope } from "next/font/google";
 import Script from "next/script";
+import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
 import "@/styles/globals.css";
@@ -16,7 +17,7 @@ const manrope = Manrope({
 	weight: ["400", "500", "600"],
 });
 
-export default async function LocaleLayout({
+export default async function RootLayout({
 	children,
 }: {
 	children: React.ReactNode;
@@ -33,14 +34,16 @@ export default async function LocaleLayout({
 				<link href="https://cloud.umami.is" rel="dns-prefetch" />
 			</head>
 			<body>
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="system"
-					disableTransitionOnChange
-					enableSystem
-				>
-					{children}
-				</ThemeProvider>
+				<NextIntlClientProvider>
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="system"
+						disableTransitionOnChange
+						enableSystem
+					>
+						{children}
+					</ThemeProvider>
+				</NextIntlClientProvider>
 				<Script
 					data-website-id="2008e087-18a7-43de-8901-4f580e9ddabc"
 					src="https://cloud.umami.is/script.js"

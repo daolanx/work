@@ -1,30 +1,38 @@
 "use client";
 
-import { getCookie, setCookie } from "cookies-next";
+import { setCookie } from "cookies-next";
 import { Languages } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
-import { defaultLocale, LOCALE_COOKIE_NAME, locales } from "@/i18n/config";
+import { useLocale } from "next-intl";
+import { useTransition } from "react";
+import { DEFAULT_LOCALE, LOCALE_COOKIE_NAME, LOCALES } from "@/i18n/constants";
 
 export default function LocaleSwitch() {
-	const locale = getCookie(LOCALE_COOKIE_NAME);
+	const locale = useLocale();
 	const router = useRouter();
-	const t = useTranslations("console");
+	const [isPending, startTransition] = useTransition();
 
 	return (
 		<button
-			aria-label={t("header.switch-language")}
-			className="cursor-pointer p-1 text-neutral-600 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
+			aria-label="Switch language"
+			className="cursor-pointer p-1 text-neutral-600 transition-colors hover:text-neutral-900 disabled:cursor-not-allowed dark:text-neutral-400 dark:hover:text-neutral-100"
+			disabled={isPending}
 			onClick={handleLocaleSwitch}
 			type="button"
 		>
-			<Languages size={20} />
+			<Languages
+				className={isPending ? "animate-pulse opacity-50" : ""}
+				size={20}
+			/>
 		</button>
 	);
 
 	function handleLocaleSwitch() {
-		const newLoacle = locales.find((temp) => temp !== locale) || defaultLocale;
-		setCookie(LOCALE_COOKIE_NAME, newLoacle);
-		router.refresh();
+		const newLocale = LOCALES.find((l) => l !== locale) || DEFAULT_LOCALE;
+		setCookie(LOCALE_COOKIE_NAME, newLocale, { path: "/" });
+
+		startTransition(() => {
+			router.refresh();
+		});
 	}
 }
