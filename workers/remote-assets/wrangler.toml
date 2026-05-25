@@ -6,14 +6,14 @@ compatibility_date = "2025-03-23"
 R2_DOMAIN = "https://assets.daolanx.com"
 UPLOADS_R2_DOMAIN = "https://files.daolanx.com"
 REMOTE_PREFIX = "/remote-assets/"
-MEDIA_PREFIX = "/media/"
+MEDIA_PREFIX = "/medias/"
 
 [[routes]]
 pattern = "demo.daolanx.com/remote-assets/*"
 zone_name = "daolanx.com"
 
 [[routes]]
-pattern = "demo.daolanx.com/media/*"
+pattern = "demo.daolanx.com/medias/*"
 zone_name = "daolanx.com"
 
 [[r2_buckets]]

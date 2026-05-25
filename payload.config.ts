@@ -1,7 +1,10 @@
-// @ts-nocheck
+// @ts-nocheck -- needed because payload generate:types uses a tsx version that can't parse import type
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { s3Storage } from "@payloadcms/storage-s3";
 import { buildConfig } from "payload";
+
+if (!process.env.PAYLOAD_SECRET) throw new Error("PAYLOAD_SECRET is missing");
+if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is missing");
 
 const Media = {
 	slug: "media",
@@ -38,23 +41,6 @@ const Sites = {
 	},
 	fields: [
 		{
-			name: "title",
-			type: "text",
-			required: true,
-			localized: true,
-		},
-		{
-			name: "description",
-			type: "text",
-			required: true,
-			localized: true,
-		},
-		{
-			name: "keywords",
-			type: "text",
-			localized: true,
-		},
-		{
 			name: "preview",
 			type: "upload",
 			relationTo: "media",
@@ -75,11 +61,27 @@ const Sites = {
 			type: "checkbox",
 			defaultValue: false,
 		},
+		{
+			name: "keywords",
+			type: "text",
+		},
+		{
+			name: "title",
+			type: "text",
+			required: true,
+			localized: true,
+		},
+		{
+			name: "description",
+			type: "textarea",
+			required: true,
+			localized: true,
+		},
 	],
 };
 
 export default buildConfig({
-	secret: process.env.PAYLOAD_SECRET || "",
+	secret: process.env.PAYLOAD_SECRET,
 	collections: [Media, Sites],
 	globals: [],
 	localization: {
@@ -89,7 +91,7 @@ export default buildConfig({
 	},
 	db: postgresAdapter({
 		pool: {
-			connectionString: process.env.DATABASE_URL || "",
+			connectionString: process.env.DATABASE_URL,
 		},
 		schemaName: "payload",
 		push: true,
@@ -99,24 +101,29 @@ export default buildConfig({
 			enabled: true,
 			collections: {
 				media: {
+					prefix: "medias",
 					generateFileURL: ({ filename, size }) => {
-						const base = "https://demo.daolanx.com/media";
-						if (size) {
-							const ext = filename.split(".").pop();
-							const name = filename.replace(/\.[^.]+$/, "");
-							return `${base}/${name}_${size}.${ext}`;
+						const baseUrl =
+							process.env.NEXT_PUBLIC_SITE_URL || "https://demo.daolanx.com";
+						if (size && typeof filename === "string") {
+							const lastDot = filename.lastIndexOf(".");
+							if (lastDot === -1)
+								return `${baseUrl}/medias/${filename}_${size}`;
+							const name = filename.substring(0, lastDot);
+							const ext = filename.substring(lastDot + 1);
+							return `${baseUrl}/medias/${name}_${size}.${ext}`;
 						}
-						return `${base}/${filename}`;
+						return `${baseUrl}/medias/${filename}`;
 					},
 				},
 			},
-			bucket: "uploads",
+			bucket: process.env.UPLOAD_R2_BUCKET || "uploads",
 			config: {
 				region: "auto",
 				endpoint: process.env.UPLOAD_R2_ENDPOINT,
 				credentials: {
-					accessKeyId: process.env.UPLOAD_R2_ACCESS_KEY_ID,
-					secretAccessKey: process.env.UPLOAD_R2_SECRET_ACCESS_KEY,
+					accessKeyId: process.env.UPLOAD_R2_ACCESS_KEY_ID || "",
+					secretAccessKey: process.env.UPLOAD_R2_SECRET_ACCESS_KEY || "",
 				},
 				requestChecksumCalculation: "WHEN_REQUIRED",
 				responseChecksumValidation: "WHEN_REQUIRED",

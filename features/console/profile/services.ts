@@ -19,9 +19,9 @@ export async function getSites(): Promise<Site[]> {
 
 	const result = await payload.find({
 		collection: "sites",
-		locale: lang,
 		sort: "_order",
 		depth: 1,
+		locale: lang,
 	});
 
 	return result.docs.map((site: any) => {
@@ -31,7 +31,7 @@ export async function getSites(): Promise<Site[]> {
 			description: site.description ?? "",
 			keywords: (site.keywords ?? "")
 				.split(",")
-				.map((kw) => kw.trim())
+				.map((kw: string) => kw.trim())
 				.filter(Boolean),
 			previewUrl: preview?.url ?? "",
 			webUrl: site.webUrl ?? "",

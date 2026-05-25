@@ -2,11 +2,12 @@ import { Home as HomeIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
+import { Suspense } from "react";
 import { DemoCard } from "@/features/console/profile/components/demo-card";
 import { FadeIn } from "@/features/console/profile/components/fade-in";
 import LocaleSwitch from "@/features/console/profile/components/locale-switch";
 import ThemeSwitch from "@/features/console/profile/components/theme-switch";
-import { getSites, type Site } from "@/features/console/profile/services";
+import { getSites } from "@/features/console/profile/services";
 
 const metadataBase = new URL("https://demo.daolanx.com");
 
@@ -37,9 +38,110 @@ export async function generateMetadata(): Promise<Metadata> {
 	};
 }
 
+async function SiteList() {
+	const t = await getTranslations("profile");
+	const sites = await getSites();
+
+	return (
+		<div className="space-y-12">
+			{sites.map((site, index) => (
+				<FadeIn delay={0.1 + index * 0.1} key={site.title}>
+					<DemoCard>
+						{/* Title */}
+						<div className="px-8 pt-8">
+							<h2 className="font-semibold text-2xl text-neutral-900 md:text-3xl dark:text-neutral-100">
+								{site.title}
+							</h2>
+						</div>
+
+						{/* Image Container */}
+
+						<div className="relative mx-8 mt-6 aspect-[21/9] overflow-hidden border border-neutral-200 dark:border-neutral-800">
+							<Image
+								alt={`${site.title} - ${site.description}`}
+								className="cursor-default object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
+								fetchPriority={index === 0 ? "high" : "auto"}
+								fill
+								priority={index === 0}
+								sizes="(max-width: 1024px) calc(100vw - 96px), 928px"
+								src={site.previewUrl}
+							/>
+						</div>
+
+						{/* Description */}
+						<div className="mt-6 px-8">
+							<p className="whitespace-pre-line text-neutral-500 leading-relaxed dark:text-neutral-400">
+								{site.description}
+							</p>
+						</div>
+
+						{/* Tags & Actions */}
+						<div className="px-8 pb-8">
+							<div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-neutral-100 border-t pt-6 dark:border-neutral-800">
+								<div className="flex flex-wrap gap-2">
+									{site.keywords.map((keyword) => (
+										<span
+											className="bg-neutral-100 px-3 py-1.5 font-medium text-neutral-600 text-xs tracking-wide dark:bg-neutral-800 dark:text-neutral-400"
+											key={keyword}
+										>
+											{keyword}
+										</span>
+									))}
+								</div>
+								<div className="flex items-center gap-3">
+									<a
+										className="border border-neutral-300 px-4 py-2 text-neutral-900 text-sm transition-colors hover:bg-blue-700 hover:text-white dark:border-neutral-600 dark:text-neutral-100 dark:hover:bg-blue-600 dark:hover:text-white"
+										href={site.sourceUrl}
+										rel="noopener noreferrer"
+										target="_blank"
+									>
+										{t("view-source")}
+									</a>
+									<a
+										className="border border-neutral-300 px-4 py-2 text-neutral-900 text-sm transition-colors hover:bg-neutral-900 hover:text-white dark:border-neutral-600 dark:text-neutral-100 dark:hover:bg-white dark:hover:text-neutral-900"
+										href={site.webUrl}
+										rel="noopener noreferrer"
+										target="_blank"
+									>
+										{t("view-site")}
+									</a>
+								</div>
+							</div>
+						</div>
+					</DemoCard>
+				</FadeIn>
+			))}
+		</div>
+	);
+}
+
+function SiteListSkeleton() {
+	return (
+		<div className="space-y-12">
+			{Array.from({ length: 4 }).map((_, i) => (
+				<div
+					className="animate-pulse rounded-xl border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900"
+					key={i}
+				>
+					<div className="mx-8 mt-8 h-8 w-1/3 rounded bg-neutral-200 dark:bg-neutral-700" />
+					<div className="mx-8 mt-6 aspect-[21/9] rounded bg-neutral-200 dark:bg-neutral-700" />
+					<div className="mx-8 mt-6 space-y-2 px-0">
+						<div className="h-4 w-full rounded bg-neutral-200 dark:bg-neutral-700" />
+						<div className="h-4 w-2/3 rounded bg-neutral-200 dark:bg-neutral-700" />
+					</div>
+					<div className="mx-8 mt-6 flex gap-2 pb-8">
+						<div className="h-6 w-16 rounded bg-neutral-200 dark:bg-neutral-700" />
+						<div className="h-6 w-16 rounded bg-neutral-200 dark:bg-neutral-700" />
+						<div className="h-6 w-16 rounded bg-neutral-200 dark:bg-neutral-700" />
+					</div>
+				</div>
+			))}
+		</div>
+	);
+}
+
 export default async function Home() {
 	const t = await getTranslations("profile");
-	const sites: Site[] = await getSites();
 
 	return (
 		<main className="min-h-screen bg-neutral-50 dark:bg-neutral-950">
@@ -72,75 +174,9 @@ export default async function Home() {
 				</FadeIn>
 
 				{/* Demo Cards */}
-				<div className="space-y-12">
-					{sites.map((site, index) => (
-						<FadeIn delay={0.1 + index * 0.1} key={site.title}>
-							<DemoCard>
-								{/* Title */}
-								<div className="px-8 pt-8">
-									<h2 className="font-semibold text-2xl text-neutral-900 md:text-3xl dark:text-neutral-100">
-										{site.title}
-									</h2>
-								</div>
-
-								{/* Image Container */}
-
-								<div className="relative mx-8 mt-6 aspect-[21/9] overflow-hidden border border-neutral-200 dark:border-neutral-800">
-									<Image
-										alt={`${site.title} - ${site.description}`}
-										className="cursor-default object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
-										fetchPriority={index === 0 ? "high" : "auto"}
-										fill
-										priority={index === 0}
-										sizes="(max-width: 1024px) calc(100vw - 96px), 928px"
-										src={site.previewUrl}
-									/>
-								</div>
-
-								{/* Description */}
-								<div className="mt-6 px-8">
-									<p className="whitespace-pre-line text-neutral-500 leading-relaxed dark:text-neutral-400">
-										{site.description}
-									</p>
-								</div>
-
-								{/* Tags & Actions */}
-								<div className="px-8 pb-8">
-									<div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-neutral-100 border-t pt-6 dark:border-neutral-800">
-										<div className="flex flex-wrap gap-2">
-											{site.keywords.map((keyword) => (
-												<span
-													className="bg-neutral-100 px-3 py-1.5 font-medium text-neutral-600 text-xs tracking-wide dark:bg-neutral-800 dark:text-neutral-400"
-													key={keyword}
-												>
-													{keyword}
-												</span>
-											))}
-										</div>
-										<div className="flex items-center gap-3">
-											<a
-												className="border border-neutral-300 px-4 py-2 text-neutral-900 text-sm transition-colors hover:bg-blue-700 hover:text-white dark:border-neutral-600 dark:text-neutral-100 dark:hover:bg-blue-600 dark:hover:text-white"
-												href={site.sourceUrl}
-												rel="noopener noreferrer"
-												target="_blank"
-											>
-												{t("view-source")}
-											</a>
-											<a
-												className="border border-neutral-300 px-4 py-2 text-neutral-900 text-sm transition-colors hover:bg-neutral-900 hover:text-white dark:border-neutral-600 dark:text-neutral-100 dark:hover:bg-white dark:hover:text-neutral-900"
-												href={site.webUrl}
-												rel="noopener noreferrer"
-												target="_blank"
-											>
-												{t("view-site")}
-											</a>
-										</div>
-									</div>
-								</div>
-							</DemoCard>
-						</FadeIn>
-					))}
-				</div>
+				<Suspense fallback={<SiteListSkeleton />}>
+					<SiteList />
+				</Suspense>
 
 				{/* Footer */}
 				<FadeIn delay={0.4}>

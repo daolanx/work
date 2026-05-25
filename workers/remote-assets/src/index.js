@@ -13,20 +13,24 @@ export default {
 		const url = new URL(request.url);
 		const { pathname, searchParams } = url;
 
-		// Determine prefix and target R2 domain
-		let prefix, r2Domain;
-		if (pathname.startsWith(env.MEDIA_PREFIX)) {
-			prefix = env.MEDIA_PREFIX;
-			r2Domain = env.UPLOADS_R2_DOMAIN;
-		} else if (pathname.startsWith(env.REMOTE_PREFIX)) {
-			prefix = env.REMOTE_PREFIX;
-			r2Domain = env.R2_DOMAIN;
-		} else {
-			return fetch(request);
-		}
+		// Route prefixes to their R2 bucket domains:
+		// MEDIA — user-uploaded files (images, docs) from Payload CMS, stored under medias/ key prefix
+		// REMOTE — static build output (Next.js pages, chunks)
+		const routes = [
+			{
+				prefix: env.MEDIA_PREFIX,
+				r2Domain: env.UPLOADS_R2_DOMAIN,
+				keyPrefix: "medias",
+			},
+			{ prefix: env.REMOTE_PREFIX, r2Domain: env.R2_DOMAIN },
+		];
+		const match = routes.find((r) => pathname.startsWith(r.prefix));
+		if (!match) return fetch(request);
+		const { prefix, r2Domain, keyPrefix } = match;
 
 		const startTime = Date.now();
-		const originPath = pathname.slice(prefix.length).replace(/^\//, "");
+		const suffix = pathname.slice(prefix.length).replace(/^\//, "");
+		const originPath = keyPrefix ? `${keyPrefix}/${suffix}` : suffix;
 		const isImage = /\.(jpg|jpeg|png|webp|avif|gif)$/i.test(originPath);
 		const [w, q] = [searchParams.get("w"), searchParams.get("q")];
 
