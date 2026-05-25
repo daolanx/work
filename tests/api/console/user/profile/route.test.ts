@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/lib/session", () => ({ getSession: vi.fn() }));
 
-import { GET } from "@/app/api/console/user/profile/route";
+import { GET } from "@/app/(site)/api/console/user/profile/route";
 import { getSession } from "@/lib/session";
 
 const mockSession = {
