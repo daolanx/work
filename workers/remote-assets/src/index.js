@@ -12,19 +12,25 @@ export default {
 	async fetch(request, env) {
 		const url = new URL(request.url);
 		const { pathname, searchParams } = url;
-		// Pass through non-proxy requests to origin
-		if (!pathname.startsWith(env.REMOTE_PREFIX)) return fetch(request);
+
+		// Determine prefix and target R2 domain
+		let prefix, r2Domain;
+		if (pathname.startsWith(env.MEDIA_PREFIX)) {
+			prefix = env.MEDIA_PREFIX;
+			r2Domain = env.UPLOADS_R2_DOMAIN;
+		} else if (pathname.startsWith(env.REMOTE_PREFIX)) {
+			prefix = env.REMOTE_PREFIX;
+			r2Domain = env.R2_DOMAIN;
+		} else {
+			return fetch(request);
+		}
 
 		const startTime = Date.now();
-		// Strip REMOTE_PREFIX to get the original asset path (e.g. /css/style.css)
-		const originPath = pathname
-			.slice(env.REMOTE_PREFIX.length)
-			.replace(/^\//, "");
+		const originPath = pathname.slice(prefix.length).replace(/^\//, "");
 		const isImage = /\.(jpg|jpeg|png|webp|avif|gif)$/i.test(originPath);
 		const [w, q] = [searchParams.get("w"), searchParams.get("q")];
 
-		// Fetch from R2 custom domain; image requests go through Edge Resizing
-		const sourceResponse = await fetch(`${env.R2_DOMAIN}/${originPath}`, {
+		const sourceResponse = await fetch(`${r2Domain}/${originPath}`, {
 			headers: request.headers,
 			cf: {
 				...(isImage && w
@@ -42,7 +48,6 @@ export default {
 			},
 		});
 
-		// Attach browser cache headers and debug info
 		const resHeaders = new Headers(sourceResponse.headers);
 		resHeaders.set("Cache-Control", `public, max-age=${CACHE_TTL}, immutable`);
 		resHeaders.set("Server-Timing", `total;dur=${Date.now() - startTime}`);

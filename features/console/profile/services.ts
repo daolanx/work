@@ -21,15 +21,22 @@ export async function getSites(): Promise<Site[]> {
 		collection: "sites",
 		locale: lang,
 		sort: "_order",
+		depth: 1,
 	});
 
-	return result.docs.map((site) => ({
-		title: site.title ?? "",
-		description: site.description ?? "",
-		keywords: (site.keywords ?? []).map((kw) => kw.keyword ?? ""),
-		previewUrl: site.previewUrl ?? "",
-		webUrl: site.webUrl ?? "",
-		sourceUrl: site.sourceUrl ?? "",
-		isDeveloping: site.isDeveloping ?? false,
-	}));
+	return result.docs.map((site: any) => {
+		const preview = site.preview as { url?: string } | null | undefined;
+		return {
+			title: site.title ?? "",
+			description: site.description ?? "",
+			keywords: (site.keywords ?? "")
+				.split(",")
+				.map((kw) => kw.trim())
+				.filter(Boolean),
+			previewUrl: preview?.url ?? "",
+			webUrl: site.webUrl ?? "",
+			sourceUrl: site.sourceUrl ?? "",
+			isDeveloping: site.isDeveloping ?? false,
+		};
+	});
 }

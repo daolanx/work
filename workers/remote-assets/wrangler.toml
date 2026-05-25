@@ -4,10 +4,16 @@ compatibility_date = "2025-03-23"
 
 [vars]
 R2_DOMAIN = "https://assets.daolanx.com"
+UPLOADS_R2_DOMAIN = "https://files.daolanx.com"
 REMOTE_PREFIX = "/remote-assets/"
+MEDIA_PREFIX = "/media/"
 
 [[routes]]
 pattern = "demo.daolanx.com/remote-assets/*"
+zone_name = "daolanx.com"
+
+[[routes]]
+pattern = "demo.daolanx.com/media/*"
 zone_name = "daolanx.com"
 
 [[r2_buckets]]
