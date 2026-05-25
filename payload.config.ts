@@ -80,7 +80,7 @@ const Sites = {
 };
 
 export default buildConfig({
-	secret: process.env.PAYLOAD_SECRET,
+	secret: String(process.env.PAYLOAD_SECRET),
 	collections: [Media, Sites],
 	globals: [],
 	localization: {
@@ -121,8 +121,8 @@ export default buildConfig({
 				region: "auto",
 				endpoint: process.env.UPLOAD_R2_ENDPOINT,
 				credentials: {
-					accessKeyId: process.env.UPLOAD_R2_ACCESS_KEY_ID || "",
-					secretAccessKey: process.env.UPLOAD_R2_SECRET_ACCESS_KEY || "",
+					accessKeyId: String(process.env.UPLOAD_R2_ACCESS_KEY_ID),
+					secretAccessKey: String(process.env.UPLOAD_R2_SECRET_ACCESS_KEY),
 				},
 				requestChecksumCalculation: "WHEN_REQUIRED",
 				responseChecksumValidation: "WHEN_REQUIRED",

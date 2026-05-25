@@ -45,7 +45,7 @@ async function SiteList() {
 	return (
 		<div className="space-y-12">
 			{sites.map((site, index) => (
-				<FadeIn delay={0.1 + index * 0.1} key={site.title}>
+				<FadeIn delay={0.1 + index * 0.1} key={site.id}>
 					<DemoCard>
 						{/* Title */}
 						<div className="px-8 pt-8">
@@ -80,10 +80,10 @@ async function SiteList() {
 						<div className="px-8 pb-8">
 							<div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-neutral-100 border-t pt-6 dark:border-neutral-800">
 								<div className="flex flex-wrap gap-2">
-									{site.keywords.map((keyword) => (
+									{site.keywords.map((keyword, ki) => (
 										<span
 											className="bg-neutral-100 px-3 py-1.5 font-medium text-neutral-600 text-xs tracking-wide dark:bg-neutral-800 dark:text-neutral-400"
-											key={keyword}
+											key={`${site.id}-${ki}`}
 										>
 											{keyword}
 										</span>

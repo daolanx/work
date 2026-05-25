@@ -4,6 +4,7 @@ import { getPayload } from "payload";
 import type { Locale } from "@/i18n/constants";
 
 export type Site = {
+	id: number;
 	title: string;
 	keywords: string[];
 	description: string;
@@ -24,9 +25,10 @@ export async function getSites(): Promise<Site[]> {
 		locale: lang,
 	});
 
-	return result.docs.map((site: any) => {
+	return result.docs.map((site) => {
 		const preview = site.preview as { url?: string } | null | undefined;
 		return {
+			id: site.id,
 			title: site.title ?? "",
 			description: site.description ?? "",
 			keywords: (site.keywords ?? "")

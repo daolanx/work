@@ -3,7 +3,8 @@
  *
  * Routes requests matching REMOTE_PREFIX to an R2 custom domain,
  * with optional Cloudflare Edge image resizing (?w= & ?q= params).
- * All responses are cached at the CDN edge for 1 year.
+ * Successful responses (2xx) are cached at the CDN edge for 1 year;
+ * errors (4xx/5xx) are not cached.
  */
 
 const CACHE_TTL = 31536000;
@@ -53,12 +54,16 @@ export default {
 		const w = searchParams.get("w");
 		const q = searchParams.get("q");
 		if (isImage && w) {
-			cfConfig.image = {
-				width: parseInt(w, 10),
-				quality: parseInt(q || "75", 10),
-				format: "auto",
-				fit: "scale-down",
-			};
+			const width = parseInt(w, 10);
+			const quality = parseInt(q || "75", 10);
+			if (Number.isFinite(width) && width > 0) {
+				cfConfig.image = {
+					width,
+					quality: Number.isFinite(quality) && quality > 0 ? quality : 75,
+					format: "auto",
+					fit: "scale-down",
+				};
+			}
 		}
 
 		// 6. Fetch from R2 (no client headers — pure static resources don't need them)

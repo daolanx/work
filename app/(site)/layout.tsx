@@ -3,6 +3,7 @@ import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
+import { cn } from "@/lib/utils";
 import "@/styles/globals.css";
 
 const epilogue = Epilogue({
@@ -26,7 +27,7 @@ export default async function RootLayout({
 
 	return (
 		<html
-			className={`${epilogue.variable} ${manrope.variable}`}
+			className={cn(epilogue.variable, manrope.variable)}
 			lang={locale}
 			suppressHydrationWarning
 		>

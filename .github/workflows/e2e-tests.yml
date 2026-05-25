@@ -34,6 +34,7 @@ jobs:
         run: pnpm exec playwright test
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
 
       - name: Upload Playwright Report
         if: ${{ !cancelled() }}

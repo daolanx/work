@@ -24,7 +24,7 @@
 		"db:push": "drizzle-kit push",
 		"db:pull": "drizzle-kit pull",
 		"db:seed": "tsx db/seed.ts",
-		"seed:sites": "tsx db/seed-sites.ts",
+		"db:seed:sites": "tsx db/seed-sites.ts",
 		"db:check": "drizzle-kit check",
 		"db:studio": "drizzle-kit studio",
 		"deploy-worker": "cd workers/remote-assets && wrangler deploy",
