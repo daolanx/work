@@ -1,7 +1,6 @@
 import config from "@payload-config";
 import { RootPage } from "@payloadcms/next/views";
-
-const importMap = {};
+import { importMap } from "../importMap";
 
 type Args = {
 	params: Promise<{
