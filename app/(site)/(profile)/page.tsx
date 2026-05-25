@@ -55,18 +55,19 @@ async function SiteList() {
 						</div>
 
 						{/* Image Container */}
-
-						<div className="relative mx-8 mt-6 aspect-[21/9] overflow-hidden border border-neutral-200 dark:border-neutral-800">
-							<Image
-								alt={`${site.title} - ${site.description}`}
-								className="cursor-default object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
-								fetchPriority={index === 0 ? "high" : "auto"}
-								fill
-								priority={index === 0}
-								sizes="(max-width: 1024px) calc(100vw - 96px), 928px"
-								src={site.previewUrl}
-							/>
-						</div>
+						{site.previewUrl && (
+							<div className="relative mx-8 mt-6 aspect-[21/9] overflow-hidden border border-neutral-200 dark:border-neutral-800">
+								<Image
+									alt={`${site.title} - ${site.description}`}
+									className="cursor-default object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
+									fetchPriority={index === 0 ? "high" : "auto"}
+									fill
+									priority={index === 0}
+									sizes="(max-width: 1024px) calc(100vw - 96px), 928px"
+									src={site.previewUrl}
+								/>
+							</div>
+						)}
 
 						{/* Description */}
 						<div className="mt-6 px-8">

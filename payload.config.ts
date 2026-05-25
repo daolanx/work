@@ -44,7 +44,6 @@ const Sites = {
 			name: "preview",
 			type: "upload",
 			relationTo: "media",
-			required: true,
 		},
 		{
 			name: "webUrl",

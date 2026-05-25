@@ -71,52 +71,27 @@ const sitesData = [
 ];
 
 async function seedSites() {
-	// Clear existing data
 	await sql`DELETE FROM payload.sites_locales`;
 	await sql`DELETE FROM payload.sites`;
 	await sql`DELETE FROM payload.media`;
 	console.log("Cleared existing sites, locales, and media records.");
 
-	// Create placeholder media records
-	const imageNames = [
-		"landing-page.webp",
-		"console-page-v2.webp",
-		"flower-shop.webp",
-		"ai-chat-page.webp",
-	];
-
-	const mediaIds: number[] = [];
-	for (const name of imageNames) {
-		const result = await sql`
-			INSERT INTO payload.media (filename, alt, updated_at, created_at)
-			VALUES (${name}, ${name.replace(".webp", "").replace(/-/g, " ")}, NOW(), NOW())
-			RETURNING id
-		`;
-		mediaIds.push(Number(result[0].id));
-		console.log(`  ✓ media: ${name} (id: ${result[0].id})`);
-	}
-
-	// Insert sites and their localized content
 	for (let i = 0; i < sitesData.length; i++) {
 		const site = sitesData[i];
-		const previewId = mediaIds[i];
 		const order = String(i + 1).padStart(5, "0");
 
-		// Insert site record
 		const siteResult = await sql`
-			INSERT INTO payload.sites (_order, preview_id, web_url, source_url, is_developing, keywords)
-			VALUES (${order}, ${previewId}, ${site.webUrl}, ${site.sourceUrl}, ${site.isDeveloping}, ${site.keywords})
+			INSERT INTO payload.sites (_order, web_url, source_url, is_developing, keywords)
+			VALUES (${order}, ${site.webUrl}, ${site.sourceUrl}, ${site.isDeveloping}, ${site.keywords})
 			RETURNING id
 		`;
 		const siteId = Number(siteResult[0].id);
 
-		// Insert English locale
 		await sql`
 			INSERT INTO payload.sites_locales (title, description, _locale, _parent_id)
 			VALUES (${site.en.title}, ${site.en.description}, 'en', ${siteId})
 		`;
 
-		// Insert Chinese locale
 		await sql`
 			INSERT INTO payload.sites_locales (title, description, _locale, _parent_id)
 			VALUES (${site.zh.title}, ${site.zh.description}, 'zh', ${siteId})
@@ -125,7 +100,9 @@ async function seedSites() {
 		console.log(`  ✓ ${site.en.title}`);
 	}
 
-	console.log(`\nSeeded ${sitesData.length} sites with localized content.`);
+	console.log(
+		`\nSeeded ${sitesData.length} sites. Upload preview images via Payload Admin.`,
+	);
 }
 
 seedSites()
