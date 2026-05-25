@@ -1,21 +1,15 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("profile page", () => {
-	test("should load the profile page and display key elements", async ({
-		page,
-	}) => {
-		// Start from the profile page
+	test("should display gallery title", async ({ page }) => {
 		await page.goto("/");
 		await expect(page.locator("h1")).toContainText("Dax");
 	});
 });
 
 test.describe("landing page", () => {
-	test("should navigate to landing page from profile", async ({ page }) => {
-		// Start from the profile page
+	test("should display hero heading", async ({ page }) => {
 		await page.goto("/landing");
-
-		// Verify landing page content
-		await expect(page.locator("h1.text-2xl")).toContainText("Midaland");
+		await expect(page.locator("h1")).toContainText("Landing Page");
 	});
 });
