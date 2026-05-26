@@ -22,26 +22,24 @@ const tiersData = [
 		priceAnnually: 95,
 	},
 	{
-		type: "business",
-		variantId: "prod_business_789",
+		type: "max",
+		variantId: "prod_max_789",
 		priceMonthly: 49,
 		priceAnnually: 516,
 	},
 ];
 
 async function seedTiers() {
-	await sql`DELETE FROM payload.tiers`;
-	console.log("Cleared existing tiers.");
-
-	for (let i = 0; i < tiersData.length; i++) {
-		const tier = tiersData[i];
+	const queries = tiersData.flatMap((tier, i) => {
 		const order = String(i + 1).padStart(5, "0");
+		return [
+			sql`INSERT INTO payload.tiers (_order, variant_id, price_monthly, price_annually, type) VALUES (${order}, ${tier.variantId}, ${tier.priceMonthly}, ${tier.priceAnnually}, ${tier.type})`,
+		];
+	});
 
-		await sql`
-			INSERT INTO payload.tiers (_order, variant_id, price_monthly, price_annually, type)
-			VALUES (${order}, ${tier.variantId}, ${tier.priceMonthly}, ${tier.priceAnnually}, ${tier.type})
-		`;
+	await sql.transaction([sql`DELETE FROM payload.tiers`, ...queries]);
 
+	for (const tier of tiersData) {
 		console.log(`  ✓ ${tier.type}`);
 	}
 

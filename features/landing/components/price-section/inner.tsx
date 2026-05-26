@@ -19,9 +19,8 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import type { PricingTier } from "@/features/landing/services";
 import { cn } from "@/lib/utils";
-
-import type { PricingTier } from "../../services";
 
 const PLAN_UI: Record<
 	string,
@@ -96,7 +95,7 @@ const PLAN_UI: Record<
 		],
 		btn: {
 			text: "Contact team",
-			href: "/auth/sign-up?tier=business",
+			href: "/auth/sign-up?tier=max",
 			variant: "default",
 		},
 	},

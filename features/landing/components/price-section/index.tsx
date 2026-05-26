@@ -1,4 +1,4 @@
-import { getPricingTiers } from "../../services";
+import { getPricingTiers } from "@/features/landing/services";
 import PriceSection from "./inner";
 
 export default async function PriceSectionWrapper() {
