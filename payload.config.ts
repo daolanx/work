@@ -1,6 +1,7 @@
 // @ts-nocheck -- needed because payload generate:types uses a tsx version that can't parse import type
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { s3Storage } from "@payloadcms/storage-s3";
+import { revalidatePath } from "next/cache";
 import { buildConfig } from "payload";
 
 if (!process.env.PAYLOAD_SECRET) throw new Error("PAYLOAD_SECRET is missing");
@@ -38,6 +39,13 @@ const Sites = {
 	orderable: true,
 	admin: {
 		useAsTitle: "title",
+	},
+	hooks: {
+		afterChange: [
+			async () => {
+				revalidatePath("/");
+			},
+		],
 	},
 	fields: [
 		{
@@ -79,9 +87,50 @@ const Sites = {
 	],
 };
 
+const Tiers = {
+	slug: "tiers",
+	orderable: true,
+	admin: {
+		useAsTitle: "type",
+	},
+	hooks: {
+		afterChange: [
+			async () => {
+				revalidatePath("/landing");
+			},
+		],
+	},
+	fields: [
+		{
+			name: "variantId",
+			type: "text",
+			required: true,
+		},
+		{
+			name: "priceMonthly",
+			type: "number",
+			required: true,
+			min: 0,
+		},
+		{
+			name: "priceAnnually",
+			type: "number",
+			required: true,
+			min: 0,
+		},
+		{
+			name: "type",
+			type: "select",
+			required: true,
+			unique: true,
+			options: ["free", "pro", "max"],
+		},
+	],
+};
+
 export default buildConfig({
 	secret: String(process.env.PAYLOAD_SECRET),
-	collections: [Media, Sites],
+	collections: [Media, Sites, Tiers],
 	globals: [],
 	localization: {
 		locales: ["en", "zh"],
