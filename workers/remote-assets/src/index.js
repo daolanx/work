@@ -24,13 +24,13 @@ export default {
 		// 2. Route matching
 		const routes = [
 			{
-				prefix: env.MEDIA_PREFIX,
+				prefix: env.UPLOADS_PREFIX,
 				domain: env.UPLOADS_R2_DOMAIN,
 				key: "medias",
 			},
 			{
-				prefix: env.REMOTE_PREFIX,
-				domain: env.UPLOADS_R2_DOMAIN,
+				prefix: env.ASSETS_PREFIX,
+				domain: env.ASSETS_R2_DOMAIN,
 			},
 		];
 		const match = routes.find((r) => pathname.startsWith(r.prefix));
