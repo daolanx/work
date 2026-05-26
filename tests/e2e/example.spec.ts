@@ -10,6 +10,8 @@ test.describe("profile page", () => {
 test.describe("landing page", () => {
 	test("should display hero heading", async ({ page }) => {
 		await page.goto("/landing");
-		await expect(page.locator("h1")).toContainText("Landing Page");
+		await expect(page.locator("h1")).toContainText(
+			"Intuitive Landing Page Builder for",
+		);
 	});
 });

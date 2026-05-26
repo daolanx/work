@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import Navbar from "./navbar";
@@ -27,9 +28,14 @@ export default function Header() {
 		>
 			<section className="section-max-width-wrapper flex items-center justify-between">
 				<div className="flex">
-					<h1 className="whitespace-nowrap bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 bg-clip-text font-extrabold text-2xl text-transparent">
-						Midaland
-					</h1>
+					<Link
+						className="shrink-0 transition-opacity hover:opacity-80"
+						href="/landing"
+					>
+						<span className="whitespace-nowrap bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 bg-clip-text font-extrabold text-2xl text-transparent">
+							Midaland
+						</span>
+					</Link>
 					<Navbar />
 				</div>
 				<ToolBar />

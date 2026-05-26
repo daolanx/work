@@ -139,7 +139,10 @@ function BanUserDialog({
 				</DropdownMenuItem>
 			</DialogTrigger>
 
-			<DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
+			<DialogContent
+				aria-describedby={undefined}
+				onOpenAutoFocus={(e) => e.preventDefault()}
+			>
 				<DialogHeader>
 					<DialogTitle>
 						{t("admin.ban-user-title", { name: user.name })}

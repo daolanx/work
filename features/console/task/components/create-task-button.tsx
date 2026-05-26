@@ -109,7 +109,7 @@ export function CreateTaskButton({ onSuccess }) {
 					<IconPlus className="h-4 w-4" /> {t("tasks.create")}
 				</Button>
 			</DialogTrigger>
-			<DialogContent className="sm:max-w-[500px]">
+			<DialogContent aria-describedby={undefined} className="sm:max-w-[500px]">
 				<DialogHeader>
 					<DialogTitle className="font-bold text-2xl">
 						{t("tasks.new-task")}
