@@ -18,8 +18,9 @@ function buildUrl(path: string, w: number, q?: number) {
 }
 
 export default function myImageLoader({ src, width, quality }: LoaderProps) {
-	// Own CDN images: strip origin, route through optimization pipeline
+	// Third-party external images: use original URL
 	if (src.startsWith("http")) {
+		if (!isProd) return src;
 		try {
 			const url = new URL(src);
 			if (url.origin === siteOrigin) {
@@ -28,7 +29,6 @@ export default function myImageLoader({ src, width, quality }: LoaderProps) {
 		} catch {
 			// Malformed URL, fall through
 		}
-		// Third-party external images: use original URL
 		return src;
 	}
 
