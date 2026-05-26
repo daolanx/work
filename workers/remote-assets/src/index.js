@@ -28,7 +28,10 @@ export default {
 				domain: env.UPLOADS_R2_DOMAIN,
 				key: "medias",
 			},
-			{ prefix: env.REMOTE_PREFIX, domain: env.R2_DOMAIN },
+			{
+				prefix: env.REMOTE_PREFIX,
+				domain: env.UPLOADS_R2_DOMAIN,
+			},
 		];
 		const match = routes.find((r) => pathname.startsWith(r.prefix));
 		if (!match) return fetch(request);
