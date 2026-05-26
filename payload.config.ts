@@ -46,6 +46,11 @@ const Sites = {
 				revalidatePath("/");
 			},
 		],
+		afterDelete: [
+			async () => {
+				revalidatePath("/");
+			},
+		],
 	},
 	fields: [
 		{
@@ -95,6 +100,11 @@ const Tiers = {
 	},
 	hooks: {
 		afterChange: [
+			async () => {
+				revalidatePath("/landing");
+			},
+		],
+		afterDelete: [
 			async () => {
 				revalidatePath("/landing");
 			},
