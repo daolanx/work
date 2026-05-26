@@ -28,7 +28,7 @@ export async function getSites(): Promise<Site[]> {
 	return result.docs.map((site) => {
 		const preview = site.preview as { url?: string } | null | undefined;
 		return {
-			id: site.id,
+			id: Number(site.id),
 			title: site.title ?? "",
 			description: site.description ?? "",
 			keywords: (site.keywords ?? "")
