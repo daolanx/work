@@ -11,6 +11,11 @@ const isProd = process.env.NODE_ENV === "production";
 function buildUrl(path: string, w: number, q?: number) {
 	const params = `w=${w}&q=${q || 75}`;
 	if (isProd) {
+		// CMS uploads: use /medias/ prefix → files.daolanx.com
+		if (path.startsWith("/medias/")) {
+			return `${path}?${params}`;
+		}
+		// Static assets: use /remote-assets/ prefix → assets.daolanx.com
 		const normalized = path.startsWith("/") ? path.slice(1) : path;
 		return `/remote-assets/${normalized}?${params}`;
 	}

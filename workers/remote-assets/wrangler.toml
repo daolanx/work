@@ -3,10 +3,10 @@ main = "src/index.js"
 compatibility_date = "2025-03-23"
 
 [vars]
-R2_DOMAIN = "https://assets.daolanx.com"
+ASSETS_R2_DOMAIN = "https://assets.daolanx.com"
+ASSETS_PREFIX = "/remote-assets/"
 UPLOADS_R2_DOMAIN = "https://files.daolanx.com"
-REMOTE_PREFIX = "/remote-assets/"
-MEDIA_PREFIX = "/medias/"
+UPLOADS_PREFIX = "/medias/"
 
 [[routes]]
 pattern = "demo.daolanx.com/remote-assets/*"
