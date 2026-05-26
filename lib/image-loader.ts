@@ -4,23 +4,34 @@ interface LoaderProps {
 	quality?: number;
 }
 
-export default function myImageLoader({ src, width, quality }: LoaderProps) {
-	const isProd = process.env.NODE_ENV === "production";
-	const isExternal = src.startsWith("http");
+const siteOrigin =
+	process.env.NEXT_PUBLIC_SITE_URL || "https://demo.daolanx.com";
+const isProd = process.env.NODE_ENV === "production";
 
-	// External images: Use original URL
-	if (isExternal) {
+function buildUrl(path: string, w: number, q?: number) {
+	const params = `w=${w}&q=${q || 75}`;
+	if (isProd) {
+		const normalized = path.startsWith("/") ? path.slice(1) : path;
+		return `/remote-assets/${normalized}?${params}`;
+	}
+	return `${path}?${params}`;
+}
+
+export default function myImageLoader({ src, width, quality }: LoaderProps) {
+	// Own CDN images: strip origin, route through optimization pipeline
+	if (src.startsWith("http")) {
+		try {
+			const url = new URL(src);
+			if (url.origin === siteOrigin) {
+				return buildUrl(url.pathname, width, quality);
+			}
+		} catch {
+			// Malformed URL, fall through
+		}
+		// Third-party external images: use original URL
 		return src;
 	}
 
-	// Development: return src with params (Next.js requires width to be used)
-	if (!isProd) {
-		return `${src}?w=${width}&q=${quality || 75}`;
-	}
-
-	// Clean path: remove leading slash for consistency
-	const normalizedSrc = src.startsWith("/") ? src.slice(1) : src;
-
-	// Production URL: Relative path to trigger Cloudflare Worker
-	return `/remote-assets/${normalizedSrc}?w=${width}&q=${quality || 75}`;
+	// Local images
+	return buildUrl(src, width, quality);
 }

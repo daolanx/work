@@ -5,7 +5,7 @@ vi.mock("@/db", () => ({ db: {} }));
 vi.mock("@/lib/session", () => ({ getSession: vi.fn() }));
 vi.mock("@/features/console/user/services", () => ({ getVisitors: vi.fn() }));
 
-import { GET } from "@/app/api/console/user/visitors/route";
+import { GET } from "@/app/(site)/api/console/user/visitors/route";
 import { getVisitors } from "@/features/console/user/services";
 
 beforeEach(() => {

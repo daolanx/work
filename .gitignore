@@ -59,3 +59,10 @@ node_modules/
 #db
 /db/seed.ts
 .gstack/
+
+# Payload CMS
+payload-types.ts
+payload-types.js
+payload-types.map
+payload-migrations/
+public/media

@@ -1,23 +1,17 @@
+import { withPayload } from "@payloadcms/next/withPayload";
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const isProd = process.env.NODE_ENV === "production";
 
 const nextConfig: NextConfig = {
-	/**
-	 * IMPORTANT: Point this to your Worker path on the MAIN domain.
-	 * This ensures all JS/CSS are served from demo.daolanx.com/remote-assets/
-	 */
 	assetPrefix: isProd ? "https://demo.daolanx.com/remote-assets" : undefined,
-
 	images: {
 		loader: "custom",
 		loaderFile: "./lib/image-loader.ts",
-		// Keep your sizes as they will be passed as 'w' parameter to the loader
 		deviceSizes: [480, 640, 828, 1120, 1920],
 		imageSizes: [64, 256],
 	},
-
 	transpilePackages: ["recharts", "react-smooth", "shiki"],
 	experimental: {
 		optimizePackageImports: [
@@ -38,4 +32,9 @@ const nextConfig: NextConfig = {
 };
 
 const withNextIntl = createNextIntlPlugin();
-export default withNextIntl(nextConfig);
+
+// executed in order from left to right
+const plugins = [withNextIntl, withPayload];
+
+// 3. 优雅地聚合导出
+export default plugins.reduce((config, plugin) => plugin(config), nextConfig);

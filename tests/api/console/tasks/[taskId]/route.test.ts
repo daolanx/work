@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 vi.mock("@/lib/session", () => ({ getSession: vi.fn() }));
 vi.mock("@/features/console/task/services", () => ({ getTask: vi.fn() }));
 
-import { GET } from "@/app/api/console/tasks/[taskId]/route";
+import { GET } from "@/app/(site)/api/console/tasks/[taskId]/route";
 import { getTask } from "@/features/console/task/services";
 import { getSession } from "@/lib/session";
 

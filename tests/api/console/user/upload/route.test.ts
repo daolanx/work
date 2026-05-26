@@ -6,7 +6,7 @@ vi.mock("@/features/console/user/lib/r2", () => ({
 	r2: { send: vi.fn() },
 }));
 
-import { POST } from "@/app/api/console/user/upload/route";
+import { POST } from "@/app/(site)/api/console/user/upload/route";
 import { r2 } from "@/features/console/user/lib/r2";
 import { getSession } from "@/lib/session";
 

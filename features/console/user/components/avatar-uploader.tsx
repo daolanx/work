@@ -138,7 +138,7 @@ export function AvatarUploader({
 
 			{/* Crop Dialog */}
 			<Dialog onOpenChange={setIsOpen} open={isOpen}>
-				<DialogContent className="sm:max-w-md">
+				<DialogContent aria-describedby={undefined} className="sm:max-w-md">
 					<DialogHeader>
 						<DialogTitle>{t("profile.adjust-avatar")}</DialogTitle>
 					</DialogHeader>

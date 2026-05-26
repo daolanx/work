@@ -53,7 +53,6 @@ export const auth = betterAuth({
 		},
 	},
 	plugins: [
-		nextCookies(),
 		admin({
 			initAdmin: true,
 			defaultRole: "user",
@@ -80,6 +79,7 @@ export const auth = betterAuth({
 				// await revokeAccess(userId, customer.email);
 			},
 		}),
+		nextCookies(),
 	],
 });
 
