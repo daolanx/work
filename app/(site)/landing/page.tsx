@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
+
+export const revalidate = 3600;
+
 import dynamic from "next/dynamic";
+import { Suspense } from "react";
 import HeroSection from "@/features/landing/components/hero-section";
+import PriceSection from "@/features/landing/components/price-section";
+import PriceSectionSkeleton from "@/features/landing/components/price-section/skeleton";
 
 const LazyCompanySection = dynamic(
 	() => import("@/features/landing/components/company-section"),
@@ -14,9 +20,6 @@ const LazyProcessSection = dynamic(
 const LazyFeedBackSection = dynamic(
 	() => import("@/features/landing/components/feedback-section"),
 );
-const LazyPriceSection = dynamic(
-	() => import("@/features/landing/components/price-section"),
-);
 const LazyCTASection = dynamic(
 	() => import("@/features/landing/components/cta-section"),
 );
@@ -27,7 +30,7 @@ export const metadata: Metadata = {
 	keywords: ["Midaland", "Landing Page Builder"],
 };
 
-export default function LandingPage() {
+export default async function LandingPage() {
 	return (
 		<main className="section-max-width-wrapper">
 			<HeroSection />
@@ -35,7 +38,9 @@ export default function LandingPage() {
 			<LazyFeatureSection />
 			<LazyProcessSection />
 			<LazyFeedBackSection />
-			<LazyPriceSection />
+			<Suspense fallback={<PriceSectionSkeleton />}>
+				<PriceSection />
+			</Suspense>
 			<LazyCTASection />
 		</main>
 	);

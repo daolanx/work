@@ -1,4 +1,7 @@
 import { Home as HomeIcon } from "lucide-react";
+
+export const revalidate = 3600;
+
 import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
