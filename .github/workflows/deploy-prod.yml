@@ -22,13 +22,12 @@ jobs:
           fetch-depth: 0
 
       - name: Get tag message
-        id: tag
-        run: echo "message=$(git tag -l -n99 ${{ github.ref_name }})" >> "$GITHUB_OUTPUT"
+        run: git tag -l --format='%(contents)' ${{ github.ref_name }} > /tmp/tag-body.txt
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          body: ${{ steps.tag.outputs.message }}
+          body_path: /tmp/tag-body.txt
 
       # 1. Environment Setup
       - name: Setup pnpm
