@@ -18,11 +18,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get tag message
+        id: tag
+        run: echo "message=$(git tag -l -n99 ${{ github.ref_name }})" >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          generate_release_notes: true
+          body: ${{ steps.tag.outputs.message }}
 
       # 1. Environment Setup
       - name: Setup pnpm
