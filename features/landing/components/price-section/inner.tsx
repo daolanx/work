@@ -101,6 +101,28 @@ const PLAN_UI: Record<
 	},
 };
 
+function DiscountBadge({
+	monthly,
+	annually,
+}: {
+	monthly: number;
+	annually: number;
+}) {
+	const discount = Math.round((1 - annually / (monthly * 12)) * 100);
+	if (!discount || discount <= 0) return null;
+	return (
+		<m.span
+			animate={{ opacity: 1, y: 0 }}
+			className="ml-2 rounded-md bg-purple-500 px-2 py-0.5 font-medium text-foreground text-sm"
+			exit={{ opacity: 0, y: 10 }}
+			initial={{ opacity: 0, y: 10 }}
+			transition={{ duration: 0.3, type: "spring", bounce: 0.25 }}
+		>
+			-{discount}%
+		</m.span>
+	);
+}
+
 const PricingCards = ({ plans }: { plans: PricingTier[] }) => {
 	return (
 		<section>
@@ -234,21 +256,10 @@ const PricingCards = ({ plans }: { plans: PricingTier[] }) => {
 											<div className="font-normal text-base text-muted-foreground">
 												{plan.type !== "free" ? "/year" : ""}
 											</div>
-											{plan.type !== "free" && (
-												<m.span
-													animate={{ opacity: 1, y: 0 }}
-													className="ml-2 rounded-md bg-purple-500 px-2 py-0.5 font-medium text-foreground text-sm"
-													exit={{ opacity: 0, y: 10 }}
-													initial={{ opacity: 0, y: 10 }}
-													transition={{
-														duration: 0.3,
-														type: "spring",
-														bounce: 0.25,
-													}}
-												>
-													-12%
-												</m.span>
-											)}
+											<DiscountBadge
+												annually={plan.priceAnnually}
+												monthly={plan.priceMonthly}
+											/>
 										</h5>
 									</CardHeader>
 									<CardContent className="space-y-4 pt-6">
