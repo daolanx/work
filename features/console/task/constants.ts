@@ -94,7 +94,7 @@ export const TASK_STATUS_ENUM_MAP = {
 	},
 	Canceled: {
 		label: "Canceled",
-		className: "bg-slate-100/50 text-slate-400",
+		className: "bg-slate-100/50 text-slate-400 dark:text-black/50",
 		icon: "IconCircleMinus",
 		iconClassName: "text-slate-300",
 	},

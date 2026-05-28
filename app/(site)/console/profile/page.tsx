@@ -206,14 +206,16 @@ function InlineEditField({
 	}
 
 	return (
-		<div className="group flex items-center gap-3 rounded-md py-1.5 pr-2 transition-colors hover:bg-slate-50/50">
-			<span className="font-medium text-md text-slate-900">
+		<div className="group flex items-center gap-3 rounded-md py-1.5 pr-2 transition-colors hover:bg-slate-50/50 dark:hover:bg-slate-800/50">
+			<span className="font-medium text-md text-slate-900 dark:text-slate-100">
 				{initialValue || (
-					<span className="text-slate-400 italic">{t("profile.not-set")}</span>
+					<span className="text-slate-400 italic dark:text-slate-500">
+						{t("profile.not-set")}
+					</span>
 				)}
 			</span>
 			<div className="opacity-0 transition-opacity group-hover:opacity-100">
-				<div className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900">
+				<div className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600 dark:hover:text-slate-100">
 					<IconEdit
 						className="h-3.5 w-3.5"
 						onClick={() => setIsEditing(true)}
