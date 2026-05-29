@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
-import {
-	AUTH_CONFIG,
-	isPublicPath,
-	NAVIGATION_CONFIG,
-} from "@/features/console/constants";
+import { NAVIGATION_CONFIG } from "@/features/console/constants";
+import { AUTH_CONFIG, isPublicPath } from "@/lib/auth-config";
 
 describe("AUTH_CONFIG", () => {
 	it("has correct login path", () => {

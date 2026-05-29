@@ -132,9 +132,9 @@ const LoginForm = ({ onLoginingStart, onLoginingEnd }: LoginFormProps) => {
 					</Button>
 
 					<div className="group relative">
-						<div className="absolute -inset-0.5 animate-tilt rounded-lg bg-gradient-to-r from-purple-600 via-pink-500 to-blue-600 opacity-30 blur transition duration-1000 group-hover:opacity-60 group-hover:duration-200" />
+						<div className="absolute -inset-0.5 animate-tilt rounded-lg bg-gradient-to-r from-purple-600 via-pink-500 to-blue-600 opacity-30 blur transition duration-1000 group-hover:opacity-60 group-hover:duration-200 dark:opacity-50 dark:group-hover:opacity-80" />
 						<Button
-							className="group relative h-11 w-full cursor-pointer overflow-hidden border-none bg-background transition-all duration-300 hover:bg-background/90"
+							className="group relative h-11 w-full cursor-pointer overflow-hidden bg-background transition-all duration-300 hover:bg-background/90 dark:border-foreground/30"
 							disabled={isLogging}
 							onClick={onSubmitWithDemoAccount}
 							type="button"
@@ -144,20 +144,20 @@ const LoginForm = ({ onLoginingStart, onLoginingEnd }: LoginFormProps) => {
 							<div className="flex items-center justify-center gap-2 font-bold tracking-wide">
 								{isLogging && loginType === LOGIN_TYPE.demo ? (
 									<>
-										<Loader2 className="mr-2 h-4 w-4 animate-spin text-purple-600" />
+										<Loader2 className="mr-2 h-4 w-4 animate-spin text-purple-600 dark:text-purple-400" />
 										{t("auth.please-wait")}
 									</>
 								) : (
 									<>
 										<Sparkles
-											className="animate-pulse text-purple-500"
+											className="animate-pulse text-purple-500 dark:text-purple-400"
 											size={16}
 										/>
-										<span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+										<span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-400">
 											{t("auth.quick-demo")}
 										</span>
 										<Sparkles
-											className="animate-pulse text-blue-500"
+											className="animate-pulse text-blue-500 dark:text-blue-400"
 											size={16}
 										/>
 									</>

@@ -4,7 +4,7 @@ import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
-export default function ThemeSwitch() {
+function ThemeSwitch() {
 	const { theme, setTheme } = useTheme();
 	const [mounted, setMounted] = useState(false);
 
@@ -31,3 +31,6 @@ export default function ThemeSwitch() {
 		</button>
 	);
 }
+
+export { ThemeSwitch };
+export default ThemeSwitch;

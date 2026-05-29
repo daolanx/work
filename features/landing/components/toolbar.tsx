@@ -15,6 +15,7 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from "@/components/ui/sheet";
+import ThemeSwitch from "@/components/ui/theme-switch";
 import { navs } from "./navbar";
 
 export default function ToolBar() {
@@ -31,6 +32,8 @@ function LargeToolbar() {
 		<div className="hidden items-center space-x-4 text-sm md:flex">
 			<Button>Sign Up</Button>
 			<Button variant={"outline"}>Sign In</Button>
+
+			<ThemeSwitch />
 			<IconGithub />
 		</div>
 	);

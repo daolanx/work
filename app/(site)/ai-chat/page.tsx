@@ -5,11 +5,11 @@ import { DefaultChatTransport } from "ai";
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import { IconGithub } from "@/components/ui/icon-github";
+import ThemeSwitch from "@/components/ui/theme-switch";
 import { ChatInput } from "@/features/ai-chat/components/chat-input";
 import { ChatMessages } from "@/features/ai-chat/components/chat-messages";
 import { MobileSidebar } from "@/features/ai-chat/components/mobile-sidebar";
 import { Sidebar } from "@/features/ai-chat/components/sidebar";
-import { ThemeSwitch } from "@/features/ai-chat/components/theme-switch";
 import { getSystemPrompt } from "@/features/ai-chat/lib/prompts";
 import "@/features/ai-chat/global.css";
 

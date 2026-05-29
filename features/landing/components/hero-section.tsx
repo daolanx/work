@@ -19,7 +19,7 @@ export default function HeroSection() {
 					<br className="hidden md:block" />
 					<span className="hidden md:block">Simple, Fast, Intuitive.</span>
 				</p>
-				<RainbowButton asChild className="px-8 py-6 text-xl">
+				<RainbowButton asChild className="px-8 py-6 text-xl dark:text-black">
 					<Link className="group inline-flex items-center" href="#">
 						Start Building for Free
 						<ArrowRightIcon className="h-4 w-4 transition-all duration-200 group-hover:translate-x-1" />

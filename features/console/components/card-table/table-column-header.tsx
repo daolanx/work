@@ -39,7 +39,7 @@ const HeaderActionButton = React.forwardRef<
 	return (
 		<Button
 			className={cn(
-				"h-5 w-5 p-0 hover:bg-slate-200 focus-visible:ring-0 focus-visible:ring-offset-0",
+				"h-5 w-5 p-0 hover:bg-slate-200 focus-visible:ring-0 focus-visible:ring-offset-0 dark:hover:bg-slate-700",
 				className,
 			)}
 			ref={ref}
@@ -165,7 +165,9 @@ export function DataTableColumnHeader<TData, TValue>({
 
 	return (
 		<div className="flex items-center space-x-1 px-4 py-1">
-			<span className="font-medium text-slate-700 text-sm">{title}</span>
+			<span className="font-medium text-slate-700 text-sm dark:text-slate-200">
+				{title}
+			</span>
 			{canSort && <ColumnSorter column={column} />}
 			{canFilter && <ColumnFilter column={column} options={options} />}
 		</div>

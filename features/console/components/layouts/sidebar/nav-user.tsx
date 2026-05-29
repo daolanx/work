@@ -31,8 +31,8 @@ import {
 	useSidebar,
 } from "@/components/ui/sidebar";
 import { authClient } from "@/features/console/auth/lib/client";
-import { AUTH_CONFIG } from "@/features/console/constants";
 import { useUser } from "@/features/console/user/hooks/use-user";
+import { AUTH_CONFIG } from "@/lib/auth-config";
 
 /**
  * Configuration for individual menu items

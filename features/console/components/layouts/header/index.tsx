@@ -16,6 +16,7 @@ import {
 import { IconGithub } from "@/components/ui/icon-github";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import ThemeSwitch from "@/components/ui/theme-switch";
 import LocaleSwitch from "@/features/console/profile/components/locale-switch";
 import { useTask } from "@/features/console/task/hooks/use-task";
 import { NotifyBell } from "./notify-bell";
@@ -149,6 +150,7 @@ export function Header() {
 				<div className="ml-auto flex items-center gap-3">
 					<NotifyBell />
 					<LocaleSwitch />
+					<ThemeSwitch />
 					<IconGithub />
 				</div>
 			</div>

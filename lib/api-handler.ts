@@ -16,6 +16,27 @@ type Middleware = <P>(handler: RouteHandler<P>) => RouteHandler<P>;
 
 // ---- Middlewares ----
 
+/** Allow requests from any origin by setting CORS headers */
+const withCors: Middleware = (handler) => async (req, ctx) => {
+	const origin = req.headers.get("origin") ?? "*";
+	const headers = {
+		"Access-Control-Allow-Origin": origin,
+		"Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+		"Access-Control-Allow-Headers": "Content-Type, Authorization",
+		"Access-Control-Allow-Credentials": "true",
+	};
+
+	if (req.method === "OPTIONS") {
+		return new NextResponse(null, { status: 204, headers });
+	}
+
+	const res = await handler(req, ctx);
+	for (const [key, value] of Object.entries(headers)) {
+		res.headers.set(key, value);
+	}
+	return res;
+};
+
 /** Catch any unhandled error and return a consistent JSON error response */
 const withErrorHandling: Middleware = (handler) => async (req, ctx) => {
 	try {
@@ -79,6 +100,12 @@ function chain(middlewares: Middleware[]) {
 /** Public endpoint: error handling only */
 export const api = chain([withErrorHandling]);
 
+/** Public endpoint: error handling + CORS (allow cross-origin requests) */
+export const corsApi = chain([withCors, withErrorHandling]);
+
 /** Protected endpoint: error handling + auth */
 // the execution order is from right to left: withErrorHandling -> withAuth
 export const authApi = chain([withAuth, withErrorHandling]);
+
+/** Protected endpoint: error handling + auth + CORS */
+export const authCorsApi = chain([withCors, withAuth, withErrorHandling]);

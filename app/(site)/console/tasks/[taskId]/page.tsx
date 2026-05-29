@@ -90,7 +90,7 @@ function TaskTitleField({
 					{isEditing ? (
 						<textarea
 							{...field}
-							className="w-full resize-none border-none bg-transparent p-0 font-extrabold text-2xl text-slate-900 leading-tight tracking-tight outline-none focus:ring-0 sm:text-4xl"
+							className="w-full resize-none border-none bg-transparent p-0 font-extrabold text-2xl text-slate-900 leading-tight tracking-tight outline-none focus:ring-0 sm:text-4xl dark:text-slate-100"
 							onInput={(e) => {
 								const target = e.target as HTMLTextAreaElement;
 								target.style.height = "auto";
@@ -100,7 +100,7 @@ function TaskTitleField({
 							rows={1}
 						/>
 					) : (
-						<h1 className="w-full break-words font-extrabold text-2xl text-slate-900 leading-tight tracking-tight sm:text-4xl">
+						<h1 className="w-full break-words font-extrabold text-2xl text-slate-900 leading-tight tracking-tight sm:text-4xl dark:text-slate-100">
 							{field.value}
 						</h1>
 					)}
@@ -135,7 +135,7 @@ function TaskEnumField({
 						editRender={() => (
 							<Select onValueChange={field.onChange} value={field.value ?? ""}>
 								<FormControl>
-									<SelectTrigger className="h-8 min-w-[100px] border-slate-200 bg-white font-bold text-[10px] uppercase">
+									<SelectTrigger className="h-8 min-w-[100px] border-slate-200 bg-white font-bold text-[10px] uppercase dark:border-slate-700 dark:bg-slate-800">
 										<SelectValue />
 									</SelectTrigger>
 								</FormControl>
@@ -190,7 +190,7 @@ export default function TaskDetailPage() {
 	if (isLoading) return <TaskDetailSkeleton />;
 	if (error || !task)
 		return (
-			<div className="p-10 text-center font-bold text-slate-500">
+			<div className="p-10 text-center font-bold text-slate-500 dark:text-slate-400">
 				{t("tasks.task-not-found")}
 			</div>
 		);
@@ -208,7 +208,7 @@ export default function TaskDetailPage() {
 							{isEditing ? (
 								<div className="fade-in zoom-in-95 flex animate-in items-center gap-1.5">
 									<Button
-										className="h-8 px-2 text-slate-500"
+										className="h-8 px-2 text-slate-500 dark:text-slate-400"
 										onClick={() => {
 											setIsEditing(false);
 											form.reset();
@@ -220,7 +220,7 @@ export default function TaskDetailPage() {
 										<IconX size={18} /> {t("common.cancel")}
 									</Button>
 									<Button
-										className="h-8 bg-slate-900 px-3 font-bold text-white shadow-sm"
+										className="h-8 bg-slate-900 px-3 font-bold text-white shadow-sm dark:bg-slate-100 dark:text-slate-900"
 										disabled={isMutating}
 										size="sm"
 										type="submit"
@@ -236,7 +236,7 @@ export default function TaskDetailPage() {
 							) : (
 								<div className="flex items-center gap-1">
 									<Button
-										className="hidden h-9 items-center border-slate-200 px-3 sm:flex"
+										className="hidden h-9 items-center border-slate-200 px-3 sm:flex dark:border-slate-700"
 										onClick={() => setIsEditing(true)}
 										size="sm"
 										type="button"
@@ -249,7 +249,7 @@ export default function TaskDetailPage() {
 									<DropdownMenu>
 										<DropdownMenuTrigger asChild>
 											<Button
-												className="h-9 w-9 p-0 text-slate-500"
+												className="h-9 w-9 p-0 text-slate-500 dark:text-slate-400"
 												size="sm"
 												variant="ghost"
 											>
@@ -318,11 +318,11 @@ export default function TaskDetailPage() {
 									)}
 									isEditing={isEditing}
 									render={() => (
-										<div className="prose prose-slate prose-sm sm:prose-base max-w-none text-slate-700">
+										<div className="prose prose-slate prose-sm sm:prose-base max-w-none text-slate-700 dark:text-slate-200">
 											{field.value ? (
 												<MarkdownWrapper>{field.value}</MarkdownWrapper>
 											) : (
-												<p className="text-slate-300 italic">
+												<p className="text-slate-300 italic dark:text-slate-600">
 													{t("tasks.no-description")}
 												</p>
 											)}

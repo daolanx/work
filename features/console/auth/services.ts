@@ -1,7 +1,7 @@
 "use server";
 
 import { APIError } from "better-auth/api";
-import { AUTH_CONFIG } from "@/features/console/constants";
+import { AUTH_CONFIG } from "@/lib/auth-config";
 import { auth } from "./lib/server";
 import {
 	type ActionResult,

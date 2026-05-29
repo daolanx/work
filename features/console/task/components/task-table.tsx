@@ -32,7 +32,7 @@ export default function TaskTable({
 			header: t("tasks.title"),
 			cell: ({ row }) => (
 				<Link
-					className="font-medium text-slate-900 hover:text-blue-600 hover:underline"
+					className="font-medium text-slate-900 hover:text-blue-600 hover:underline dark:text-slate-100 dark:hover:text-blue-400"
 					href={`/console/tasks/${row.original.id}`}
 				>
 					{row.original.title}
@@ -75,7 +75,8 @@ export default function TaskTable({
 			sortDescFirst: true,
 			cell: ({ row }) => {
 				const date = row.original.createdAt;
-				if (!date) return <span className="text-slate-400">-</span>;
+				if (!date)
+					return <span className="text-slate-400 dark:text-slate-500">-</span>;
 				return (
 					<div
 						title={new Intl.DateTimeFormat(locale, {
@@ -93,7 +94,7 @@ export default function TaskTable({
 			header: t("tasks.actions"),
 			cell: ({ row }) => (
 				<Link
-					className="text-slate-900 hover:text-blue-600 hover:underline"
+					className="text-slate-900 hover:text-blue-600 hover:underline dark:text-slate-100 dark:hover:text-blue-400"
 					href={`/console/tasks/${row.original.id}`}
 				>
 					{t("tasks.detail")}

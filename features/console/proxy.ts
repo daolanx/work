@@ -1,6 +1,6 @@
 import { getSessionCookie } from "better-auth/cookies";
 import { type NextRequest, NextResponse } from "next/server";
-import { AUTH_CONFIG, isPublicPath } from "./constants";
+import { AUTH_CONFIG, isPublicPath } from "@/lib/auth-config";
 
 export function proxyAuth(request: NextRequest): NextResponse | null {
 	const { pathname } = request.nextUrl;

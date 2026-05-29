@@ -2,8 +2,9 @@ import config from "@payload-config";
 import { getLocale } from "next-intl/server";
 import { getPayload } from "payload";
 import type { Locale } from "@/i18n/constants";
+import { LOCALES } from "@/i18n/constants";
 
-export type Site = {
+export type Portfolio = {
 	id: number;
 	title: string;
 	keywords: string[];
@@ -14,15 +15,20 @@ export type Site = {
 	isDeveloping?: boolean;
 };
 
-export async function getSites(): Promise<Site[]> {
-	const lang = (await getLocale()) as Locale;
+export async function getPortfolios(
+	lang?: string | null,
+): Promise<Portfolio[]> {
+	const locale =
+		lang && LOCALES.includes(lang as Locale)
+			? (lang as Locale)
+			: ((await getLocale()) as Locale);
 	const payload = await getPayload({ config });
 
 	const result = await payload.find({
 		collection: "sites",
 		sort: "_order",
 		depth: 1,
-		locale: lang,
+		locale,
 	});
 
 	return result.docs.map((site) => {
