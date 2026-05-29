@@ -21,12 +21,14 @@ export const PUBLIC_ROUTES: readonly string[] = [
 	"/ai-chat",
 	"/landing",
 	"/flower-shop",
-	`${AUTH_CONFIG.authPathPrefix}*`,
+	"/payload",
+	"/payload/*",
 	"/docs/*",
 	"/legal",
 	"/api/auth/*",
 	"/api/ai-chat",
 	"/api/public/*",
+	`${AUTH_CONFIG.authPathPrefix}*`,
 ];
 
 /**
