@@ -10,7 +10,7 @@ import ThemeSwitch from "@/components/ui/theme-switch";
 import { DemoCard } from "@/features/console/profile/components/demo-card";
 import { FadeIn } from "@/features/console/profile/components/fade-in";
 import LocaleSwitch from "@/features/console/profile/components/locale-switch";
-import { getSites } from "@/features/console/profile/services";
+import { getPortfolios } from "@/features/console/profile/services";
 
 const metadataBase = new URL("https://demo.daolanx.com");
 
@@ -41,13 +41,13 @@ export async function generateMetadata(): Promise<Metadata> {
 	};
 }
 
-async function SiteList() {
+async function PortfolioList() {
 	const t = await getTranslations("profile");
-	const sites = await getSites();
+	const portfolios = await getPortfolios();
 
 	return (
 		<div className="space-y-12">
-			{sites.map((site, index) => (
+			{portfolios.map((site, index) => (
 				<FadeIn delay={0.1 + index * 0.1} key={site.id}>
 					<DemoCard>
 						{/* Title */}
@@ -119,7 +119,7 @@ async function SiteList() {
 	);
 }
 
-function SiteListSkeleton() {
+function PortfolioListSkeleton() {
 	return (
 		<div className="space-y-12">
 			{Array.from({ length: 4 }).map((_, i) => (
@@ -178,8 +178,8 @@ export default async function Home() {
 				</FadeIn>
 
 				{/* Demo Cards */}
-				<Suspense fallback={<SiteListSkeleton />}>
-					<SiteList />
+				<Suspense fallback={<PortfolioListSkeleton />}>
+					<PortfolioList />
 				</Suspense>
 
 				{/* Footer */}
