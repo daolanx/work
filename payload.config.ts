@@ -140,6 +140,9 @@ const Tiers = {
 
 export default buildConfig({
 	secret: String(process.env.PAYLOAD_SECRET),
+	routes: {
+		api: "/payload-api",
+	},
 	collections: [Media, Sites, Tiers],
 	globals: [],
 	localization: {
