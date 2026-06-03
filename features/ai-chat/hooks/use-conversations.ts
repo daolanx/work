@@ -4,10 +4,13 @@ import type { ChatSession, Message } from "../types";
 interface ConversationsState {
 	conversations: ChatSession[];
 	currentConversationId: string | null;
+	// Tracks newly created conversation so ChatMessages can skip initial load
+	newConversationId: string | null;
 
 	createConversation: (title?: string) => ChatSession;
 	deleteConversation: (id: string) => void;
 	switchConversation: (id: string) => void;
+	clearNewConversationFlag: () => void;
 
 	messagesMap: Map<string, Message[]>;
 	saveMessages: (sessionId: string, messages: Message[]) => void;
@@ -20,6 +23,7 @@ interface ConversationsState {
 export const useConversationsStore = create<ConversationsState>((set, get) => ({
 	conversations: [],
 	currentConversationId: null,
+	newConversationId: null,
 
 	createConversation: (title?: string) => {
 		const { conversations } = get();
@@ -33,8 +37,13 @@ export const useConversationsStore = create<ConversationsState>((set, get) => ({
 		set((state) => ({
 			conversations: [newSession, ...state.conversations],
 			currentConversationId: newSession.id,
+			newConversationId: newSession.id,
 		}));
 		return newSession;
+	},
+
+	clearNewConversationFlag: () => {
+		set({ newConversationId: null });
 	},
 
 	deleteConversation: (id: string) => {

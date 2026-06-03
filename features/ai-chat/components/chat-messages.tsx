@@ -30,6 +30,8 @@ export function ChatMessages({
 }: ChatMessagesProps) {
 	const {
 		currentConversationId,
+		newConversationId,
+		clearNewConversationFlag,
 		getMessages,
 		saveMessages,
 		getCurrentConversation,
@@ -42,6 +44,12 @@ export function ChatMessages({
 	useEffect(() => {
 		const sessionId = currentConversationId;
 
+		// Skip loading if this is a freshly created conversation (no stored messages yet)
+		if (sessionId && sessionId === newConversationId) {
+			clearNewConversationFlag();
+			return;
+		}
+
 		if (sessionId && sessionId !== lastLoadedSessionRef.current) {
 			lastLoadedSessionRef.current = sessionId;
 			const stored = getMessages(sessionId);
@@ -50,7 +58,14 @@ export function ChatMessages({
 			lastLoadedSessionRef.current = null;
 			setMessages([]);
 		}
-	}, [currentConversationId, getMessages, setMessages, currentConversation]);
+	}, [
+		currentConversationId,
+		newConversationId,
+		clearNewConversationFlag,
+		getMessages,
+		setMessages,
+		currentConversation,
+	]);
 
 	// Sync messages to current session when AI SDK messages change
 	useEffect(() => {
