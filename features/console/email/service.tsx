@@ -5,7 +5,7 @@ import VerificationEmail from "./components/verification-email";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const isProd = process.env.NODE_ENV === "production";
-const FROM_EMAIL = "Indie Console <Dax@daolanx.com>";
+const FROM_EMAIL = "Indie Console <support@daolanx.com>";
 
 async function send({
 	to,
@@ -49,11 +49,15 @@ export const sendVerificationEmail = async (
 		console.log("---------------------------------");
 		return;
 	}
-	await send({
-		to: user.email,
-		subject: "Indie Console: Verify Your Email",
-		react: <VerificationEmail url={url} userName={user.name ?? ""} />,
-	});
+	try {
+		await send({
+			to: user.email,
+			subject: "Indie Console: Verify Your Email",
+			react: <VerificationEmail url={url} userName={user.name ?? ""} />,
+		});
+	} catch (err) {
+		console.error("Error sending verification email:", err);
+	}
 };
 
 export const sendPasswordResetEmail = async (
@@ -67,9 +71,13 @@ export const sendPasswordResetEmail = async (
 		console.log("---------------------------------");
 		return;
 	}
-	await send({
-		to: user.email,
-		subject: "Indie Console: Reset Password",
-		react: <ResetPasswordEmail url={url} userName={user.name ?? ""} />,
-	});
+	try {
+		await send({
+			to: user.email,
+			subject: "Indie Console: Reset Password",
+			react: <ResetPasswordEmail url={url} userName={user.name ?? ""} />,
+		});
+	} catch (err) {
+		console.error("Error sending password reset email:", err);
+	}
 };
