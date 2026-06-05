@@ -5,7 +5,7 @@ import VerificationEmail from "./components/verification-email";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const isProd = process.env.NODE_ENV === "production";
-const FROM_EMAIL = "Indie Console <Dax@daolanx.me>";
+const FROM_EMAIL = "Indie Console <Dax@daolanx.com>";
 
 async function send({
 	to,
@@ -37,7 +37,11 @@ async function send({
 		console.error("💥 Unexpected Error:", err);
 	}
 }
-export const sendVerificationEmail = (user, url: string) => {
+
+export const sendVerificationEmail = async (
+	user: { email: string; name?: string | null },
+	url: string,
+) => {
 	if (!isProd) {
 		console.log("--- [DEV] Verification Email ---");
 		console.log(`To: ${user.email}`);
@@ -45,14 +49,17 @@ export const sendVerificationEmail = (user, url: string) => {
 		console.log("---------------------------------");
 		return;
 	}
-	return send({
+	await send({
 		to: user.email,
 		subject: "Indie Console: Verify Your Email",
 		react: <VerificationEmail url={url} userName={user.name ?? ""} />,
 	});
 };
 
-export const sendPasswordResetEmail = (user, url: string) => {
+export const sendPasswordResetEmail = async (
+	user: { email: string; name?: string | null },
+	url: string,
+) => {
 	if (!isProd) {
 		console.log("--- [DEV] Password Reset Link ---");
 		console.log(`To: ${user.email}`);
@@ -60,7 +67,7 @@ export const sendPasswordResetEmail = (user, url: string) => {
 		console.log("---------------------------------");
 		return;
 	}
-	return send({
+	await send({
 		to: user.email,
 		subject: "Indie Console: Reset Password",
 		react: <ResetPasswordEmail url={url} userName={user.name ?? ""} />,
